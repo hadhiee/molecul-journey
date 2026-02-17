@@ -4,8 +4,8 @@ import GoogleProvider from "next-auth/providers/google";
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       authorization: {
         params: {
           prompt: "consent",
@@ -16,10 +16,13 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development', // Enable debug logs in dev
+  debug: true, // Always enable debug to catch production errors
   session: {
     strategy: "jwt",
   },
+  // Ensure NextAuth trusts the host header (critical for Vercel + custom domains)
+  // This is often needed if NEXTAUTH_URL isn't explicitly set in some environments
+  // trustHost: true,
   callbacks: {
     async signIn({ account, profile }: any) {
       if (account?.provider === "google") {
