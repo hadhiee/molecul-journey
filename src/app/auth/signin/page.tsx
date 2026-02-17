@@ -1,8 +1,26 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function SignIn() {
+function SignInContent() {
+    const searchParams = useSearchParams();
+    const error = searchParams.get("error");
+
+    const getErrorMessage = (error: string) => {
+        switch (error) {
+            case "OAuthSignin":
+                return "Error configuring OAuth. Check NEXTAUTH_URL and Google Console configuration.";
+            case "OAuthCallback":
+                return "Error during OAuth callback. Try again.";
+            case "AccessDenied":
+                return "You do not have permission to sign in (Email domain restricted?).";
+            default:
+                return "An unknown error occurred.";
+        }
+    };
+
     return (
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, background: '#f0f2f5' }}>
             <div style={{
@@ -22,6 +40,16 @@ export default function SignIn() {
                         Moklet Learning Culture
                     </p>
                 </div>
+
+                {error && (
+                    <div style={{
+                        marginBottom: 24, padding: 16, borderRadius: 12,
+                        backgroundColor: '#fee2e2', border: '1px solid #fecaca',
+                        color: '#991b1b', fontSize: 13, fontWeight: 600, textAlign: 'center'
+                    }}>
+                        {getErrorMessage(error)}
+                    </div>
+                )}
 
                 <div style={{ textAlign: 'center' as const, marginBottom: 32 }}>
                     <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1a1a2e', marginBottom: 6 }}>Mulai Perjalanan</h2>
@@ -49,5 +77,13 @@ export default function SignIn() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function SignIn() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SignInContent />
+        </Suspense>
     );
 }
