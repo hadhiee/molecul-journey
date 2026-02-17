@@ -53,7 +53,7 @@ function SignInContent() {
 
                 <div style={{ textAlign: 'center' as const, marginBottom: 32 }}>
                     <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1a1a2e', marginBottom: 6 }}>Mulai Perjalanan</h2>
-                    <p style={{ fontSize: 13, color: '#94a3b8', fontWeight: 500 }}>Gunakan akun sekolah untuk masuk ke simulasi budaya.</p>
+                    <p style={{ fontSize: 13, color: '#94a3b8', fontWeight: 500 }}>Gunakan akun sekolah untuk masuk ke simulasi budaya MOKLET.</p>
                 </div>
 
                 <button
