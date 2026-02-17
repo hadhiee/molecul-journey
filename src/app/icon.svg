@@ -4,26 +4,30 @@
       <stop offset="0%" style="stop-color:#e11d48;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#be123c;stop-opacity:1" />
     </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
   </defs>
+  
+  <!-- Background Container -->
   <rect width="512" height="512" rx="128" fill="url(#grad1)"/>
   
-  <!-- Central Node -->
-  <circle cx="256" cy="256" r="40" fill="white"/>
+  <!-- Molecule Structure -->
+  <g transform="translate(256, 256)" filter="url(#shadow)">
+    <!-- Orbits -->
+    <ellipse cx="0" cy="0" rx="160" ry="60" stroke="white" stroke-width="24" fill="none" transform="rotate(60)" opacity="0.4"/>
+    <ellipse cx="0" cy="0" rx="160" ry="60" stroke="white" stroke-width="24" fill="none" transform="rotate(-60)" opacity="0.4"/>
+    <ellipse cx="0" cy="0" rx="160" ry="60" stroke="white" stroke-width="24" fill="none" opacity="0.4"/>
+    
+    <!-- Nucleus (Moklet) -->
+    <circle r="50" fill="white"/>
+    
+    <!-- Electrons -->
+    <circle cx="140" cy="0" r="25" fill="white" transform="rotate(60)"/>
+    <circle cx="140" cy="0" r="25" fill="white" transform="rotate(-60)"/>
+    <circle cx="140" cy="0" r="25" fill="white" transform="rotate(180)"/>
+  </g>
   
-  <!-- Top Node -->
-  <circle cx="256" cy="140" r="30" fill="white"/>
-  <line x1="256" y1="216" x2="256" y2="170" stroke="white" stroke-width="12" stroke-linecap="round"/>
-  
-  <!-- Bottom Left Node -->
-  <circle cx="156" cy="336" r="30" fill="white"/>
-  <line x1="222" y1="284" x2="182" y2="316" stroke="white" stroke-width="12" stroke-linecap="round"/>
-  
-  <!-- Bottom Right Node -->
-  <circle cx="356" cy="336" r="30" fill="white"/>
-  <line x1="290" y1="284" x2="330" y2="316" stroke="white" stroke-width="12" stroke-linecap="round"/>
-
-  <!-- Connecting 'M' shape stylization -->
-  <path d="M156 336 Q 256 140 356 336" fill="none" stroke="white" stroke-width="4" opacity="0.3"/>
-
-  <text x="256" y="440" text-anchor="middle" fill="white" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="800" font-size="64" letter-spacing="4">MOLECUL</text>
+  <!-- Text Label (Optional, but adds to brand) -->
+  <text x="256" y="450" text-anchor="middle" fill="white" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="56" letter-spacing="4" opacity="0.9">MOLECUL</text>
 </svg>

@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: "MoLeCul - Moklet Learning Culture Journey",
   description: "A gamified learning experience for SMK Telkom Malang students.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export const viewport: Viewport = {
