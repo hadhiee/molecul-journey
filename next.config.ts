@@ -14,6 +14,7 @@ const pwa = withPWA({
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // Force deploy: 2026-02-17
 };
 
 export default pwa(nextConfig);
