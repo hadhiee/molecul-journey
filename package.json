@@ -10,6 +10,7 @@
     "seed:attitude": "echo \"Run seeds/seed_attitude_values.sql in Supabase SQL Editor\""
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@supabase/supabase-js": "^2.95.3",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
