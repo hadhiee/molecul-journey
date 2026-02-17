@@ -1,0 +1,2722 @@
+[
+  {
+    "chapter": 1,
+    "title": "Deadline mepet, 1 anggota hilang kabar",
+    "context": "Tugas tim harus dikumpulkan besok. Salah satu anggota tidak merespon chat dan bagiannya belum jalan.",
+    "tags": {
+      "attitude": [
+        "ATT_ETC",
+        "ATT_TS",
+        "ATT_TP"
+      ],
+      "bisa": [
+        "agility",
+        "integrity"
+      ],
+      "akhlak": [
+        "kolaboratif",
+        "amanah"
+      ],
+      "codes": [
+        "continuous_improvement"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Bagi ulang tugas, hubungi dengan sopan, tulis rencana di doc, dan informasikan guru jika perlu.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 3,
+            "ATT_TS": 3,
+            "ATT_TP": 2
+          },
+          "bisa": {
+            "agility": 3,
+            "integrity": 2
+          },
+          "akhlak": {
+            "kolaboratif": 3,
+            "amanah": 2
+          },
+          "codes": {
+            "continuous_improvement": 2
+          }
+        },
+        "feedback": "Kolaboratif, fokus solusi, komunikasi profesional."
+      },
+      {
+        "id": "B",
+        "label": "Kerjakan sendiri bagian teman supaya cepat selesai, tanpa koordinasi.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 1,
+            "ATT_TS": 2
+          },
+          "bisa": {
+            "agility": 2
+          },
+          "akhlak": {
+            "kolaboratif": 1
+          },
+          "codes": {
+            "continuous_improvement": 1
+          }
+        },
+        "feedback": "Selesai cepat, tapi rawan one-man show."
+      },
+      {
+        "id": "C",
+        "label": "Marah di grup, menyalahkan teman, lalu menyerah menunggu.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_TS": 0,
+            "ATT_ETC": 0
+          },
+          "akhlak": {
+            "harmonis": 0
+          },
+          "bisa": {
+            "integrity": 0
+          }
+        },
+        "feedback": "Konflik naik, solusi tidak bergerak."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "title": "Chat kelas memanas karena candaan menyinggung",
+    "context": "Ada komentar yang mengarah ke body shaming di grup kelas. Suasana jadi panas.",
+    "tags": {
+      "attitude": [
+        "ATT_TP",
+        "ATT_A"
+      ],
+      "akhlak": [
+        "harmonis"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "codes": [
+        "open_mind"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tegur dengan bahasa sopan, hentikan body shaming, ajak klarifikasi dan minta maaf jika perlu.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 3,
+            "ATT_A": 3
+          },
+          "akhlak": {
+            "harmonis": 3
+          },
+          "bisa": {
+            "integrity": 2
+          },
+          "codes": {
+            "open_mind": 2
+          }
+        },
+        "feedback": "Benar isi dan benar cara—menjaga martabat orang."
+      },
+      {
+        "id": "B",
+        "label": "Diam saja agar tidak ikut ribut.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 1
+          },
+          "akhlak": {
+            "harmonis": 1
+          }
+        },
+        "feedback": "Aman sementara, budaya negatif bisa berulang."
+      },
+      {
+        "id": "C",
+        "label": "Balas dengan kata-kata lebih pedas biar kapok.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          },
+          "akhlak": {
+            "harmonis": 0
+          },
+          "bisa": {
+            "integrity": 0
+          }
+        },
+        "feedback": "Memperburuk situasi dan melanggar zero tolerance."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "title": "Plagiarisme kode project",
+    "context": "Kamu menemukan teman menyalin kode dari internet tanpa sumber dan mengklaim hasil sendiri.",
+    "tags": {
+      "attitude": [
+        "ATT_UTW",
+        "ATT_TS",
+        "ATT_TP"
+      ],
+      "akhlak": [
+        "amanah"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "codes": [
+        "data_drivenness"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Ajak diskusi: jelaskan risiko, minta cantumkan sumber, pahami kode, dan perbaiki bersama.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 3,
+            "ATT_TS": 2,
+            "ATT_TP": 2
+          },
+          "akhlak": {
+            "amanah": 3
+          },
+          "bisa": {
+            "integrity": 3
+          },
+          "codes": {
+            "data_drivenness": 1
+          }
+        },
+        "feedback": "AI/Internet boleh, tapi harus jujur dan dipahami."
+      },
+      {
+        "id": "B",
+        "label": "Biarkan saja, toh yang penting nilai bagus.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          },
+          "bisa": {
+            "integrity": 0
+          }
+        },
+        "feedback": "Merusak budaya amanah dan mematikan proses belajar."
+      },
+      {
+        "id": "C",
+        "label": "Laporkan ke guru tanpa bicara dulu ke teman.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 1,
+            "ATT_A": 1
+          },
+          "akhlak": {
+            "amanah": 2
+          },
+          "bisa": {
+            "integrity": 2
+          }
+        },
+        "feedback": "Bisa benar, tapi kurang edukatif bila tanpa pembinaan dulu."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "title": "HP mengganggu saat guru menjelaskan",
+    "context": "Saat materi inti, beberapa teman scrolling medsos. Kamu juga tergoda.",
+    "tags": {
+      "attitude": [
+        "ATT_TOD",
+        "ATT_A"
+      ],
+      "akhlak": [
+        "kompeten"
+      ],
+      "bisa": [
+        "agility"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Simpan HP silent, tutup tab tidak relevan, fokus catat poin penting.",
+        "impact": {
+          "attitude": {
+            "ATT_TOD": 3,
+            "ATT_A": 2
+          },
+          "akhlak": {
+            "kompeten": 2
+          },
+          "bisa": {
+            "agility": 1
+          }
+        },
+        "feedback": "Fokus meningkat, belajar jadi efektif."
+      },
+      {
+        "id": "B",
+        "label": "Tetap pegang HP tapi janji hanya cek notifikasi.",
+        "impact": {
+          "attitude": {
+            "ATT_TOD": 1
+          },
+          "akhlak": {
+            "kompeten": 1
+          }
+        },
+        "feedback": "Masih rawan terdistraksi."
+      },
+      {
+        "id": "C",
+        "label": "Main game diam-diam karena bosan.",
+        "impact": {
+          "attitude": {
+            "ATT_TOD": 0
+          },
+          "akhlak": {
+            "kompeten": 0
+          }
+        },
+        "feedback": "Mengganggu proses belajar dan melanggar aturan fokus."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "title": "Relawan dibutuhkan, kelas hening",
+    "context": "Guru meminta relawan untuk mempresentasikan hasil diskusi. Semua diam.",
+    "tags": {
+      "attitude": [
+        "ATT_IA",
+        "ATT_DA",
+        "ATT_A"
+      ],
+      "bisa": [
+        "bravery"
+      ],
+      "akhlak": [
+        "kompeten"
+      ],
+      "codes": [
+        "open_mind"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Angkat tangan, sampaikan singkat-terstruktur, dan minta feedback.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 3,
+            "ATT_DA": 2
+          },
+          "bisa": {
+            "bravery": 3
+          },
+          "akhlak": {
+            "kompeten": 2
+          },
+          "codes": {
+            "open_mind": 1
+          }
+        },
+        "feedback": "Berani tampil dan belajar dari umpan balik."
+      },
+      {
+        "id": "B",
+        "label": "Menyuruh teman saja karena takut salah.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 1
+          },
+          "bisa": {
+            "bravery": 1
+          }
+        },
+        "feedback": "Kurang terlibat aktif."
+      },
+      {
+        "id": "C",
+        "label": "Menghindar sambil bercanda agar tidak ditunjuk.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 0,
+            "ATT_A": 0
+          },
+          "akhlak": {
+            "kompeten": 0
+          }
+        },
+        "feedback": "Menghilangkan kesempatan belajar."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "title": "Bingung materi, takut ditertawakan",
+    "context": "Kamu belum paham konsep. Teman lain tampak paham semua.",
+    "tags": {
+      "attitude": [
+        "ATT_DA",
+        "ATT_TP",
+        "ATT_A"
+      ],
+      "akhlak": [
+        "kompeten",
+        "harmonis"
+      ],
+      "bisa": [
+        "bravery"
+      ],
+      "codes": [
+        "open_mind"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Bertanya 'mengapa'/'bagaimana jika', lalu konfirmasi pemahaman dengan kata sendiri.",
+        "impact": {
+          "attitude": {
+            "ATT_DA": 3,
+            "ATT_TP": 2,
+            "ATT_A": 2
+          },
+          "akhlak": {
+            "kompeten": 3,
+            "harmonis": 2
+          },
+          "bisa": {
+            "bravery": 2
+          },
+          "codes": {
+            "open_mind": 2
+          }
+        },
+        "feedback": "Bertanya itu bagian dari belajar mendalam."
+      },
+      {
+        "id": "B",
+        "label": "Cari jawaban sendiri setelah kelas tanpa bertanya.",
+        "impact": {
+          "attitude": {
+            "ATT_DA": 1
+          },
+          "akhlak": {
+            "kompeten": 2
+          }
+        },
+        "feedback": "Baik, tapi kehilangan klarifikasi saat itu."
+      },
+      {
+        "id": "C",
+        "label": "Diam saja, berharap nanti paham sendiri.",
+        "impact": {
+          "attitude": {
+            "ATT_DA": 0
+          },
+          "akhlak": {
+            "kompeten": 0
+          }
+        },
+        "feedback": "Risiko salah paham makin besar."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "title": "Diskusi berubah jadi sesi mengeluh",
+    "context": "Tim lebih banyak mengeluh: 'ini susah' 'nggak mungkin'.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_ETC",
+        "ATT_TP"
+      ],
+      "akhlak": [
+        "adaptif",
+        "kolaboratif"
+      ],
+      "bisa": [
+        "agility"
+      ],
+      "codes": [
+        "agile_innovation"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Arahkan: definisikan masalah, bagi jadi langkah kecil, cari 2 opsi solusi.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 3,
+            "ATT_ETC": 2
+          },
+          "akhlak": {
+            "adaptif": 2,
+            "kolaboratif": 2
+          },
+          "bisa": {
+            "agility": 2
+          },
+          "codes": {
+            "agile_innovation": 2
+          }
+        },
+        "feedback": "Keluhan jadi aksi; tim bergerak."
+      },
+      {
+        "id": "B",
+        "label": "Ikut mengeluh tapi tetap kerja sedikit-sedikit.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 1
+          },
+          "bisa": {
+            "agility": 1
+          }
+        },
+        "feedback": "Progres ada, kultur negatif tetap."
+      },
+      {
+        "id": "C",
+        "label": "Meninggalkan tim karena malas debat.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 0
+          },
+          "akhlak": {
+            "kolaboratif": 0
+          }
+        },
+        "feedback": "Kolaborasi runtuh."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "title": "Pembagian tugas tidak adil",
+    "context": "Satu orang mengerjakan hampir semuanya. Yang lain jadi pasif.",
+    "tags": {
+      "attitude": [
+        "ATT_ETC",
+        "ATT_IA",
+        "ATT_TP"
+      ],
+      "akhlak": [
+        "kolaboratif",
+        "harmonis"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "codes": [
+        "continuous_improvement"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Ajak rapat singkat, buat RACI sederhana, rotasi peran, sepakati standar kontribusi.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 3,
+            "ATT_IA": 2,
+            "ATT_TP": 2
+          },
+          "akhlak": {
+            "kolaboratif": 3,
+            "harmonis": 2
+          },
+          "bisa": {
+            "integrity": 2
+          },
+          "codes": {
+            "continuous_improvement": 2
+          }
+        },
+        "feedback": "Mencegah one-man show dan meningkatkan kualitas tim."
+      },
+      {
+        "id": "B",
+        "label": "Biarkan yang jago mengerjakan, yang lain bantu presentasi saja.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 1
+          },
+          "akhlak": {
+            "kolaboratif": 1
+          }
+        },
+        "feedback": "Skill tim tidak berkembang."
+      },
+      {
+        "id": "C",
+        "label": "Paksa teman dengan ancaman agar mau kerja.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          },
+          "akhlak": {
+            "harmonis": 0
+          }
+        },
+        "feedback": "Komunikasi merusak relasi."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "title": "Menemukan barang teman tertinggal",
+    "context": "Kamu menemukan flashdisk/akses kartu milik teman di kelas.",
+    "tags": {
+      "attitude": [
+        "ATT_A",
+        "ATT_TP",
+        "ATT_UTW"
+      ],
+      "akhlak": [
+        "amanah",
+        "harmonis"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Amankan, hubungi pemilik/guru piket, kembalikan dengan sopan.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 3,
+            "ATT_TP": 2,
+            "ATT_UTW": 1
+          },
+          "akhlak": {
+            "amanah": 3,
+            "harmonis": 2
+          },
+          "bisa": {
+            "integrity": 3
+          }
+        },
+        "feedback": "Amanah dan menjaga kepercayaan."
+      },
+      {
+        "id": "B",
+        "label": "Taruh saja di meja, biar nanti diambil sendiri.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 1
+          },
+          "akhlak": {
+            "amanah": 1
+          }
+        },
+        "feedback": "Niat baik, tapi masih berisiko hilang."
+      },
+      {
+        "id": "C",
+        "label": "Coba cek isinya karena penasaran.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          },
+          "bisa": {
+            "integrity": 0
+          }
+        },
+        "feedback": "Melanggar privasi dan integritas."
+      }
+    ]
+  },
+  {
+    "chapter": 1,
+    "title": "Feedback guru terasa 'pedas'",
+    "context": "Guru memberi kritik tajam pada hasilmu. Kamu merasa malu.",
+    "tags": {
+      "attitude": [
+        "ATT_A",
+        "ATT_IA",
+        "ATT_TS"
+      ],
+      "akhlak": [
+        "kompeten",
+        "adaptif"
+      ],
+      "bisa": [
+        "agility"
+      ],
+      "codes": [
+        "open_mind",
+        "continuous_improvement"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tahan emosi, catat poin, tanya klarifikasi, revisi, lalu minta cek ulang.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 2,
+            "ATT_IA": 2,
+            "ATT_TS": 2
+          },
+          "akhlak": {
+            "kompeten": 2,
+            "adaptif": 2
+          },
+          "bisa": {
+            "agility": 2
+          },
+          "codes": {
+            "open_mind": 3,
+            "continuous_improvement": 2
+          }
+        },
+        "feedback": "Umpan balik jadi bahan tumbuh, bukan serangan pribadi."
+      },
+      {
+        "id": "B",
+        "label": "Diam saja tapi tidak merevisi karena sakit hati.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 0
+          },
+          "codes": {
+            "continuous_improvement": 0
+          }
+        },
+        "feedback": "Kehilangan kesempatan perbaikan."
+      },
+      {
+        "id": "C",
+        "label": "Membantah keras di kelas.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          }
+        },
+        "feedback": "Cara tidak hormat, konflik meningkat."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "Bug muncul di hari demo",
+    "context": "Aplikasi error saat akan demo. Waktu tersisa 30 menit.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_TOD",
+        "ATT_ETC"
+      ],
+      "bisa": [
+        "agility"
+      ],
+      "akhlak": [
+        "kompeten",
+        "kolaboratif"
+      ],
+      "codes": [
+        "agile_innovation",
+        "data_drivenness"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Triage: cek log, tentukan fix cepat/rollback, test minimal, jelaskan status secara jujur.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 3,
+            "ATT_TOD": 2,
+            "ATT_ETC": 2
+          },
+          "bisa": {
+            "agility": 3
+          },
+          "akhlak": {
+            "kompeten": 2,
+            "kolaboratif": 2
+          },
+          "codes": {
+            "agile_innovation": 2,
+            "data_drivenness": 2
+          }
+        },
+        "feedback": "Terstruktur + transparan."
+      },
+      {
+        "id": "B",
+        "label": "Panik, ubah banyak kode tanpa testing.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 1
+          },
+          "bisa": {
+            "agility": 1
+          },
+          "codes": {
+            "agile_innovation": 1
+          }
+        },
+        "feedback": "Berisiko tambah bug."
+      },
+      {
+        "id": "C",
+        "label": "Menyalahkan device dan batal demo tanpa coba solusi.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 0
+          },
+          "akhlak": {
+            "kompeten": 0
+          }
+        },
+        "feedback": "Tidak menunjukkan problem solving."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "Data pribadi siswa kebuka link publik",
+    "context": "Spreadsheet berisi data sensitif bisa diakses siapa saja lewat link.",
+    "tags": {
+      "attitude": [
+        "ATT_UTW",
+        "ATT_TS",
+        "ATT_TP"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "akhlak": [
+        "amanah"
+      ],
+      "codes": [
+        "data_drivenness",
+        "continuous_improvement"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tutup akses publik, audit, lapor, lalu buat SOP permission & masking data.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 3,
+            "ATT_TS": 2
+          },
+          "bisa": {
+            "integrity": 3
+          },
+          "akhlak": {
+            "amanah": 3
+          },
+          "codes": {
+            "data_drivenness": 1,
+            "continuous_improvement": 2
+          }
+        },
+        "feedback": "Keamanan & amanah nomor satu."
+      },
+      {
+        "id": "B",
+        "label": "Hapus file tanpa memberitahu siapa pun.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 2
+          },
+          "akhlak": {
+            "amanah": 1
+          }
+        },
+        "feedback": "Kurang transparan dan pencegahan belum ada."
+      },
+      {
+        "id": "C",
+        "label": "Biarkan, toh tidak ada yang lihat.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          }
+        },
+        "feedback": "Sangat berisiko."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "AI dipakai untuk mengarang laporan",
+    "context": "Teman ingin full-generate laporan pakai AI tanpa verifikasi dan tanpa sumber.",
+    "tags": {
+      "attitude": [
+        "ATT_UTW",
+        "ATT_TS",
+        "ATT_TP"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "akhlak": [
+        "amanah"
+      ],
+      "codes": [
+        "data_drivenness"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Pakai AI untuk outline, cek fakta, tulis proses, cantumkan sumber, refleksi sendiri.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 3,
+            "ATT_TS": 2,
+            "ATT_TP": 2
+          },
+          "bisa": {
+            "integrity": 3
+          },
+          "akhlak": {
+            "amanah": 3
+          },
+          "codes": {
+            "data_drivenness": 2
+          }
+        },
+        "feedback": "AI jadi alat bantu belajar, bukan plagiasi."
+      },
+      {
+        "id": "B",
+        "label": "Pakai AI lalu edit sedikit supaya tidak ketahuan.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 1
+          },
+          "akhlak": {
+            "amanah": 0
+          },
+          "bisa": {
+            "integrity": 0
+          }
+        },
+        "feedback": "Masih tidak amanah."
+      },
+      {
+        "id": "C",
+        "label": "Copy-paste penuh karena kejar cepat.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          },
+          "bisa": {
+            "integrity": 0
+          }
+        },
+        "feedback": "Melanggar etika akademik."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "Code review menyinggung perasaan",
+    "context": "Komentar review: 'kodenya jelek' membuat teman down.",
+    "tags": {
+      "attitude": [
+        "ATT_TP",
+        "ATT_A",
+        "ATT_ETC"
+      ],
+      "akhlak": [
+        "harmonis",
+        "kolaboratif"
+      ],
+      "bisa": [
+        "service_excellence"
+      ],
+      "codes": [
+        "open_mind",
+        "continuous_improvement"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Ubah jadi konstruktif: fokus pada kode, saran spesifik, tawarkan pair programming.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 3,
+            "ATT_A": 2,
+            "ATT_ETC": 2
+          },
+          "akhlak": {
+            "harmonis": 3,
+            "kolaboratif": 2
+          },
+          "bisa": {
+            "service_excellence": 2
+          },
+          "codes": {
+            "open_mind": 2,
+            "continuous_improvement": 2
+          }
+        },
+        "feedback": "Mutu naik tanpa merendahkan."
+      },
+      {
+        "id": "B",
+        "label": "Biarkan, nanti juga terbiasa.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 1
+          },
+          "akhlak": {
+            "harmonis": 1
+          }
+        },
+        "feedback": "Budaya tim jadi toksik."
+      },
+      {
+        "id": "C",
+        "label": "Balas lebih pedas biar setara.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          },
+          "akhlak": {
+            "harmonis": 0
+          }
+        },
+        "feedback": "Konflik makin besar."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "Akun admin dipakai bareng",
+    "context": "Tim memakai satu akun admin bersama karena praktis.",
+    "tags": {
+      "attitude": [
+        "ATT_UTW",
+        "ATT_TS",
+        "ATT_ETC"
+      ],
+      "akhlak": [
+        "amanah",
+        "kompeten"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "codes": [
+        "continuous_improvement"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Buat role-based access, akun personal, audit log, dokumentasikan SOP.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 3,
+            "ATT_TS": 2,
+            "ATT_ETC": 1
+          },
+          "akhlak": {
+            "amanah": 3,
+            "kompeten": 2
+          },
+          "bisa": {
+            "integrity": 3
+          },
+          "codes": {
+            "continuous_improvement": 2
+          }
+        },
+        "feedback": "Aman, profesional, bisa ditelusuri."
+      },
+      {
+        "id": "B",
+        "label": "Tetap akun bareng tapi ganti password tiap minggu.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 1
+          },
+          "akhlak": {
+            "amanah": 1
+          }
+        },
+        "feedback": "Masih sulit audit dan berisiko."
+      },
+      {
+        "id": "C",
+        "label": "Bagikan password ke semua orang agar cepat.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          },
+          "bisa": {
+            "integrity": 0
+          }
+        },
+        "feedback": "Sangat tidak aman."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "Fitur keren vs kebutuhan user",
+    "context": "Tim ingin fitur 'keren' padahal pengguna butuh yang dasar dulu.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_DA"
+      ],
+      "bisa": [
+        "service_excellence"
+      ],
+      "akhlak": [
+        "kompeten"
+      ],
+      "codes": [
+        "customer_centricity"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Validasi kebutuhan (survey/interview), prioritaskan pain point, baru iterasi fitur.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 3,
+            "ATT_DA": 2
+          },
+          "bisa": {
+            "service_excellence": 2
+          },
+          "akhlak": {
+            "kompeten": 2
+          },
+          "codes": {
+            "customer_centricity": 3
+          }
+        },
+        "feedback": "Customer-centric dan tepat sasaran."
+      },
+      {
+        "id": "B",
+        "label": "Buat fitur keren dulu biar terlihat hebat.",
+        "impact": {
+          "codes": {
+            "customer_centricity": 1
+          },
+          "attitude": {
+            "ATT_TS": 1
+          }
+        },
+        "feedback": "Risiko tidak dipakai pengguna."
+      },
+      {
+        "id": "C",
+        "label": "Ikuti ego tim tanpa data.",
+        "impact": {
+          "codes": {
+            "customer_centricity": 0
+          },
+          "attitude": {
+            "ATT_TS": 0
+          }
+        },
+        "feedback": "Tidak berbasis kebutuhan."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "Enggan testing",
+    "context": "Tim bilang testing buang waktu.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_IA"
+      ],
+      "bisa": [
+        "service_excellence"
+      ],
+      "akhlak": [
+        "kompeten"
+      ],
+      "codes": [
+        "continuous_improvement"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Buat checklist QA & Definition of Done, ukur bug rate, testing minimal wajib.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 3,
+            "ATT_IA": 2
+          },
+          "bisa": {
+            "service_excellence": 3
+          },
+          "akhlak": {
+            "kompeten": 2
+          },
+          "codes": {
+            "continuous_improvement": 3
+          }
+        },
+        "feedback": "Mutu naik dan terukur."
+      },
+      {
+        "id": "B",
+        "label": "Testing hanya kalau sempat.",
+        "impact": {
+          "codes": {
+            "continuous_improvement": 1
+          }
+        },
+        "feedback": "Mutu tidak konsisten."
+      },
+      {
+        "id": "C",
+        "label": "Tidak perlu testing sama sekali.",
+        "impact": {
+          "codes": {
+            "continuous_improvement": 0
+          },
+          "bisa": {
+            "service_excellence": 0
+          }
+        },
+        "feedback": "Rawan gagal."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "Performa aplikasi lambat",
+    "context": "Pengguna komplain loading lama.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_DA"
+      ],
+      "akhlak": [
+        "kompeten"
+      ],
+      "codes": [
+        "data_drivenness",
+        "continuous_improvement"
+      ],
+      "bisa": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Profiling dulu, ukur baseline, optimasi bertahap, bandingkan sebelum-sesudah.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 3,
+            "ATT_DA": 2
+          },
+          "akhlak": {
+            "kompeten": 3
+          },
+          "codes": {
+            "data_drivenness": 3,
+            "continuous_improvement": 2
+          }
+        },
+        "feedback": "Solusi berbasis data."
+      },
+      {
+        "id": "B",
+        "label": "Tebak-tebakan optimasi tanpa ukur.",
+        "impact": {
+          "codes": {
+            "data_drivenness": 0
+          },
+          "attitude": {
+            "ATT_TS": 1
+          }
+        },
+        "feedback": "Hasil tidak pasti."
+      },
+      {
+        "id": "C",
+        "label": "Bilang 'memang laptop user jelek'.",
+        "impact": {
+          "codes": {
+            "customer_centricity": 0
+          },
+          "attitude": {
+            "ATT_TP": 0
+          }
+        },
+        "feedback": "Tidak customer-centric."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "Salah branch saat deploy",
+    "context": "Deploy gagal karena merge asal.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_TOD",
+        "ATT_ETC"
+      ],
+      "bisa": [
+        "agility"
+      ],
+      "codes": [
+        "continuous_improvement"
+      ],
+      "akhlak": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Terapkan PR review, git-flow, checklist release, dan rollback plan.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 3,
+            "ATT_TOD": 2,
+            "ATT_ETC": 2
+          },
+          "bisa": {
+            "agility": 2
+          },
+          "codes": {
+            "continuous_improvement": 3
+          }
+        },
+        "feedback": "Rapi dan mencegah ulang."
+      },
+      {
+        "id": "B",
+        "label": "Deploy cepat dulu, nanti benerin.",
+        "impact": {
+          "bisa": {
+            "agility": 1
+          },
+          "codes": {
+            "continuous_improvement": 1
+          }
+        },
+        "feedback": "Risiko downtime."
+      },
+      {
+        "id": "C",
+        "label": "Saling menyalahkan di grup.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          }
+        },
+        "feedback": "Tidak produktif."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": "Wi-Fi sekolah dipakai hal tak relevan",
+    "context": "Ada yang memakai jaringan untuk hal non-produktif saat jam belajar.",
+    "tags": {
+      "attitude": [
+        "ATT_UTW",
+        "ATT_A",
+        "ATT_TP"
+      ],
+      "akhlak": [
+        "amanah"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Ingatkan aturan dengan sopan, ajak fokus produktif, dan laporkan jika berulang.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 3,
+            "ATT_TP": 2,
+            "ATT_A": 2
+          },
+          "akhlak": {
+            "amanah": 2
+          },
+          "bisa": {
+            "integrity": 2
+          }
+        },
+        "feedback": "Teknologi digunakan bijak dan tetap hormat."
+      },
+      {
+        "id": "B",
+        "label": "Diam saja, bukan urusanmu.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 1
+          }
+        },
+        "feedback": "Budaya bisa makin longgar."
+      },
+      {
+        "id": "C",
+        "label": "Ikut-ikutan karena seru.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          }
+        },
+        "feedback": "Melanggar Use Tech Wisely."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Klien marah di helpdesk",
+    "context": "User komplain keras karena layanan error.",
+    "tags": {
+      "attitude": [
+        "ATT_TP",
+        "ATT_A",
+        "ATT_TS"
+      ],
+      "bisa": [
+        "service_excellence"
+      ],
+      "akhlak": [
+        "harmonis"
+      ],
+      "codes": [
+        "customer_centricity"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Dengarkan, klarifikasi, catat tiket, beri langkah/estimasi realistis, follow-up.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 3,
+            "ATT_A": 2,
+            "ATT_TS": 2
+          },
+          "bisa": {
+            "service_excellence": 3
+          },
+          "akhlak": {
+            "harmonis": 2
+          },
+          "codes": {
+            "customer_centricity": 3
+          }
+        },
+        "feedback": "Profesional dan fokus solusi."
+      },
+      {
+        "id": "B",
+        "label": "Jawab singkat: 'tunggu saja' tanpa empati.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 1
+          },
+          "bisa": {
+            "service_excellence": 1
+          },
+          "codes": {
+            "customer_centricity": 1
+          }
+        },
+        "feedback": "Kurang customer-centric."
+      },
+      {
+        "id": "C",
+        "label": "Balas emosi karena merasa disalahkan.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          },
+          "akhlak": {
+            "harmonis": 0
+          }
+        },
+        "feedback": "Memicu eskalasi."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Diminta manipulasi laporan jam kerja",
+    "context": "Ada yang menyuruh menaikkan jam kerja agar terlihat bagus.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_TP",
+        "ATT_A"
+      ],
+      "bisa": [
+        "integrity",
+        "bravery"
+      ],
+      "akhlak": [
+        "amanah"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tolak dengan sopan, jelaskan risiko, tawarkan solusi transparan (perbaiki planning).",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 2,
+            "ATT_TP": 2,
+            "ATT_A": 2
+          },
+          "bisa": {
+            "integrity": 3,
+            "bravery": 2
+          },
+          "akhlak": {
+            "amanah": 3
+          }
+        },
+        "feedback": "Integritas dijaga, tetap solutif."
+      },
+      {
+        "id": "B",
+        "label": "Ikuti saja sekali ini.",
+        "impact": {
+          "bisa": {
+            "integrity": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          }
+        },
+        "feedback": "Merusak amanah."
+      },
+      {
+        "id": "C",
+        "label": "Sebar ke orang lain agar mereka ikut tanggung jawab.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          }
+        },
+        "feedback": "Tidak etis."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Senior bilang 'pokoknya ikut'",
+    "context": "Kamu ragu dengan keputusan, tapi disuruh diam dan ikut.",
+    "tags": {
+      "attitude": [
+        "ATT_DA",
+        "ATT_TP",
+        "ATT_A"
+      ],
+      "codes": [
+        "open_mind",
+        "data_drivenness"
+      ],
+      "akhlak": [
+        "harmonis",
+        "kompeten"
+      ],
+      "bisa": [
+        "bravery"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tanya alasan berbasis data dengan sopan dan ajukan alternatif singkat.",
+        "impact": {
+          "attitude": {
+            "ATT_DA": 3,
+            "ATT_TP": 2,
+            "ATT_A": 2
+          },
+          "codes": {
+            "data_drivenness": 2,
+            "open_mind": 2
+          },
+          "akhlak": {
+            "kompeten": 2,
+            "harmonis": 2
+          },
+          "bisa": {
+            "bravery": 2
+          }
+        },
+        "feedback": "Kritis tapi tetap hormat."
+      },
+      {
+        "id": "B",
+        "label": "Diam ikut, tapi catat risiko untuk nanti.",
+        "impact": {
+          "attitude": {
+            "ATT_DA": 1
+          },
+          "akhlak": {
+            "kompeten": 1
+          }
+        },
+        "feedback": "Aman, kesempatan memperbaiki hilang."
+      },
+      {
+        "id": "C",
+        "label": "Membantah keras di depan umum.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          }
+        },
+        "feedback": "Cara salah, hubungan rusak."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Meeting tanpa agenda",
+    "context": "Meeting molor tanpa output.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_IA"
+      ],
+      "akhlak": [
+        "kompeten"
+      ],
+      "codes": [
+        "continuous_improvement"
+      ],
+      "bisa": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Kirim agenda & tujuan, timebox, notulen + action items.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 3,
+            "ATT_IA": 2
+          },
+          "akhlak": {
+            "kompeten": 3
+          },
+          "codes": {
+            "continuous_improvement": 2
+          }
+        },
+        "feedback": "Efisien & terukur."
+      },
+      {
+        "id": "B",
+        "label": "Ikuti saja walau tidak jelas.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 1
+          }
+        },
+        "feedback": "Waktu terbuang."
+      },
+      {
+        "id": "C",
+        "label": "Keluar diam-diam tanpa izin.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 0
+          }
+        },
+        "feedback": "Tidak profesional."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Komunikasi lintas tim tidak nyambung",
+    "context": "Tim dev dan desain salah paham terus.",
+    "tags": {
+      "attitude": [
+        "ATT_TP",
+        "ATT_ETC",
+        "ATT_DA"
+      ],
+      "akhlak": [
+        "kolaboratif"
+      ],
+      "codes": [
+        "open_mind"
+      ],
+      "bisa": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Pakai bahasa sederhana, visual, definisi istilah, confirm understanding.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 2,
+            "ATT_ETC": 3,
+            "ATT_DA": 2
+          },
+          "akhlak": {
+            "kolaboratif": 3
+          },
+          "codes": {
+            "open_mind": 2
+          }
+        },
+        "feedback": "Komunikasi jadi jelas."
+      },
+      {
+        "id": "B",
+        "label": "Biarkan, nanti juga paham sendiri.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 1
+          }
+        },
+        "feedback": "Salah paham tetap."
+      },
+      {
+        "id": "C",
+        "label": "Menyalahkan tim lain.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          }
+        },
+        "feedback": "Merusak kolaborasi."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Deadline bentrok, kualitas turun",
+    "context": "Scope terlalu besar untuk waktu yang ada.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_DA",
+        "ATT_ETC"
+      ],
+      "bisa": [
+        "agility"
+      ],
+      "codes": [
+        "agile_innovation"
+      ],
+      "akhlak": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Negosiasi scope (MVP), prioritas fitur, jaga standar kualitas minimum.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 3,
+            "ATT_DA": 2,
+            "ATT_ETC": 2
+          },
+          "bisa": {
+            "agility": 3
+          },
+          "codes": {
+            "agile_innovation": 2
+          }
+        },
+        "feedback": "Agile dan realistis."
+      },
+      {
+        "id": "B",
+        "label": "Paksakan semua fitur walau banyak bug.",
+        "impact": {
+          "bisa": {
+            "service_excellence": 0
+          }
+        },
+        "feedback": "Mutu runtuh."
+      },
+      {
+        "id": "C",
+        "label": "Menyerah tanpa komunikasi.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0
+          }
+        },
+        "feedback": "Tidak bertanggung jawab."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Pelanggan minta data pribadi orang lain",
+    "context": "User minta nomor/akun orang lain agar bisa dihubungi.",
+    "tags": {
+      "attitude": [
+        "ATT_UTW",
+        "ATT_TP",
+        "ATT_A"
+      ],
+      "akhlak": [
+        "amanah"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tolak sopan, jelaskan privasi, arahkan prosedur resmi.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 3,
+            "ATT_TP": 2,
+            "ATT_A": 2
+          },
+          "akhlak": {
+            "amanah": 3
+          },
+          "bisa": {
+            "integrity": 3
+          }
+        },
+        "feedback": "Privasi dilindungi."
+      },
+      {
+        "id": "B",
+        "label": "Berikan sedikit saja biar cepat.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          }
+        },
+        "feedback": "Tetap pelanggaran."
+      },
+      {
+        "id": "C",
+        "label": "Upload data ke grup biar ramai bantu.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          }
+        },
+        "feedback": "Sangat berbahaya."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Karyawan baru dipermalukan",
+    "context": "Ada senior mengejek junior di depan umum.",
+    "tags": {
+      "attitude": [
+        "ATT_A",
+        "ATT_TP",
+        "ATT_ETC"
+      ],
+      "akhlak": [
+        "harmonis"
+      ],
+      "bisa": [
+        "bravery"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Dukung junior, hentikan dengan sopan, ajak bicara privat/eskalasi sesuai aturan.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 3,
+            "ATT_TP": 2,
+            "ATT_ETC": 2
+          },
+          "akhlak": {
+            "harmonis": 3
+          },
+          "bisa": {
+            "bravery": 2
+          }
+        },
+        "feedback": "Melindungi martabat tanpa memperbesar konflik."
+      },
+      {
+        "id": "B",
+        "label": "Diam saja agar aman.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 1
+          }
+        },
+        "feedback": "Budaya buruk tetap."
+      },
+      {
+        "id": "C",
+        "label": "Ikut menertawakan.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 0,
+            "ATT_TP": 0
+          }
+        },
+        "feedback": "Merusak budaya hormat."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Menolak belajar tool baru",
+    "context": "Tim perlu tool baru, tapi kamu malas belajar.",
+    "tags": {
+      "attitude": [
+        "ATT_IA",
+        "ATT_TS"
+      ],
+      "akhlak": [
+        "adaptif",
+        "kompeten"
+      ],
+      "bisa": [
+        "agility"
+      ],
+      "codes": [
+        "continuous_improvement"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Buat learning plan 30 menit/hari, minta mentor, praktek mini task.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 2,
+            "ATT_TS": 2
+          },
+          "akhlak": {
+            "adaptif": 3,
+            "kompeten": 2
+          },
+          "bisa": {
+            "agility": 2
+          },
+          "codes": {
+            "continuous_improvement": 2
+          }
+        },
+        "feedback": "Adaptif dan bertumbuh."
+      },
+      {
+        "id": "B",
+        "label": "Tunggu teman yang bisa.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 1
+          }
+        },
+        "feedback": "Ketergantungan tim."
+      },
+      {
+        "id": "C",
+        "label": "Menolak total.",
+        "impact": {
+          "akhlak": {
+            "adaptif": 0
+          }
+        },
+        "feedback": "Menghambat tim."
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": "Klaim kredit kerja tim",
+    "context": "Seseorang mengaku hasil tim sebagai kerja pribadi.",
+    "tags": {
+      "attitude": [
+        "ATT_ETC",
+        "ATT_TP",
+        "ATT_A"
+      ],
+      "akhlak": [
+        "loyal",
+        "kolaboratif"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Dokumentasikan kontribusi, apresiasi adil, bicarakan sopan & tegas.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 3,
+            "ATT_TP": 2,
+            "ATT_A": 2
+          },
+          "akhlak": {
+            "kolaboratif": 3,
+            "loyal": 2
+          },
+          "bisa": {
+            "integrity": 3
+          }
+        },
+        "feedback": "Adil dan menjaga budaya tim."
+      },
+      {
+        "id": "B",
+        "label": "Biarkan saja agar tidak ribut.",
+        "impact": {
+          "akhlak": {
+            "kolaboratif": 1
+          }
+        },
+        "feedback": "Risiko berulang."
+      },
+      {
+        "id": "C",
+        "label": "Menjatuhkan orangnya di depan publik.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0
+          }
+        },
+        "feedback": "Cara salah."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "Hoaks teknologi di grup RT",
+    "context": "Ada info viral soal 'aplikasi mencuri data' tanpa sumber.",
+    "tags": {
+      "attitude": [
+        "ATT_UTW",
+        "ATT_TP",
+        "ATT_TS"
+      ],
+      "akhlak": [
+        "amanah",
+        "harmonis"
+      ],
+      "codes": [
+        "data_drivenness"
+      ],
+      "bisa": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Cek fakta, kirim sumber kredibel, jelaskan ringkas dengan bahasa sopan.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 2,
+            "ATT_TP": 2,
+            "ATT_TS": 2
+          },
+          "akhlak": {
+            "amanah": 3,
+            "harmonis": 2
+          },
+          "codes": {
+            "data_drivenness": 3
+          }
+        },
+        "feedback": "Membantu warga tanpa memicu konflik."
+      },
+      {
+        "id": "B",
+        "label": "Langsung bilang 'bodoh' yang percaya hoaks.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          },
+          "akhlak": {
+            "harmonis": 0
+          }
+        },
+        "feedback": "Benar konten, salah cara."
+      },
+      {
+        "id": "C",
+        "label": "Forward lagi biar ramai.",
+        "impact": {
+          "akhlak": {
+            "amanah": 0
+          }
+        },
+        "feedback": "Menyebar hoaks."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "UMKM minta bantuan go digital",
+    "context": "UMKM bingung bikin katalog & pembayaran.",
+    "tags": {
+      "attitude": [
+        "ATT_ETC",
+        "ATT_TP",
+        "ATT_TS"
+      ],
+      "bisa": [
+        "service_excellence"
+      ],
+      "akhlak": [
+        "kolaboratif"
+      ],
+      "codes": [
+        "customer_centricity"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tanya kebutuhan, buat langkah sederhana, ajari perlahan, dan follow-up.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 2,
+            "ATT_TP": 2,
+            "ATT_TS": 2
+          },
+          "bisa": {
+            "service_excellence": 3
+          },
+          "akhlak": {
+            "kolaboratif": 2
+          },
+          "codes": {
+            "customer_centricity": 3
+          }
+        },
+        "feedback": "Layanan berdampak dan empatik."
+      },
+      {
+        "id": "B",
+        "label": "Buatkan semuanya sendiri tanpa mengajari.",
+        "impact": {
+          "bisa": {
+            "service_excellence": 2
+          },
+          "attitude": {
+            "ATT_ETC": 1
+          }
+        },
+        "feedback": "UMKM jadi bergantung."
+      },
+      {
+        "id": "C",
+        "label": "Menolak karena bukan urusanmu.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 0
+          }
+        },
+        "feedback": "Kesempatan kontribusi hilang."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "Teman minta 'hack' akun orang",
+    "context": "Ada yang minta bantuan akses akun orang lain.",
+    "tags": {
+      "attitude": [
+        "ATT_UTW",
+        "ATT_A",
+        "ATT_TP"
+      ],
+      "akhlak": [
+        "amanah"
+      ],
+      "bisa": [
+        "integrity",
+        "bravery"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tolak tegas, edukasi etika/aturan, arahkan solusi aman (reset resmi).",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 3,
+            "ATT_TP": 2,
+            "ATT_A": 2
+          },
+          "akhlak": {
+            "amanah": 3
+          },
+          "bisa": {
+            "integrity": 3,
+            "bravery": 2
+          }
+        },
+        "feedback": "Menjaga integritas dan keselamatan digital."
+      },
+      {
+        "id": "B",
+        "label": "Bantu sedikit, asal tidak ketahuan.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          }
+        },
+        "feedback": "Tetap salah."
+      },
+      {
+        "id": "C",
+        "label": "Kasih tutorial dari internet.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          }
+        },
+        "feedback": "Mendorong tindakan tidak etis."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "Konten viral vs etika",
+    "context": "Kamu bisa viral jika posting video orang tanpa izin.",
+    "tags": {
+      "attitude": [
+        "ATT_A",
+        "ATT_TP",
+        "ATT_UTW"
+      ],
+      "akhlak": [
+        "harmonis",
+        "amanah"
+      ],
+      "bisa": [
+        "integrity"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Minta izin, blur identitas, fokus edukasi, tidak mempermalukan.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 3,
+            "ATT_TP": 2,
+            "ATT_UTW": 2
+          },
+          "akhlak": {
+            "harmonis": 2,
+            "amanah": 2
+          },
+          "bisa": {
+            "integrity": 2
+          }
+        },
+        "feedback": "Viral boleh, etika wajib."
+      },
+      {
+        "id": "B",
+        "label": "Upload dulu, minta izin belakangan.",
+        "impact": {
+          "akhlak": {
+            "amanah": 0
+          },
+          "attitude": {
+            "ATT_A": 1
+          }
+        },
+        "feedback": "Tetap pelanggaran."
+      },
+      {
+        "id": "C",
+        "label": "Upload dengan caption mengejek.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0,
+            "ATT_A": 0
+          }
+        },
+        "feedback": "Melukai orang lain."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "Bimbing adik kelas",
+    "context": "Adik kelas kesulitan belajar dan minder.",
+    "tags": {
+      "attitude": [
+        "ATT_ETC",
+        "ATT_TP",
+        "ATT_DA"
+      ],
+      "akhlak": [
+        "kolaboratif",
+        "harmonis"
+      ],
+      "bisa": [
+        "service_excellence"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tutor sebaya, feedback positif, ajari cara bertanya & belajar.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 3,
+            "ATT_TP": 2,
+            "ATT_DA": 2
+          },
+          "akhlak": {
+            "kolaboratif": 3,
+            "harmonis": 2
+          },
+          "bisa": {
+            "service_excellence": 2
+          }
+        },
+        "feedback": "Menciptakan budaya belajar aman dan kolaboratif."
+      },
+      {
+        "id": "B",
+        "label": "Kasih jawaban saja biar cepat.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 1
+          },
+          "akhlak": {
+            "kompeten": 1
+          }
+        },
+        "feedback": "Tidak membangun kemandirian."
+      },
+      {
+        "id": "C",
+        "label": "Bilangkan 'makanya belajar' tanpa membantu.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0
+          }
+        },
+        "feedback": "Menjatuhkan motivasi."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "Aplikasi layanan publik error",
+    "context": "Warga mengeluh aplikasi layanan publik sering error, kamu diminta bantu.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_UTW",
+        "ATT_TP"
+      ],
+      "akhlak": [
+        "kompeten",
+        "amanah"
+      ],
+      "bisa": [
+        "service_excellence"
+      ],
+      "codes": [
+        "data_drivenness"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Kumpulkan bukti (screenshot/log), lapor kanal resmi, jelaskan langkah workaround yang aman.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 3,
+            "ATT_UTW": 2,
+            "ATT_TP": 2
+          },
+          "akhlak": {
+            "kompeten": 2,
+            "amanah": 2
+          },
+          "bisa": {
+            "service_excellence": 2
+          },
+          "codes": {
+            "data_drivenness": 2
+          }
+        },
+        "feedback": "Membantu dengan data dan jalur resmi."
+      },
+      {
+        "id": "B",
+        "label": "Posting keluhan kasar di medsos tanpa bukti.",
+        "impact": {
+          "attitude": {
+            "ATT_TP": 0
+          },
+          "akhlak": {
+            "harmonis": 0
+          }
+        },
+        "feedback": "Benar niat, salah cara dan kurang efektif."
+      },
+      {
+        "id": "C",
+        "label": "Minta password warga untuk 'cek langsung' di akun mereka.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          }
+        },
+        "feedback": "Melanggar keamanan akun."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "Sampah elektronik sekolah/rumah",
+    "context": "Ada tumpukan e-waste (charger rusak, baterai) dibuang sembarangan.",
+    "tags": {
+      "attitude": [
+        "ATT_TS",
+        "ATT_ETC",
+        "ATT_IA"
+      ],
+      "akhlak": [
+        "loyal",
+        "kolaboratif"
+      ],
+      "bisa": [
+        "bravery"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Ajak teman buat kampanye kecil, cari drop point, edukasi cara buang aman.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 2,
+            "ATT_ETC": 2,
+            "ATT_IA": 2
+          },
+          "akhlak": {
+            "loyal": 2,
+            "kolaboratif": 2
+          },
+          "bisa": {
+            "bravery": 1
+          }
+        },
+        "feedback": "Dampak nyata untuk lingkungan."
+      },
+      {
+        "id": "B",
+        "label": "Buang di tempat sampah biasa karena praktis.",
+        "impact": {
+          "attitude": {
+            "ATT_TS": 0
+          }
+        },
+        "feedback": "Tidak menyelesaikan akar masalah."
+      },
+      {
+        "id": "C",
+        "label": "Biarkan saja, bukan urusanmu.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 0
+          }
+        },
+        "feedback": "Kesempatan kontribusi hilang."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "Diskriminasi di komunitas",
+    "context": "Di komunitas, ada yang mengejek anggota karena latar belakangnya.",
+    "tags": {
+      "attitude": [
+        "ATT_A",
+        "ATT_TP",
+        "ATT_TS"
+      ],
+      "akhlak": [
+        "harmonis"
+      ],
+      "bisa": [
+        "bravery",
+        "integrity"
+      ],
+      "codes": []
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Hentikan dengan sopan, tegaskan aturan inklusif, ajak bicara privat dan mediasi.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 3,
+            "ATT_TP": 2,
+            "ATT_TS": 2
+          },
+          "akhlak": {
+            "harmonis": 3
+          },
+          "bisa": {
+            "bravery": 2,
+            "integrity": 2
+          }
+        },
+        "feedback": "Berani membela nilai hormat dan harmonis."
+      },
+      {
+        "id": "B",
+        "label": "Diam agar tidak jadi sasaran.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 1
+          }
+        },
+        "feedback": "Budaya buruk tetap."
+      },
+      {
+        "id": "C",
+        "label": "Ikut mengejek biar dianggap lucu.",
+        "impact": {
+          "attitude": {
+            "ATT_A": 0,
+            "ATT_TP": 0
+          }
+        },
+        "feedback": "Merusak karakter dan melukai orang."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "Relawan IT untuk acara warga",
+    "context": "Panitia acara warga butuh sistem pendaftaran sederhana.",
+    "tags": {
+      "attitude": [
+        "ATT_ETC",
+        "ATT_TS",
+        "ATT_DA"
+      ],
+      "akhlak": [
+        "kolaboratif",
+        "kompeten"
+      ],
+      "bisa": [
+        "service_excellence",
+        "agility"
+      ],
+      "codes": [
+        "agile_innovation"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Tanya kebutuhan, buat MVP form+sheet, uji coba kecil, ajari panitia cara pakai.",
+        "impact": {
+          "attitude": {
+            "ATT_ETC": 2,
+            "ATT_TS": 3,
+            "ATT_DA": 2
+          },
+          "akhlak": {
+            "kolaboratif": 2,
+            "kompeten": 2
+          },
+          "bisa": {
+            "service_excellence": 2,
+            "agility": 2
+          },
+          "codes": {
+            "agile_innovation": 2
+          }
+        },
+        "feedback": "Cepat, tepat guna, dan memberdayakan."
+      },
+      {
+        "id": "B",
+        "label": "Bikin sistem rumit dulu baru minta panitia ikut.",
+        "impact": {
+          "codes": {
+            "agile_innovation": 0
+          },
+          "attitude": {
+            "ATT_TS": 1
+          }
+        },
+        "feedback": "Tidak sesuai kebutuhan dan menghambat."
+      },
+      {
+        "id": "C",
+        "label": "Menolak karena takut repot.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 0
+          }
+        },
+        "feedback": "Kesempatan belajar berdampak hilang."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": "Open-source lokal: kontribusi kecil konsisten",
+    "context": "Ada proyek open-source lokal, kamu ingin ikut tapi takut tidak jago.",
+    "tags": {
+      "attitude": [
+        "ATT_DA",
+        "ATT_IA",
+        "ATT_ETC"
+      ],
+      "akhlak": [
+        "kompeten",
+        "kolaboratif"
+      ],
+      "bisa": [
+        "bravery",
+        "agility"
+      ],
+      "codes": [
+        "continuous_improvement",
+        "open_mind"
+      ]
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Mulai dari issue kecil (docs/bug minor), tanya sopan di forum, ikut review dan belajar iteratif.",
+        "impact": {
+          "attitude": {
+            "ATT_DA": 2,
+            "ATT_IA": 2,
+            "ATT_ETC": 2
+          },
+          "akhlak": {
+            "kompeten": 2,
+            "kolaboratif": 2
+          },
+          "bisa": {
+            "bravery": 1,
+            "agility": 1
+          },
+          "codes": {
+            "continuous_improvement": 2,
+            "open_mind": 2
+          }
+        },
+        "feedback": "Belajar nyata, kontribusi bertahap."
+      },
+      {
+        "id": "B",
+        "label": "Menunggu sampai merasa sempurna baru mulai.",
+        "impact": {
+          "attitude": {
+            "ATT_IA": 1
+          }
+        },
+        "feedback": "Seringnya tidak mulai-mulai."
+      },
+      {
+        "id": "C",
+        "label": "Copy-paste kontribusi orang tanpa paham.",
+        "impact": {
+          "attitude": {
+            "ATT_UTW": 0
+          },
+          "akhlak": {
+            "amanah": 0
+          }
+        },
+        "feedback": "Tidak amanah dan merusak reputasi."
+      }
+    ]
+  }
+]

@@ -5,10 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "seed:scenarios": "node scripts/seed-scenarios.mjs",
+    "seed:attitude": "echo \"Run seeds/seed_attitude_values.sql in Supabase SQL Editor\""
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.95.3",
     "next": "16.1.6",
+    "next-auth": "^4.24.13",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
