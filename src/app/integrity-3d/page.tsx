@@ -4,13 +4,22 @@ import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import Link from "next/link";
 
-const ATTITUDE_SEQUENCE = "ATTITUDE".split("");
-const ATTITUDE_COLORS = [0xe11d48, 0xbe123c, 0x9f1239, 0x2563eb, 0x059669, 0xd97706, 0x7c3aed, 0x0891b2];
+const ATTITUDE_VALUES = [
+    { letter: "A", title: "Act Respectfully", desc: "Menjaga adab kepada guru dan saling menghargai sesama teman.", color: 0xe11d48 },
+    { letter: "T", title: "Talk Politely", desc: "Bertutur kata santun, positif, dan menghindari ucapan kasar.", color: 0xbe123c },
+    { letter: "T", title: "Turn Off Distractions", desc: "Fokus penuh pada materi, tidak terdistraksi hal lain.", color: 0x9f1239 },
+    { letter: "I", title: "Involve Actively", desc: "Hadir sepenuhnya dan aktif berpartisipasi dalam diskusi.", color: 0x2563eb },
+    { letter: "T", title: "Think Solutions", desc: "Berorientasi pada penyelesaian masalah, bukan mengeluh.", color: 0x059669 },
+    { letter: "U", title: "Use Tech Wisely", desc: "Memanfaatkan teknologi & AI sebagai alat bantu belajar.", color: 0xd97706 },
+    { letter: "D", title: "Dare to Ask", desc: "Membangun rasa ingin tahu dan tidak malu bertanya.", color: 0x7c3aed },
+    { letter: "E", title: "Eager to Collaborate", desc: "Terbuka untuk bekerja sama dan berbagi ilmu.", color: 0x0891b2 },
+];
 
 export default function Integrity3DGame() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [score, setScore] = useState(0);
     const [gameState, setGameState] = useState<"IDLE" | "PLAYING" | "GAMEOVER">("IDLE");
+    const [activeValue, setActiveValue] = useState<any>(null);
 
     useEffect(() => {
         if (!containerRef.current || gameState !== "PLAYING") return;
@@ -79,7 +88,6 @@ export default function Integrity3DGame() {
                 const texture = createTextTexture(label, color);
                 const faceMat = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.3, metalness: 0.2 });
                 const plainMat = new THREE.MeshStandardMaterial({ color, roughness: 0.3, metalness: 0.2 });
-                // Array of materials: [x+, x-, y+, y-, z+, z-]
                 material = [faceMat, faceMat, plainMat, plainMat, faceMat, faceMat];
             } else {
                 material = new THREE.MeshStandardMaterial({ color, roughness: 0.3, metalness: 0.2 });
@@ -99,19 +107,18 @@ export default function Integrity3DGame() {
         // Moving Box
         let currentBox: THREE.Mesh | null = null;
         let direction = 1;
-        let speed = 0.04; // Slightly slower base speed
+        let speed = 0.04;
         let axis: "x" | "z" = "x";
 
         const spawnBox = () => {
-            const letterIdx = stack.length % ATTITUDE_SEQUENCE.length;
-            const letter = ATTITUDE_SEQUENCE[letterIdx];
-            const color = ATTITUDE_COLORS[letterIdx];
+            const valueIdx = stack.length % ATTITUDE_VALUES.length;
+            const value = ATTITUDE_VALUES[valueIdx];
 
             const y = (stack.length * boxHeight) + (boxHeight / 2);
-            currentBox = createBox(y, color, letter);
+            currentBox = createBox(y, value.color, value.letter);
             currentBox.position[axis] = -5;
 
-            // Camera follow
+            // Adjust camera
             if (stack.length > 5) {
                 camera.position.y += boxHeight;
                 camera.lookAt(0, stack.length * boxHeight / 2, 0);
@@ -125,8 +132,6 @@ export default function Integrity3DGame() {
 
             const lastBox = stack[stack.length - 1];
             const diff = currentBox.position[axis] - lastBox.position[axis];
-
-            // "Lebih tidak presisi": Tolerance increased to 110% of width
             const limit = baseWidth * 1.1;
 
             if (Math.abs(diff) >= limit) {
@@ -135,11 +140,14 @@ export default function Integrity3DGame() {
             }
 
             // Successfully stacked
+            const valueIdx = (stack.length) % ATTITUDE_VALUES.length;
+            setActiveValue(ATTITUDE_VALUES[valueIdx]);
+
             stack.push(currentBox);
             setScore(prev => prev + 10);
 
             axis = axis === "x" ? "z" : "x";
-            speed += 0.003; // Slower speed increase
+            speed += 0.003;
             spawnBox();
         };
 
@@ -176,7 +184,7 @@ export default function Integrity3DGame() {
     }, [gameState]);
 
     return (
-        <div style={{ position: "relative", width: "100vw", height: "100vh", overflow: "hidden", background: "#f0f2f5" }}>
+        <div style={{ position: "relative", width: "100vw", height: "100vh", overflow: "hidden", background: "#f0f2f5", fontFamily: "Inter, sans-serif" }}>
             {/* UI Layer */}
             <div style={{ position: "absolute", top: 24, left: 24, zIndex: 10 }}>
                 <Link href="/" style={{ background: "white", padding: "10px 20px", borderRadius: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)", textDecoration: "none", color: "#1a1a2e" }}>
@@ -189,12 +197,51 @@ export default function Integrity3DGame() {
                 <div style={{ fontSize: 32, fontWeight: 900, color: "#1a1a2e" }}>{score}</div>
             </div>
 
+            {/* Value Description Popup */}
+            {activeValue && gameState === "PLAYING" && (
+                <div
+                    key={score} // Forces re-animation on new score
+                    style={{
+                        position: "absolute",
+                        bottom: 120,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        zIndex: 20,
+                        background: "white",
+                        padding: "20px 32px",
+                        borderRadius: 24,
+                        boxShadow: "0 20px 40px -10px rgba(0,0,0,0.1)",
+                        maxWidth: 400,
+                        textAlign: "center",
+                        borderBottom: `6px solid #${activeValue.color.toString(16).padStart(6, '0')}`,
+                        animation: "slideUp 0.5s ease-out"
+                    }}
+                >
+                    <div style={{ fontSize: 40, fontWeight: 900, color: `#${activeValue.color.toString(16).padStart(6, '0')}`, marginBottom: 4 }}>
+                        {activeValue.letter}
+                    </div>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: "#1a1a2e", marginBottom: 8 }}>
+                        {activeValue.title}
+                    </div>
+                    <p style={{ fontSize: 14, color: "#64748b", fontWeight: 500, lineHeight: 1.5, margin: 0 }}>
+                        {activeValue.desc}
+                    </p>
+                </div>
+            )}
+
+            <style>{`
+                @keyframes slideUp {
+                    from { opacity: 0; transform: translate(-50%, 20px); }
+                    to { opacity: 1; transform: translate(-50%, 0); }
+                }
+            `}</style>
+
             {/* Game States */}
             {gameState === "IDLE" && (
-                <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 20, background: "rgba(255,255,255,0.8)", backdropFilter: "blur(10px)" }}>
+                <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 30, background: "rgba(255,255,255,0.8)", backdropFilter: "blur(10px)" }}>
                     <div style={{ fontSize: 48, fontWeight: 900, color: "#e11d48", marginBottom: 12 }}>ATTITUDE TOWER</div>
                     <p style={{ fontSize: 16, color: "#64748b", maxWidth: 400, textAlign: "center", marginBottom: 32, fontWeight: 500 }}>
-                        Susun blok A-T-T-I-T-U-D-E setinggi mungkin. Klik di waktu yang pas!
+                        Tumpuk nilai budaya Moklet setinggi mungkin. Temukan pesan di balik setiap huruf!
                     </p>
                     <button
                         onClick={() => setGameState("PLAYING")}
@@ -206,8 +253,8 @@ export default function Integrity3DGame() {
             )}
 
             {gameState === "GAMEOVER" && (
-                <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 20, background: "rgba(0,0,0,0.7)", color: "white", backdropFilter: "blur(5px)" }}>
-                    <div style={{ fontSize: 64, fontWeight: 900, marginBottom: 8 }}>BOOOM! 💥</div>
+                <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 30, background: "rgba(0,0,0,0.7)", color: "white", backdropFilter: "blur(5px)" }}>
+                    <div style={{ fontSize: 64, fontWeight: 900, marginBottom: 8 }}>MENARA RUNTUH! 💥</div>
                     <p style={{ fontSize: 20, opacity: 0.8, marginBottom: 32 }}>Karaktermu butuh lebih banyak konsistensi.</p>
                     <div style={{ background: "rgba(255,255,255,0.1)", padding: "24px 48px", borderRadius: 24, textAlign: "center", marginBottom: 40, border: "1px solid rgba(255,255,255,0.2)" }}>
                         <div style={{ fontSize: 14, fontWeight: 700, textTransform: "uppercase" }}>Skor Karakter</div>
@@ -215,7 +262,7 @@ export default function Integrity3DGame() {
                     </div>
                     <div style={{ display: "flex", gap: 16 }}>
                         <button
-                            onClick={() => { setScore(0); setGameState("PLAYING"); }}
+                            onClick={() => { setScore(0); setGameState("PLAYING"); setActiveValue(null); }}
                             style={{ background: "white", color: "#e11d48", border: "none", padding: "18px 32px", borderRadius: 16, fontSize: 16, fontWeight: 800, cursor: "pointer" }}
                         >
                             Coba Lagi
@@ -233,7 +280,7 @@ export default function Integrity3DGame() {
             {gameState === "PLAYING" && (
                 <div style={{ position: "absolute", bottom: 40, width: "100%", textAlign: "center", zIndex: 10, pointerEvents: "none" }}>
                     <div style={{ display: "inline-block", background: "rgba(26,26,46,0.8)", color: "white", padding: "12px 24px", borderRadius: 99, fontSize: 14, fontWeight: 700, backdropFilter: "blur(4px)" }}>
-                        Tap untuk menumpuk! 🖱️
+                        Tap untuk menumpuk nilai ATTITUDE! 🖱️
                     </div>
                 </div>
             )}
