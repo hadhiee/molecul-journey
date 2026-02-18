@@ -52,7 +52,7 @@ export default function TetrisPage() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [popup, setPopup] = useState<{ text: string, id: number } | null>(null);
 
-    const requestRef = useRef<number>();
+    const requestRef = useRef<number>(0);
     const lastTimeRef = useRef<number>(0);
     const dropCounterRef = useRef<number>(0);
     const dropIntervalRef = useRef<number>(1000); // ms
