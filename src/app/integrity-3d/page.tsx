@@ -4,21 +4,12 @@ import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import Link from "next/link";
 
-const ATTITUDE_VALUES = [
-    { text: "Act Respectfully", color: 0xe11d48 },
-    { text: "Talk Politely", color: 0xbe123c },
-    { text: "Turn Off Distractions", color: 0x9f1239 },
-    { text: "Involve Actively", color: 0x2563eb },
-    { text: "Think Solutions", color: 0x059669 },
-    { text: "Use Tech Wisely", color: 0xd97706 },
-    { text: "Dare to Ask", color: 0x7c3aed },
-    { text: "Eager to Collaborate", color: 0x0891b2 },
-];
+const ATTITUDE_SEQUENCE = "ATTITUDE".split("");
+const ATTITUDE_COLORS = [0xe11d48, 0xbe123c, 0x9f1239, 0x2563eb, 0x059669, 0xd97706, 0x7c3aed, 0x0891b2];
 
 export default function Integrity3DGame() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [score, setScore] = useState(0);
-    const [gameOver, setGameOver] = useState(false);
     const [gameState, setGameState] = useState<"IDLE" | "PLAYING" | "GAMEOVER">("IDLE");
 
     useEffect(() => {
@@ -59,10 +50,42 @@ export default function Integrity3DGame() {
         const baseWidth = 3;
         const boxHeight = 0.5;
 
-        const createBox = (y: number, color: number) => {
+        const createTextTexture = (text: string, bgColor: number) => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return null;
+
+            // Background
+            ctx.fillStyle = `#${bgColor.toString(16).padStart(6, '0')}`;
+            ctx.fillRect(0, 0, 256, 256);
+
+            // Text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 160px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, 128, 128);
+
+            return new THREE.CanvasTexture(canvas);
+        };
+
+        const createBox = (y: number, color: number, label: string = "") => {
             const geo = new THREE.BoxGeometry(baseWidth, boxHeight, baseWidth);
-            const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.3, metalness: 0.2 });
-            const mesh = new THREE.Mesh(geo, mat);
+
+            let material;
+            if (label) {
+                const texture = createTextTexture(label, color);
+                const faceMat = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.3, metalness: 0.2 });
+                const plainMat = new THREE.MeshStandardMaterial({ color, roughness: 0.3, metalness: 0.2 });
+                // Array of materials: [x+, x-, y+, y-, z+, z-]
+                material = [faceMat, faceMat, plainMat, plainMat, faceMat, faceMat];
+            } else {
+                material = new THREE.MeshStandardMaterial({ color, roughness: 0.3, metalness: 0.2 });
+            }
+
+            const mesh = new THREE.Mesh(geo, material);
             mesh.position.y = y;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
@@ -76,16 +99,19 @@ export default function Integrity3DGame() {
         // Moving Box
         let currentBox: THREE.Mesh | null = null;
         let direction = 1;
-        let speed = 0.05;
+        let speed = 0.04; // Slightly slower base speed
         let axis: "x" | "z" = "x";
 
         const spawnBox = () => {
-            const attitude = ATTITUDE_VALUES[Math.floor(Math.random() * ATTITUDE_VALUES.length)];
-            const y = (stack.length * boxHeight) + (boxHeight / 2);
-            currentBox = createBox(y, attitude.color);
-            currentBox.position[axis] = -5; // Start off-screen
+            const letterIdx = stack.length % ATTITUDE_SEQUENCE.length;
+            const letter = ATTITUDE_SEQUENCE[letterIdx];
+            const color = ATTITUDE_COLORS[letterIdx];
 
-            // Adjust camera
+            const y = (stack.length * boxHeight) + (boxHeight / 2);
+            currentBox = createBox(y, color, letter);
+            currentBox.position[axis] = -5;
+
+            // Camera follow
             if (stack.length > 5) {
                 camera.position.y += boxHeight;
                 camera.lookAt(0, stack.length * boxHeight / 2, 0);
@@ -99,10 +125,11 @@ export default function Integrity3DGame() {
 
             const lastBox = stack[stack.length - 1];
             const diff = currentBox.position[axis] - lastBox.position[axis];
-            const limit = baseWidth;
+
+            // "Lebih tidak presisi": Tolerance increased to 110% of width
+            const limit = baseWidth * 1.1;
 
             if (Math.abs(diff) >= limit) {
-                // Game Over
                 setGameState("GAMEOVER");
                 return;
             }
@@ -111,9 +138,8 @@ export default function Integrity3DGame() {
             stack.push(currentBox);
             setScore(prev => prev + 10);
 
-            // Switch axis for next box
             axis = axis === "x" ? "z" : "x";
-            speed += 0.005; // Slightly faster
+            speed += 0.003; // Slower speed increase
             spawnBox();
         };
 
@@ -124,7 +150,6 @@ export default function Integrity3DGame() {
         window.addEventListener("mousedown", handleClick);
         window.addEventListener("touchstart", handleClick);
 
-        // Animation Loop
         let animationId: number;
         const animate = () => {
             if (currentBox) {
@@ -139,7 +164,6 @@ export default function Integrity3DGame() {
         };
         animate();
 
-        // Cleanup
         return () => {
             window.removeEventListener("mousedown", handleClick);
             window.removeEventListener("touchstart", handleClick);
@@ -155,7 +179,7 @@ export default function Integrity3DGame() {
         <div style={{ position: "relative", width: "100vw", height: "100vh", overflow: "hidden", background: "#f0f2f5" }}>
             {/* UI Layer */}
             <div style={{ position: "absolute", top: 24, left: 24, zIndex: 10 }}>
-                <Link href="/" style={{ background: "white", padding: "10px 20px", borderRadius: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+                <Link href="/" style={{ background: "white", padding: "10px 20px", borderRadius: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)", textDecoration: "none", color: "#1a1a2e" }}>
                     ← Keluar
                 </Link>
             </div>
@@ -168,22 +192,22 @@ export default function Integrity3DGame() {
             {/* Game States */}
             {gameState === "IDLE" && (
                 <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 20, background: "rgba(255,255,255,0.8)", backdropFilter: "blur(10px)" }}>
-                    <div style={{ fontSize: 48, fontWeight: 900, color: "#e11d48", marginBottom: 12 }}>3D INTEGRITY TOWER</div>
+                    <div style={{ fontSize: 48, fontWeight: 900, color: "#e11d48", marginBottom: 12 }}>ATTITUDE TOWER</div>
                     <p style={{ fontSize: 16, color: "#64748b", maxWidth: 400, textAlign: "center", marginBottom: 32, fontWeight: 500 }}>
-                        Bangun karaktermu setinggi mungkin. Klik untuk menaruh blok ATTITUDE tepat di atas blok sebelumnya!
+                        Susun blok A-T-T-I-T-U-D-E setinggi mungkin. Klik di waktu yang pas!
                     </p>
                     <button
                         onClick={() => setGameState("PLAYING")}
                         style={{ background: "#e11d48", color: "white", border: "none", padding: "18px 48px", borderRadius: 20, fontSize: 18, fontWeight: 800, cursor: "pointer", boxShadow: "0 12px 24px -6px rgba(225,29,72,0.4)" }}
                     >
-                        Mulai Bangun Karakter 🚀
+                        Mulai Tumpuk 🚀
                     </button>
                 </div>
             )}
 
             {gameState === "GAMEOVER" && (
                 <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 20, background: "rgba(0,0,0,0.7)", color: "white", backdropFilter: "blur(5px)" }}>
-                    <div style={{ fontSize: 64, fontWeight: 900, marginBottom: 8 }}>MENARA RUNTUH! 💥</div>
+                    <div style={{ fontSize: 64, fontWeight: 900, marginBottom: 8 }}>BOOOM! 💥</div>
                     <p style={{ fontSize: 20, opacity: 0.8, marginBottom: 32 }}>Karaktermu butuh lebih banyak konsistensi.</p>
                     <div style={{ background: "rgba(255,255,255,0.1)", padding: "24px 48px", borderRadius: 24, textAlign: "center", marginBottom: 40, border: "1px solid rgba(255,255,255,0.2)" }}>
                         <div style={{ fontSize: 14, fontWeight: 700, textTransform: "uppercase" }}>Skor Karakter</div>
@@ -209,7 +233,7 @@ export default function Integrity3DGame() {
             {gameState === "PLAYING" && (
                 <div style={{ position: "absolute", bottom: 40, width: "100%", textAlign: "center", zIndex: 10, pointerEvents: "none" }}>
                     <div style={{ display: "inline-block", background: "rgba(26,26,46,0.8)", color: "white", padding: "12px 24px", borderRadius: 99, fontSize: 14, fontWeight: 700, backdropFilter: "blur(4px)" }}>
-                        Klik di mana saja untuk menaruh blok! 🖱️
+                        Tap untuk menumpuk! 🖱️
                     </div>
                 </div>
             )}
