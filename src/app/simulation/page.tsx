@@ -159,10 +159,29 @@ const ScenarioVisuals = ({ scenario, emotion }: { scenario: Scenario; emotion: "
 
         // Body
         ctx.fillStyle = shirtColor;
+        if (emotion === "neutral" || emotion === "thinking") ctx.fillStyle = "#1e1b4b"; // Moklet Navy Blazer
+
         ctx.beginPath();
         ctx.moveTo(currentCx - 60, cy);
         ctx.quadraticCurveTo(currentCx - 50, cy - 100 + breath, currentCx, cy - 110 + breath);
         ctx.quadraticCurveTo(currentCx + 50, cy - 100 + breath, currentCx + 60, cy);
+        ctx.fill();
+
+        // White Shirt & Red Tie (Uniform details)
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.moveTo(currentCx - 15, cy - 110 + breath);
+        ctx.lineTo(currentCx + 15, cy - 110 + breath);
+        ctx.lineTo(currentCx, cy - 80 + breath);
+        ctx.fill();
+
+        ctx.fillStyle = "#e11d48"; // Moklet Red Tie
+        ctx.beginPath();
+        ctx.moveTo(currentCx - 4, cy - 110 + breath);
+        ctx.lineTo(currentCx + 4, cy - 110 + breath);
+        ctx.lineTo(currentCx + 4, cy - 95 + breath);
+        ctx.lineTo(currentCx, cy - 88 + breath);
+        ctx.lineTo(currentCx - 4, cy - 95 + breath);
         ctx.fill();
 
         // Head
@@ -217,12 +236,22 @@ const ScenarioVisuals = ({ scenario, emotion }: { scenario: Scenario; emotion: "
 
     useEffect(() => {
         let animationId: number;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d")!;
+
+        const dpr = window.devicePixelRatio || 1;
+        const w = 400;
+        const h = 260;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+        ctx.scale(dpr, dpr);
+
         const animate = () => {
             frameRef.current++;
-            const canvas = canvasRef.current;
-            if (canvas) {
-                drawScene(canvas.getContext("2d")!, canvas.width, canvas.height, frameRef.current);
-            }
+            drawScene(ctx, w, h, frameRef.current);
             animationId = requestAnimationFrame(animate);
         };
         animate();

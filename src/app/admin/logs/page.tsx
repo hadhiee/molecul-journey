@@ -146,10 +146,22 @@ export default function AdminLogs() {
                                     <div key={i} style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div style={{ flex: 1 }}>
                                             <div style={{ fontWeight: 800, fontSize: 14 }}>{log.user_email?.split('@')[0]}</div>
-                                            <div style={{ fontSize: 11, color: '#3b82f6', fontWeight: 700 }}>Action: {log.mission_id}</div>
+                                            <div style={{
+                                                fontSize: 11, color:
+                                                    log.mission_id === 'SYSTEM_REFLECTION' ? '#fb7185' :
+                                                        log.mission_id === 'SYSTEM_EVIDENCE' ? '#38bdf8' :
+                                                            log.mission_id === 'SYSTEM_CHECKIN' ? '#c084fc' : '#3b82f6',
+                                                fontWeight: 700
+                                            }}>
+                                                {log.mission_id === 'SYSTEM_REFLECTION' ? '📝 REFLEKSI' :
+                                                    log.mission_id === 'SYSTEM_EVIDENCE' ? '📂 PORTOFOLIO' :
+                                                        log.mission_id === 'SYSTEM_CHECKIN' ? '🗓️ CHECK-IN' : `🎯 MISI: ${log.mission_id}`}
+                                            </div>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
-                                            <div style={{ fontSize: 12, fontWeight: 900, color: '#fff' }}>{log.score > 0 ? `+${log.score} XP` : 'Participated'}</div>
+                                            <div style={{ fontSize: 12, fontWeight: 900, color: '#fff' }}>
+                                                {log.mission_id.startsWith('SYSTEM_') ? 'PRIVATE' : (log.score > 0 ? `+${log.score} XP` : 'Done')}
+                                            </div>
                                             <div style={{ fontSize: 10, color: '#475569' }}>{new Date(log.created_at).toLocaleString('id-ID')}</div>
                                         </div>
                                     </div>

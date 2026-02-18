@@ -189,9 +189,17 @@ export default function MokletRunner() {
         const resizeCanvas = () => {
             const parent = canvas.parentElement;
             if (parent) {
-                canvas.width = Math.min(parent.clientWidth, 600);
-                canvas.height = Math.min(window.innerHeight - 200, 400);
-                gameRef.current.groundY = canvas.height * GROUND_Y;
+                const dpr = window.devicePixelRatio || 1;
+                const displayW = Math.min(parent.clientWidth, 600);
+                const displayH = Math.min(window.innerHeight - 200, 400);
+
+                canvas.width = displayW * dpr;
+                canvas.height = displayH * dpr;
+                canvas.style.width = `${displayW}px`;
+                canvas.style.height = `${displayH}px`;
+
+                ctx.scale(dpr, dpr);
+                gameRef.current.groundY = displayH * GROUND_Y;
             }
         };
         resizeCanvas();
@@ -700,26 +708,35 @@ export default function MokletRunner() {
                         </p>
 
                         {/* Avatar Selector */}
-                        <div style={{ fontSize: 9, fontWeight: 800, color: '#64748b', textTransform: 'uppercase' as const, letterSpacing: '0.15em', marginBottom: 8 }}>
-                            Pilih Avatar
+                        <div style={{ fontSize: 10, fontWeight: 800, color: '#64748b', textTransform: 'uppercase' as const, letterSpacing: '0.15em', marginBottom: 12 }}>
+                            Pilih Avatar Siswa
                         </div>
-                        <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' as const, justifyContent: 'center' }}>
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(3, 1fr)',
+                            gap: 12,
+                            marginBottom: 24,
+                            width: '100%',
+                            maxWidth: 320
+                        }}>
                             {AVATARS.map((av, i) => (
                                 <div
                                     key={av.id}
                                     onClick={(e) => { e.stopPropagation(); setSelectedAvatar(i); }}
                                     style={{
-                                        width: 48, height: 56, borderRadius: 12,
+                                        aspectRatio: '1/1.2',
+                                        borderRadius: 20,
                                         background: selectedAvatar === i ? `${av.body}33` : 'rgba(255,255,255,0.04)',
                                         border: selectedAvatar === i ? `2px solid ${av.body}` : '1px solid rgba(255,255,255,0.08)',
                                         display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center',
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s',
-                                        boxShadow: selectedAvatar === i ? `0 0 16px ${av.glow}44` : 'none',
+                                        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                                        transform: selectedAvatar === i ? 'scale(1.05)' : 'scale(1)',
+                                        boxShadow: selectedAvatar === i ? `0 10px 20px -5px ${av.glow}44` : 'none',
                                     }}
                                 >
-                                    <span style={{ fontSize: 18 }}>{av.emoji}</span>
-                                    <span style={{ fontSize: 7, fontWeight: 800, color: selectedAvatar === i ? av.body : '#64748b', marginTop: 2 }}>{av.name}</span>
+                                    <span style={{ fontSize: 24, marginBottom: 4 }}>{av.emoji}</span>
+                                    <span style={{ fontSize: 9, fontWeight: 900, color: selectedAvatar === i ? (av.id === 'moklet' ? 'white' : av.body) : '#64748b', textAlign: 'center' }}>{av.name}</span>
                                 </div>
                             ))}
                         </div>
