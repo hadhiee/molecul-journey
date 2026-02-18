@@ -58,6 +58,47 @@ function Glove({ position, isPunching, side }: { position: [number, number, numb
     );
 }
 
+// --- 3D Environment ---
+
+function BoxingRing() {
+    return (
+        <group position={[0, -2.5, -2]}>
+            {/* Floor Canvas */}
+            <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[20, 20]} />
+                <meshStandardMaterial color="#334155" roughness={0.8} />
+            </mesh>
+            {/* Ring Platform */}
+            <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+                <planeGeometry args={[12, 12]} />
+                <meshStandardMaterial color="#475569" roughness={0.5} />
+            </mesh>
+            {/* Inner Ring (Blue Canvas) */}
+            <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+                <planeGeometry args={[10, 10]} />
+                <meshStandardMaterial color="#1e293b" roughness={0.6} />
+            </mesh>
+
+            {/* Posts */}
+            <mesh position={[-5, 2, -5]} castShadow><cylinderGeometry args={[0.2, 0.2, 4]} /><meshStandardMaterial color="#ef4444" /></mesh>
+            <mesh position={[5, 2, -5]} castShadow><cylinderGeometry args={[0.2, 0.2, 4]} /><meshStandardMaterial color="#3b82f6" /></mesh>
+            <mesh position={[-5, 2, 5]} castShadow><cylinderGeometry args={[0.2, 0.2, 4]} /><meshStandardMaterial color="#3b82f6" /></mesh>
+            <mesh position={[5, 2, 5]} castShadow><cylinderGeometry args={[0.2, 0.2, 4]} /><meshStandardMaterial color="#ef4444" /></mesh>
+
+            {/* Ropes */}
+            {[1.2, 2.4, 3.6].map((y, i) => (
+                <group key={i} position={[0, y - 1, 0]}>
+                    {/* Horizontal Ropes */}
+                    <mesh position={[0, 0, -5]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.04, 0.04, 10]} /><meshStandardMaterial color="white" /></mesh>
+                    <mesh position={[0, 0, 5]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.04, 0.04, 10]} /><meshStandardMaterial color="white" /></mesh>
+                    <mesh position={[-5, 0, 0]} rotation={[Math.PI / 2, 0, 0]}><cylinderGeometry args={[0.04, 0.04, 10]} /><meshStandardMaterial color="white" /></mesh>
+                    <mesh position={[5, 0, 0]} rotation={[Math.PI / 2, 0, 0]}><cylinderGeometry args={[0.04, 0.04, 10]} /><meshStandardMaterial color="white" /></mesh>
+                </group>
+            ))}
+        </group>
+    );
+}
+
 function Enemy({ isHit, color }: { isHit: boolean, color: number }) {
     const ref = useRef<THREE.Group>(null!);
 
@@ -114,16 +155,22 @@ function ArenaScene({
 
     return (
         <>
-            <ambientLight intensity={0.5} />
+            <ambientLight intensity={0.4} />
+            <spotLight position={[0, 10, 5]} angle={0.5} penumbra={1} intensity={2} castShadow />
+            <pointLight position={[0, 5, 0]} intensity={1.5} color="#e2e8f0" />
 
-            {/* Background */}
+            {/* Distant Stadium Background */}
             <Image
                 url={BG_URL}
-                scale={[20, 12]}
-                position={[0, 0, -10]}
+                scale={[40, 20]}
+                position={[0, 5, -15]}
+                transparent
+                opacity={0.5}
+                color="#222"
                 toneMapped={false}
-                color="#888" // Dim background slightly
             />
+
+            <BoxingRing />
 
             <Sparkles count={50} scale={10} size={4} speed={0.4} opacity={0.5} color="#fff" />
 
@@ -134,7 +181,7 @@ function ArenaScene({
             <Glove position={[-1.2, -1.5, 0]} isPunching={isLeftPunching} side="left" />
             <Glove position={[1.2, -1.5, 0]} isPunching={isRightPunching} side="right" />
 
-            <fog attach="fog" args={['#000', 5, 20]} />
+            <fog attach="fog" args={['#0a0a0f', 2, 18]} />
         </>
     );
 }
