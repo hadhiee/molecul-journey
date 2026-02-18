@@ -14,6 +14,13 @@ const ATTITUDE_VALUES = [
     { letter: "E", title: "Eager to Collaborate", desc: "Terbuka untuk bekerja sama dan berbagi ilmu.", color: "#0891b2" },
 ];
 
+interface HistoryItem {
+    id: string;
+    content: string;
+    timestamp: string;
+    type: string;
+}
+
 const Modal = ({ title, children, onClose }: { title: string, children: React.ReactNode, onClose: () => void }) => (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
         <div
@@ -21,8 +28,9 @@ const Modal = ({ title, children, onClose }: { title: string, children: React.Re
             style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(8px)' }}
         />
         <div style={{
-            position: 'relative', background: 'white', borderRadius: 28, width: '100%', maxWidth: 440,
-            padding: 32, boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', animation: 'modalIn 0.3s ease-out'
+            position: 'relative', background: 'white', borderRadius: 28, width: '100%', maxWidth: 480,
+            padding: 32, boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', animation: 'modalIn 0.3s ease-out',
+            maxHeight: '90vh', overflowY: 'auto'
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                 <h3 style={{ fontSize: 20, fontWeight: 800, color: '#1a1a2e' }}>{title}</h3>
@@ -40,7 +48,10 @@ export default function HomeActivityPanel() {
     const [uploadStatus, setUploadStatus] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
 
-    // Get value of the day - calculated after mount to avoid hydration mismatch
+    // History states
+    const [reflectionsHistory, setReflectionsHistory] = useState<HistoryItem[]>([]);
+    const [evidenceHistory, setEvidenceHistory] = useState<HistoryItem[]>([]);
+
     const [dayValue, setDayValue] = useState(ATTITUDE_VALUES[0]);
 
     useEffect(() => {
@@ -48,19 +59,38 @@ export default function HomeActivityPanel() {
         const date = new Date().getDate();
         setDayValue(ATTITUDE_VALUES[date % ATTITUDE_VALUES.length]);
 
-        const saved = localStorage.getItem("user_reflection_daily");
-        if (saved) setReflection(saved);
+        // Load history from localStorage
+        const savedReflections = localStorage.getItem("user_reflections_history");
+        if (savedReflections) setReflectionsHistory(JSON.parse(savedReflections));
+
+        const savedEvidence = localStorage.getItem("user_evidence_history");
+        if (savedEvidence) setEvidenceHistory(JSON.parse(savedEvidence));
+
+        // Load today's draft
+        const draft = localStorage.getItem("user_reflection_draft");
+        if (draft) setReflection(draft);
     }, []);
 
     const handleSaveReflection = () => {
+        if (!reflection.trim()) return;
         setIsSaving(true);
+
         setTimeout(() => {
-            if (typeof window !== "undefined") {
-                localStorage.setItem("user_reflection_daily", reflection);
-            }
+            const newItem: HistoryItem = {
+                id: Date.now().toString(),
+                content: reflection,
+                timestamp: new Date().toISOString(),
+                type: 'reflection'
+            };
+
+            const newHistory = [newItem, ...reflectionsHistory];
+            setReflectionsHistory(newHistory);
+            localStorage.setItem("user_reflections_history", JSON.stringify(newHistory));
+            localStorage.removeItem("user_reflection_draft");
+            setReflection("");
+
             setIsSaving(false);
-            alert("Refleksi berhasil disimpan! ✨");
-            setActiveModal(null);
+            alert("Refleksi berhasil disimpan ke riwayat! ✨");
         }, 800);
     };
 
@@ -72,14 +102,30 @@ export default function HomeActivityPanel() {
                 return;
             }
             setUploadStatus("Mengunggah...");
+
             setTimeout(() => {
-                setUploadStatus(`Berhasil mengunggah: ${file.name} ✅`);
+                const newItem: HistoryItem = {
+                    id: Date.now().toString(),
+                    content: file.name,
+                    timestamp: new Date().toISOString(),
+                    type: 'evidence'
+                };
+
+                const newHistory = [newItem, ...evidenceHistory];
+                setEvidenceHistory(newHistory);
+                localStorage.setItem("user_evidence_history", JSON.stringify(newHistory));
+
+                setUploadStatus(`Berhasil: ${file.name} ✅`);
                 setTimeout(() => {
-                    setActiveModal(null);
                     setUploadStatus(null);
-                }, 1500);
+                }, 2000);
             }, 1200);
         }
+    };
+
+    const onReflectionChange = (val: string) => {
+        setReflection(val);
+        localStorage.setItem("user_reflection_draft", val);
     };
 
     if (!mounted) {
@@ -140,7 +186,6 @@ export default function HomeActivityPanel() {
                 </button>
             </div>
 
-            {/* Modals */}
             {activeModal === "CHECKIN" && (
                 <Modal title="Commitment Today" onClose={() => setActiveModal(null)}>
                     <div style={{ textAlign: 'center' }}>
@@ -161,24 +206,30 @@ export default function HomeActivityPanel() {
             {activeModal === "EVIDENCE" && (
                 <Modal title="Upload Evidence" onClose={() => setActiveModal(null)}>
                     <div>
-                        <p style={{ color: '#64748b', fontSize: 14, marginBottom: 20 }}>Unggah bukti lomba, karya, atau portofolio kamu dalam format PDF.</p>
-                        <div style={{
-                            border: '2px dashed #e2e8f0', borderRadius: 20, padding: 32, textAlign: 'center',
-                            position: 'relative', background: '#f8fafc'
-                        }}>
-                            <span style={{ fontSize: 32, display: 'block', marginBottom: 12 }}>📄</span>
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#475569' }}>
-                                {uploadStatus || "Klik untuk pilih file PDF"}
-                            </span>
-                            <input
-                                type="file"
-                                accept=".pdf"
-                                onChange={handleFileUpload}
-                                style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }}
-                            />
+                        <div style={{ padding: '16px', background: '#f8fafc', borderRadius: 20, border: '1px solid #e2e8f0', marginBottom: 24 }}>
+                            <p style={{ color: '#64748b', fontSize: 13, marginBottom: 16, fontWeight: 500 }}>Upload PDF bukti prestasi/karya:</p>
+                            <div style={{ border: '2px dashed #cbd5e1', borderRadius: 16, padding: '24px', textAlign: 'center', position: 'relative' }}>
+                                <span style={{ fontSize: 28 }}>📄</span>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: '#475569', marginTop: 8 }}>{uploadStatus || "Pilih File PDF"}</div>
+                                <input type="file" accept=".pdf" onChange={handleFileUpload} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                            </div>
                         </div>
-                        <div style={{ marginTop: 20, fontSize: 11, color: '#94a3b8', fontWeight: 500 }}>
-                            * Maksimal ukuran file 5MB.
+
+                        <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 20 }}>
+                            <h4 style={{ fontSize: 14, fontWeight: 800, color: '#1e293b', marginBottom: 16 }}>Riwayat Bukti</h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {evidenceHistory.length > 0 ? evidenceHistory.map(item => (
+                                    <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', background: '#f8fafc', borderRadius: 12, border: '1px solid #f1f5f9' }}>
+                                        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>📄</div>
+                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                            <div style={{ fontSize: 13, fontWeight: 700, color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.content}</div>
+                                            <div style={{ fontSize: 10, color: '#94a3b8' }}>{new Date(item.timestamp).toLocaleDateString()} • {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                                        </div>
+                                    </div>
+                                )) : (
+                                    <div style={{ textAlign: 'center', color: '#94a3b8', fontSize: 12, padding: 20 }}>Belum ada bukti yang diunggah.</div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </Modal>
@@ -187,27 +238,36 @@ export default function HomeActivityPanel() {
             {activeModal === "REFLECTION" && (
                 <Modal title="Daily Reflection" onClose={() => setActiveModal(null)}>
                     <div>
-                        <p style={{ color: '#64748b', fontSize: 14, marginBottom: 16 }}>Apa yang kamu pelajari hari ini? Tuliskan refleksimu di sini.</p>
-                        <textarea
-                            value={reflection}
-                            onChange={(e) => setReflection(e.target.value)}
-                            placeholder="Tuliskan pengalaman belajarmu hari ini..."
-                            style={{
-                                width: '100%', height: 160, borderRadius: 20, border: '1px solid #e2e8f0',
-                                padding: 16, fontSize: 14, fontFamily: 'inherit', resize: 'none', marginBottom: 20,
-                                outline: 'none', transition: 'border-color 0.2s'
-                            }}
-                        />
-                        <button
-                            disabled={isSaving}
-                            onClick={handleSaveReflection}
-                            style={{
-                                width: '100%', background: '#e11d48', color: 'white', border: 'none', padding: '16px',
-                                borderRadius: 16, fontWeight: 800, cursor: 'pointer', opacity: isSaving ? 0.7 : 1
-                            }}
-                        >
-                            {isSaving ? "Menyimpan..." : "Simpan Refleksi 📁"}
-                        </button>
+                        <div style={{ marginBottom: 24 }}>
+                            <p style={{ color: '#64748b', fontSize: 14, marginBottom: 12 }}>Tuliskan refleksimu hari ini:</p>
+                            <textarea
+                                value={reflection}
+                                onChange={(e) => onReflectionChange(e.target.value)}
+                                placeholder="Apa yang kamu pelajari hari ini?..."
+                                style={{ width: '100%', height: 120, borderRadius: 20, border: '1px solid #e2e8f0', padding: 16, fontSize: 14, fontFamily: 'inherit', resize: 'none', marginBottom: 12 }}
+                            />
+                            <button
+                                disabled={isSaving || !reflection.trim()}
+                                onClick={handleSaveReflection}
+                                style={{ width: '100%', background: '#e11d48', color: 'white', border: 'none', padding: '16px', borderRadius: 16, fontWeight: 800, cursor: 'pointer', opacity: (isSaving || !reflection.trim()) ? 0.7 : 1 }}
+                            >
+                                {isSaving ? "Menyimpan..." : "Simpan Refleksi 📁"}
+                            </button>
+                        </div>
+
+                        <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 20 }}>
+                            <h4 style={{ fontSize: 14, fontWeight: 800, color: '#1e293b', marginBottom: 16 }}>Riwayat Refleksi</h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                {reflectionsHistory.length > 0 ? reflectionsHistory.map(item => (
+                                    <div key={item.id} style={{ padding: '16px', background: '#fff1f2', borderRadius: 16, border: '1px solid #ffe4e6' }}>
+                                        <div style={{ fontSize: 10, fontWeight: 800, color: '#e11d48', marginBottom: 6 }}>{new Date(item.timestamp).toLocaleDateString()} • {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                                        <div style={{ fontSize: 13, color: '#1e293b', lineHeight: 1.5, fontStyle: 'italic' }}>"{item.content}"</div>
+                                    </div>
+                                )) : (
+                                    <div style={{ textAlign: 'center', color: '#94a3b8', fontSize: 12, padding: 20 }}>Belum ada riwayat refleksi.</div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </Modal>
             )}
