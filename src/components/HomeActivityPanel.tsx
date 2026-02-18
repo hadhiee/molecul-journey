@@ -104,13 +104,25 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
     }, [userEmail, fetchUserHistory]);
 
     const handleCheckin = async () => {
-        if (!userEmail || isSaving) return;
+        if (!userEmail) {
+            alert("Sesi tidak valid/email tidak ditemukan.");
+            return;
+        }
+        if (isSaving) return;
         const normalizedEmail = userEmail.toLowerCase();
         setIsSaving(true);
+        console.log("Attempting Checkin for:", normalizedEmail);
         try {
-            const { error } = await supabase.from("user_progress").insert({
-                user_email: normalizedEmail, mission_id: "SYSTEM_CHECKIN", score: 0, choice_label: `LOK: ${dayValue.title}`
-            });
+            const payload = {
+                user_email: normalizedEmail,
+                mission_id: "SYSTEM_CHECKIN",
+                score: 0,
+                choice_label: `LOK: ${dayValue.title}`
+            };
+            console.log("Payload:", payload);
+
+            const { error } = await supabase.from("user_progress").insert(payload);
+
             if (error) {
                 console.error("Supabase Error [Checkin]:", error);
                 throw error;
@@ -118,30 +130,49 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
             await fetchUserHistory();
             alert(`Komitmen diterima! Mari kita bersama-sama: ${dayValue.title} 💪`);
             setActiveModal(null);
-        } catch (e) { alert("Gagal mencatat check-in."); }
+        } catch (e: any) {
+            console.error("Checkin catch:", e);
+            alert(`Gagal mencatat check-in: ${e.message || JSON.stringify(e)}`);
+        }
         finally { setIsSaving(false); }
     };
 
     const handleSaveReflection = async () => {
-        if (!reflection.trim() || !userEmail || isSaving) return;
+        if (!userEmail) {
+            alert("Sesi tidak valid/email tidak ditemukan.");
+            return;
+        }
+        if (!reflection.trim()) return;
+        if (isSaving) return;
+
         const normalizedEmail = userEmail.toLowerCase();
         setIsSaving(true);
+        console.log("Attempting Reflection Save for:", normalizedEmail);
+
         try {
-            const { error } = await supabase.from("user_progress").insert({
-                user_email: normalizedEmail, mission_id: "SYSTEM_REFLECTION", score: 0, choice_label: reflection
-            });
+            const payload = {
+                user_email: normalizedEmail,
+                mission_id: "SYSTEM_REFLECTION",
+                score: 0,
+                choice_label: reflection
+            };
+            console.log("Payload:", payload);
+
+            const { error } = await supabase.from("user_progress").insert(payload);
+
             if (error) {
                 console.error("Supabase Error [Reflection]:", error);
                 throw error;
             }
+
             const draftKey = `user_reflection_draft_${normalizedEmail.split('@')[0]}`;
             localStorage.removeItem(draftKey);
             setReflection("");
             await fetchUserHistory();
             alert("Refleksi berhasil disimpan ke riwayat pribadi Anda! ✨");
-        } catch (e) {
+        } catch (e: any) {
             console.error("Save reflection error catch:", e);
-            alert("Gagal menyimpan refleksi. Pastikan koneksi internet stabil.");
+            alert(`Gagal menyimpan refleksi: ${e.message || JSON.stringify(e)}`);
         }
         finally { setIsSaving(false); }
     };
@@ -164,7 +195,10 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
             await fetchUserHistory();
             setUploadStatus(`Berhasil: ${file.name} ✅`);
             setTimeout(() => setUploadStatus(null), 2000);
-        } catch (e) { setUploadStatus("Gagal mencatat bukti."); }
+        } catch (e: any) {
+            console.error("Evidence catch:", e);
+            setUploadStatus(`Gagal: ${e.message}`);
+        }
     };
 
     const handleDeleteRecord = async (id: string | number) => {
