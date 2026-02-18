@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import GlobalActivityTracker from "@/components/GlobalActivityTracker";
+import TopWeatherBar from "@/components/TopWeatherBar";
 
 export const metadata: Metadata = {
   title: "MoLeCul - Moklet Learning Culture Journey",
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <TopWeatherBar />
         <Providers>
           <GlobalActivityTracker />
           {children}

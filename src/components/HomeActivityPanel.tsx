@@ -79,6 +79,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
             }
 
             if (data) {
+                console.log("Supabase [History] Loaded:", data.length, "items");
                 setReflectionsHistory(data.filter(i => i.mission_id === "SYSTEM_REFLECTION").map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'reflection' })));
                 setEvidenceHistory(data.filter(i => i.mission_id === "SYSTEM_EVIDENCE").map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'evidence' })));
                 setCheckinHistory(data.filter(i => i.mission_id === "SYSTEM_CHECKIN").map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'checkin' })));
@@ -207,6 +208,29 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                     <span style={{ fontSize: 28 }}>📝</span>
                     <span style={{ fontSize: 11, fontWeight: 800, color: '#e11d48' }}>Refleksi</span>
                 </button>
+
+                <div style={{ gridColumn: 'span 3', marginTop: 8 }}>
+                    <button
+                        onClick={() => setActiveModal("FULL_HISTORY" as any)}
+                        style={{
+                            width: '100%',
+                            background: '#f1f5f9',
+                            border: '1px dashed #cbd5e1',
+                            padding: '12px',
+                            borderRadius: 16,
+                            cursor: 'pointer',
+                            fontSize: 12,
+                            fontWeight: 800,
+                            color: '#475569',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 8
+                        }}
+                    >
+                        <span>📜</span> LIHAT SEMUA RIYAWAT
+                    </button>
+                </div>
             </div>
 
             {/* Modals with Unified History Display */}
@@ -271,7 +295,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                     <div style={{ marginBottom: 32 }}>
                         <textarea
                             value={reflection}
-                            onChange={(e) => { setReflection(e.target.value); localStorage.setItem(`user_reflection_draft_${userEmail?.split('@')[0]}`, e.target.value); }}
+                            onChange={(e) => { setReflection(e.target.value); localStorage.setItem(`user_reflection_draft_${userEmail.toLowerCase().split('@')[0]}`, e.target.value); }}
                             placeholder="Apa insight belajarmu hari ini? (Hanya Anda yang bisa melihat ini)"
                             style={{ width: '100%', height: 140, borderRadius: 20, border: '1px solid #e2e8f0', padding: 16, fontSize: 14, fontFamily: 'inherit', resize: 'none', marginBottom: 12, outline: 'none' }}
                         />
@@ -283,14 +307,67 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                         <h4 style={{ fontSize: 13, fontWeight: 800, color: '#e11d48', marginBottom: 16 }}>Riwayat Diari</h4>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                             {reflectionsHistory.length > 0 ? reflectionsHistory.map(item => (
-                                <div key={item.id} style={{ padding: '16px', background: '#fff1f2', borderRadius: 20, border: '1px solid #ffe4e6', position: 'relative' }}>
-                                    <div style={{ fontSize: 9, fontWeight: 800, color: '#e11d48', marginBottom: 8, display: 'flex', justifyContent: 'space-between' }}>
+                                <div key={item.id} style={{ padding: '16px', background: '#fff1f2', borderRadius: 20, border: '1px solid #ffe4e6', position: 'relative', cursor: 'pointer' }} onClick={() => alert(item.content)}>
+                                    <div style={{ fontSize: 9, fontWeight: 800, color: '#e11d48', marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <span>{new Date(item.timestamp).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                        <button onClick={() => handleDeleteRecord(item.id)} style={{ background: 'none', border: 'none', color: '#e11d48', cursor: 'pointer', padding: 0 }}>Hapus</button>
+                                        <button onClick={(e) => { e.stopPropagation(); handleDeleteRecord(item.id); }} style={{ background: '#ff33661a', border: 'none', color: '#e11d48', padding: '4px 8px', borderRadius: 6, cursor: 'pointer', fontSize: 10, fontWeight: 800 }}>Hapus</button>
                                     </div>
-                                    <div style={{ fontSize: 13, color: '#1e293b', lineHeight: 1.6 }}>{item.content}</div>
+                                    <div style={{ fontSize: 13, color: '#1e293b', lineHeight: 1.6, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
+                                        {item.content}
+                                    </div>
+                                    <div style={{ fontSize: 9, fontWeight: 700, color: '#e11d48', marginTop: 8, textAlign: 'right' }}>Klik untuk baca penuh →</div>
                                 </div>
                             )) : <div style={{ textAlign: 'center', color: '#94a3b8', fontSize: 12 }}>Diari pribadimu masih kosong.</div>}
+                        </div>
+                    </div>
+                </Modal>
+            )}
+
+            {(activeModal as any) === "FULL_HISTORY" && (
+                <Modal title="Riwayat Aktivitas" onClose={() => setActiveModal(null)}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                        <div>
+                            <h4 style={{ fontSize: 13, fontWeight: 800, color: '#1e293b', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span>📝</span> Refleksi Terbaru
+                            </h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {reflectionsHistory.slice(0, 3).map(item => (
+                                    <div key={item.id} onClick={() => alert(item.content)} style={{ padding: 12, background: '#f8fafc', borderRadius: 12, fontSize: 12, border: '1px solid #f1f5f9', cursor: 'pointer' }}>
+                                        <div style={{ fontWeight: 800, fontSize: 10, color: '#64748b', marginBottom: 4 }}>{new Date(item.timestamp).toLocaleDateString()}</div>
+                                        <div style={{ color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.content}</div>
+                                    </div>
+                                ))}
+                                {reflectionsHistory.length === 0 && <div style={{ fontSize: 11, color: '#94a3b8' }}>Belum ada refleksi.</div>}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 style={{ fontSize: 13, fontWeight: 800, color: '#1e293b', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span>🗓️</span> Check-in Harian
+                            </h4>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                {checkinHistory.map(item => (
+                                    <div key={item.id} style={{ padding: '6px 12px', background: '#f0fdf4', color: '#166534', borderRadius: 8, fontSize: 10, fontWeight: 800, border: '1px solid #dcfce7' }}>
+                                        {item.content.replace('LOK: ', '')} ({new Date(item.timestamp).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })})
+                                    </div>
+                                ))}
+                                {checkinHistory.length === 0 && <div style={{ fontSize: 11, color: '#94a3b8' }}>Belum ada check-in.</div>}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 style={{ fontSize: 13, fontWeight: 800, color: '#1e293b', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span>📂</span> Bukti & Portofolio
+                            </h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {evidenceHistory.map(item => (
+                                    <div key={item.id} style={{ padding: 12, background: '#eff6ff', borderRadius: 12, fontSize: 12, border: '1px solid #dbeafe', display: 'flex', justifyContent: 'space-between' }}>
+                                        <div style={{ color: '#1e3a8a', fontWeight: 700 }}>{item.content}</div>
+                                        <div style={{ fontSize: 10, color: '#60a5fa' }}>{new Date(item.timestamp).toLocaleDateString()}</div>
+                                    </div>
+                                ))}
+                                {evidenceHistory.length === 0 && <div style={{ fontSize: 11, color: '#94a3b8' }}>Belum ada bukti unggahan.</div>}
+                            </div>
                         </div>
                     </div>
                 </Modal>
