@@ -1,9 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import React, { useEffect, useRef, useState, useMemo } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Image, Text, Sparkles } from "@react-three/drei";
 import Link from "next/link";
+import * as THREE from "three";
+
+// --- Assets ---
+const BG_URL = "https://images.unsplash.com/photo-1599058945522-28d584b6f0ff";
+const GLOVE_URL = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Oncoming%20Fist%20Medium-Light%20Skin%20Tone.png";
+const ENEMY_URL = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Angry%20Face%20with%20Horns.png";
 
 const AVATARS = [
     { id: "hero-rpl", name: "Inno-Bot", color: 0x3b82f6, power: 85, icon: "🤖" },
@@ -23,221 +29,214 @@ const ATTITUDE_VALUES = [
     "Dare to Ask", "Eager to Collaborate"
 ];
 
-interface HitPopup {
-    id: number;
-    text: string;
-    x: number;
-    y: number;
+// --- Sub-components ---
+
+function Glove({ position, isPunching, side }: { position: [number, number, number], isPunching: boolean, side: "left" | "right" }) {
+    const ref = useRef<THREE.Group>(null!);
+
+    useFrame((state, delta) => {
+        if (!ref.current) return;
+        const targetZ = isPunching ? -1 : 2; // Forward / Back
+        // Faster punch, slower return
+        const speed = isPunching ? 20 : 5;
+        ref.current.position.z = THREE.MathUtils.lerp(ref.current.position.z, targetZ, delta * speed);
+
+        // Slight bobbing
+        ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 2) * 0.05;
+    });
+
+    return (
+        <group ref={ref} position={[position[0], position[1], 2]}>
+            <Image
+                url={GLOVE_URL}
+                transparent
+                scale={[1.5, 1.5]}
+                scale-x={side === "left" ? -1.5 : 1.5} // Flip left glove
+                toneMapped={false}
+            />
+        </group>
+    );
 }
 
-export default function Fighter3DGame() {
-    const containerRef = useRef<HTMLDivElement>(null);
+function Enemy({ isHit, color }: { isHit: boolean, color: number }) {
+    const ref = useRef<THREE.Group>(null!);
+
+    useFrame((state) => {
+        if (!ref.current) return;
+        // Idle Animation
+        ref.current.position.y = Math.sin(state.clock.elapsedTime) * 0.1;
+
+        // Hit Shake
+        if (isHit) {
+            ref.current.position.x = Math.sin(state.clock.elapsedTime * 50) * 0.1;
+            ref.current.scale.setScalar(1.1); // Bulge on hit
+        } else {
+            ref.current.position.x = THREE.MathUtils.lerp(ref.current.position.x, 0, 0.1);
+            ref.current.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
+        }
+    });
+
+    return (
+        <group ref={ref} position={[0, 0, -3]}>
+            <Image
+                url={ENEMY_URL}
+                transparent
+                scale={[3.5, 3.5]}
+                toneMapped={false}
+                color={isHit ? "#ff0000" : "white"} // Flash red
+            />
+        </group>
+    );
+}
+
+function ArenaScene({
+    gameState,
+    lastPunchTime,
+    punchSide,
+    enemyHitTime,
+    onEnemyTurn
+}: any) {
+    const isLeftPunching = (Date.now() - lastPunchTime < 150) && punchSide === "left";
+    const isRightPunching = (Date.now() - lastPunchTime < 150) && punchSide === "right";
+    const isEnemyHit = (Date.now() - enemyHitTime < 200);
+
+    // Enemy AI Loop
+    const cooldownRef = useRef(0);
+    useFrame(() => {
+        if (gameState === "PLAYING") {
+            cooldownRef.current++;
+            if (cooldownRef.current > 60) { // Approx 1 sec
+                onEnemyTurn();
+                cooldownRef.current = 0;
+            }
+        }
+    });
+
+    return (
+        <>
+            <ambientLight intensity={0.5} />
+
+            {/* Background */}
+            <Image
+                url={BG_URL}
+                scale={[20, 12]}
+                position={[0, 0, -10]}
+                toneMapped={false}
+                color="#888" // Dim background slightly
+            />
+
+            <Sparkles count={50} scale={10} size={4} speed={0.4} opacity={0.5} color="#fff" />
+
+            {/* Enemy */}
+            <Enemy isHit={isEnemyHit} color={0xffffff} />
+
+            {/* Player Gloves (FPP) */}
+            <Glove position={[-1.2, -1.5, 0]} isPunching={isLeftPunching} side="left" />
+            <Glove position={[1.2, -1.5, 0]} isPunching={isRightPunching} side="right" />
+
+            <fog attach="fog" args={['#000', 5, 20]} />
+        </>
+    );
+}
+
+// --- Main Component ---
+
+export default function FighterPage() {
+    // Game State
     const [gameState, setGameState] = useState<"AVATAR" | "PLAYING" | "RESULT">("AVATAR");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
+    const [enemyData, setEnemyData] = useState(ANTI_HEROES[0]);
+
+    // Combat State
     const [playerHp, setPlayerHp] = useState(100);
     const [enemyHp, setEnemyHp] = useState(100);
     const [playerScore, setPlayerScore] = useState(0);
     const [winner, setWinner] = useState<"PLAYER" | "ENEMY" | null>(null);
-    const [hitPopups, setHitPopups] = useState<HitPopup[]>([]);
+
+    // Visual State
+    const [lastPunchTime, setLastPunchTime] = useState(0);
+    const [enemyHitTime, setEnemyHitTime] = useState(0);
+    const [punchSide, setPunchSide] = useState<"left" | "right">("right");
+    const [hitPopups, setHitPopups] = useState<{ id: number, text: string, x: number, y: number }[]>([]);
     const popupIdCounter = useRef(0);
 
-    useEffect(() => {
-        if (!containerRef.current || gameState !== "PLAYING") return;
+    // Logic
+    const spawnHitPopup = () => {
+        const text = ATTITUDE_VALUES[Math.floor(Math.random() * ATTITUDE_VALUES.length)];
+        const id = popupIdCounter.current++;
+        const x = 50 + (Math.random() * 40 - 20); // Center-ish
+        const y = 40 + (Math.random() * 20 - 10);
+        setHitPopups(prev => [...prev, { id, text, x, y }]);
+        setTimeout(() => setHitPopups(prev => prev.filter(p => p.id !== id)), 800);
+    };
 
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0a0a0f);
-        scene.fog = new THREE.FogExp2(0x0a0a0f, 0.02);
+    const handlePunch = () => {
+        if (gameState !== "PLAYING") return;
 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 4, 10);
+        // Cooldown check (visual)
+        if (Date.now() - lastPunchTime < 200) return;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.shadowMap.enabled = true;
-        containerRef.current.appendChild(renderer.domElement);
+        // Visuals
+        setLastPunchTime(Date.now());
+        setPunchSide(prev => prev === "left" ? "right" : "left");
+        setEnemyHitTime(Date.now()); // Flash enemy immediately
+        spawnHitPopup();
 
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.maxPolarAngle = Math.PI / 2.1;
-        controls.target.set(0, 2, 0);
-
-        // Lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-        scene.add(ambientLight);
-
-        const spotLight = new THREE.SpotLight(0xffffff, 2);
-        spotLight.position.set(0, 15, 5);
-        spotLight.angle = Math.PI / 4;
-        spotLight.castShadow = true;
-        scene.add(spotLight);
-
-        const enemyLight = new THREE.PointLight(0xffffff, 1, 15);
-        enemyLight.position.set(0, 5, -5);
-        scene.add(enemyLight);
-
-        // Arena
-        const ringGeo = new THREE.CylinderGeometry(8, 8, 1, 32);
-        const ringMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5 });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.position.y = -0.5;
-        ring.receiveShadow = true;
-        scene.add(ring);
-
-        // Character Creation Utility
-        const createFighter = (color: number, isEnemy = false) => {
-            const group = new THREE.Group();
-            const bodyGeo = new THREE.CapsuleGeometry(0.6, 1, 4, 8);
-            const bodyMat = new THREE.MeshStandardMaterial({
-                color,
-                emissive: color,
-                emissiveIntensity: isEnemy ? 0.5 : 0.2
-            });
-            const body = new THREE.Mesh(bodyGeo, bodyMat);
-            body.position.y = 1.2;
-            body.castShadow = true;
-            group.add(body);
-
-            const headGeo = new THREE.SphereGeometry(0.4, 16, 16);
-            const head = new THREE.Mesh(headGeo, bodyMat);
-            head.position.y = 2.4;
-            group.add(head);
-
-            const armGeo = new THREE.BoxGeometry(0.3, 0.3, 1.2);
-            const leftArm = new THREE.Mesh(armGeo, bodyMat);
-            leftArm.position.set(-0.8, 1.8, 0.5);
-            group.add(leftArm);
-
-            const rightArm = new THREE.Mesh(armGeo, bodyMat);
-            rightArm.position.set(0.8, 1.8, 0.5);
-            group.add(rightArm);
-
-            return { group, leftArm, rightArm };
-        };
-
-        const player = createFighter(selectedAvatar.color);
-        player.group.position.set(0, 0, 3);
-        scene.add(player.group);
-
-        const enemyData = ANTI_HEROES[Math.floor(Math.random() * ANTI_HEROES.length)];
-        const enemy = createFighter(enemyData.color, true);
-        enemy.group.position.set(0, 0, -3.5);
-        enemy.group.rotation.y = Math.PI;
-        scene.add(enemy.group);
-
-        // Battle Logic
-        let isAttacking = false;
-        let enemyAttackCooldown = 0;
-
-        const spawnHitPopup = () => {
-            const text = ATTITUDE_VALUES[Math.floor(Math.random() * ATTITUDE_VALUES.length)];
-            const id = popupIdCounter.current++;
-            const x = 50 + (Math.random() * 20 - 10);
-            const y = 40 + (Math.random() * 20 - 10);
-            setHitPopups(prev => [...prev, { id, text, x, y }]);
-            setTimeout(() => {
-                setHitPopups(prev => prev.filter(p => p.id !== id));
-            }, 1000);
-        };
-
-        const punch = (fighterArms: any, isPlayer: boolean) => {
-            if (isPlayer && isAttacking) return;
-            if (isPlayer) isAttacking = true;
-
-            const arm = Math.random() > 0.5 ? fighterArms.leftArm : fighterArms.rightArm;
-            arm.userData.punching = true;
-
-            if (isPlayer) {
-                spawnHitPopup();
-                setEnemyHp(hp => {
-                    const newHp = Math.max(0, hp - (selectedAvatar.power / 10));
-                    if (newHp === 0 && gameState === "PLAYING") {
-                        setWinner("PLAYER");
-                        setGameState("RESULT");
-                    }
-                    return newHp;
-                });
-                setPlayerScore(s => s + 100);
-            } else {
-                setPlayerHp(hp => {
-                    const newHp = Math.max(0, hp - 8);
-                    if (newHp === 0 && gameState === "PLAYING") {
-                        setWinner("ENEMY");
-                        setGameState("RESULT");
-                    }
-                    return newHp;
-                });
+        // Logic
+        setEnemyHp(hp => {
+            // Damage calculation based on avatar power
+            const dmg = selectedAvatar.power / 8;
+            const newHp = Math.max(0, hp - dmg);
+            if (newHp <= 0) {
+                setWinner("PLAYER");
+                setGameState("RESULT");
+                setPlayerScore(s => s + 500); // Bonus
             }
-
-            setTimeout(() => {
-                arm.userData.punching = false;
-                if (isPlayer) isAttacking = false;
-            }, 200);
-        };
-
-        const handleInteraction = () => {
-            if (gameState === "PLAYING") punch(player, true);
-        };
-
-        window.addEventListener('mousedown', handleInteraction);
-        window.addEventListener('touchstart', (e) => {
-            if (gameState === "PLAYING") {
-                e.preventDefault();
-                punch(player, true);
-            }
+            return newHp;
         });
+        setPlayerScore(s => s + 50);
+    };
 
-        const handleResize = () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        };
-        window.addEventListener('resize', handleResize);
+    const handleEnemyAttack = () => {
+        if (gameState !== "PLAYING") return;
 
-        let animationId: number;
-        const animate = () => {
-            animationId = requestAnimationFrame(animate);
-
-            [player, enemy].forEach(f => {
-                [f.leftArm, f.rightArm].forEach(arm => {
-                    if (arm.userData.punching) {
-                        arm.position.z = THREE.MathUtils.lerp(arm.position.z, 2.5, 0.4);
-                    } else {
-                        arm.position.z = THREE.MathUtils.lerp(arm.position.z, 0.5, 0.2);
-                    }
-                });
-            });
-
-            if (gameState === "PLAYING") {
-                enemyAttackCooldown++;
-                if (enemyAttackCooldown > 50) {
-                    punch(enemy, false);
-                    enemyAttackCooldown = 0;
-                }
+        // Enemy punches back
+        setPlayerHp(hp => {
+            const newHp = Math.max(0, hp - 5); // Constant damage
+            if (newHp <= 0) {
+                setWinner("ENEMY");
+                setGameState("RESULT");
             }
+            return newHp;
+        });
+    };
 
-            controls.update();
-            renderer.render(scene, camera);
-        };
-        animate();
+    // Reset Enemy on Start
+    useEffect(() => {
+        if (gameState === "PLAYING") {
+            setEnemyData(ANTI_HEROES[Math.floor(Math.random() * ANTI_HEROES.length)]);
+            setPlayerHp(100);
+            setEnemyHp(100);
+            setPlayerScore(0);
+            setHitPopups([]);
+        }
+    }, [gameState]);
 
-        return () => {
-            window.removeEventListener('mousedown', handleInteraction);
-            window.removeEventListener('resize', handleResize);
-            cancelAnimationFrame(animationId);
-            renderer.dispose();
-            if (containerRef.current) containerRef.current.innerHTML = "";
-        };
+    // Cleanup popups
+    useEffect(() => {
+        if (gameState !== "PLAYING") setHitPopups([]);
     }, [gameState]);
 
     return (
         <div style={{ position: "relative", width: "100svw", height: "100svh", overflow: "hidden", background: "#0a0a0f", fontFamily: "Inter, sans-serif" }}>
 
+            {/* --- UI Overlays --- */}
+
             {gameState === "AVATAR" && (
                 <div style={{ position: "absolute", inset: 0, zIndex: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "rgba(10,10,15,0.95)", padding: 16 }}>
-                    <div style={{ fontSize: 10, fontWeight: 800, color: "#e11d48", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 8 }}>3D Combat Training</div>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: "#e11d48", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 8 }}>Combat Training</div>
                     <h2 style={{ fontSize: "clamp(24px, 8vw, 48px)", fontWeight: 900, color: "white", marginBottom: 8, textAlign: "center" }}>ATTITUDE FIGHTER</h2>
-                    <p style={{ color: "#94a3b8", marginBottom: 32, textAlign: "center", maxWidth: 400, fontSize: 13 }}>Kalahkan manifestasi buruk dan raih nilai ATTITUDE dalam setiap pukulan!</p>
+                    <p style={{ color: "#94a3b8", marginBottom: 32, textAlign: "center", maxWidth: 400, fontSize: 13 }}>Kalahkan manifestasi buruk secara REAL di atas ring!</p>
 
                     <div className="avatar-grid">
                         {AVATARS.map(avatar => (
@@ -286,7 +285,7 @@ export default function Fighter3DGame() {
                         <div className="hp-block enemy">
                             <div className="hp-info">
                                 <span className="hp-value">{Math.ceil(enemyHp)}</span>
-                                <span className="entity-name">TARGET</span>
+                                <span className="entity-name">{enemyData.name}</span>
                             </div>
                             <div className="hp-bar-bg rtl">
                                 <div style={{ width: `${enemyHp}%`, height: "100%", background: "linear-gradient(90deg, #e11d48, #9f1239)" }} />
@@ -294,7 +293,7 @@ export default function Fighter3DGame() {
                         </div>
                     </div>
 
-                    {/* Hit Popups */}
+                    {/* Hit Popups are HTML overlay */}
                     {hitPopups.map(popup => (
                         <div key={popup.id} className="hit-popup" style={{ left: `${popup.x}%`, top: `${popup.y}%` }}>
                             +ATTITUDE<br />
@@ -304,8 +303,9 @@ export default function Fighter3DGame() {
 
                     <div className="combat-instruction">
                         <div className="instruction-badge">
-                            Tap Layar untuk Memukul! 🥊
+                            Tap Screen to Punch! 🥊
                         </div>
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>Graphics by Fluent Emoji & Unsplash</div>
                     </div>
                 </>
             )}
@@ -327,7 +327,7 @@ export default function Fighter3DGame() {
 
                     <div className="result-buttons">
                         <button
-                            onClick={() => { setGameState("AVATAR"); setPlayerHp(100); setEnemyHp(100); setPlayerScore(0); }}
+                            onClick={() => { setGameState("AVATAR"); }}
                             className="btn-replay"
                         >
                             MAIN LAGI
@@ -339,8 +339,26 @@ export default function Fighter3DGame() {
                 </div>
             )}
 
-            <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
+            {/* --- 3D Scene --- */}
+            <div style={{ width: "100%", height: "100%", cursor: "crosshair" }}>
+                <Canvas
+                    shadows
+                    camera={{ position: [0, 0, 5], fov: 60 }}
+                    onClick={handlePunch} // Handle clicks on canvas
+                >
+                    <React.Suspense fallback={null}>
+                        <ArenaScene
+                            gameState={gameState}
+                            lastPunchTime={lastPunchTime}
+                            punchSide={punchSide}
+                            enemyHitTime={enemyHitTime}
+                            onEnemyTurn={handleEnemyAttack}
+                        />
+                    </React.Suspense>
+                </Canvas>
+            </div>
 
+            {/* --- Styles --- */}
             <style>{`
                 .avatar-grid {
                     display: flex;
@@ -374,10 +392,14 @@ export default function Fighter3DGame() {
                     justify-content: space-between;
                     align-items: center;
                     z-index: 10;
+                    pointer-events: none; /* Let clicks pass through to Canvas */
                 }
                 .hp-block {
                     flex: 1;
                     max-width: 200px;
+                    background: rgba(0,0,0,0.5);
+                    padding: 8px;
+                    border-radius: 8px;
                 }
                 .score-block {
                     text-align: center;
@@ -402,14 +424,14 @@ export default function Fighter3DGame() {
                 .score-value { color: white; font-size: 24px; font-weight: 900; }
                 .hit-popup {
                     position: absolute;
-                    color: #10b981;
+                    color: #facc15;
                     font-weight: 900;
                     font-size: clamp(16px, 5vw, 24px);
-                    text-shadow: 0 0 10px rgba(16,185,129,0.8);
+                    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
                     pointer-events: none;
-                    animation: popupFade 1s forwards;
+                    animation: popupFade 0.8s forwards;
                     z-index: 50;
-                    textAlign: center;
+                    text-align: center;
                     transform: translate(-50%, -50%);
                 }
                 .combat-instruction {
@@ -418,6 +440,7 @@ export default function Fighter3DGame() {
                     width: 100%;
                     text-align: center;
                     pointer-events: none;
+                    z-index: 10;
                 }
                 .instruction-badge {
                     background: rgba(10,10,15,0.8);
@@ -464,8 +487,8 @@ export default function Fighter3DGame() {
 
                 @keyframes popupFade {
                     0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-                    20% { transform: translate(-50%, -80%) scale(1.1); opacity: 1; }
-                    100% { transform: translate(-50%, -150%) scale(1); opacity: 0; }
+                    20% { transform: translate(-50%, -100%) scale(1.2); opacity: 1; }
+                    100% { transform: translate(-50%, -200%) scale(1); opacity: 0; }
                 }
                 @keyframes bounce {
                     0%, 100% { transform: translateY(0); }
