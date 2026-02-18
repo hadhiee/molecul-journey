@@ -132,14 +132,18 @@ export default function Integrity3DGame() {
 
             const lastBox = stack[stack.length - 1];
             const diff = currentBox.position[axis] - lastBox.position[axis];
-            const limit = baseWidth * 1.1;
+
+            // "Lebih tidak presisi": Tolerance increased to 130% of width
+            const limit = baseWidth * 1.3;
 
             if (Math.abs(diff) >= limit) {
                 setGameState("GAMEOVER");
                 return;
             }
 
-            // Successfully stacked
+            // Successfully stacked - Snap to center of last box to keep tower straight
+            currentBox.position[axis] = lastBox.position[axis];
+
             const valueIdx = (stack.length) % ATTITUDE_VALUES.length;
             setActiveValue(ATTITUDE_VALUES[valueIdx]);
 
