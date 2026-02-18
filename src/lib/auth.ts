@@ -29,7 +29,18 @@ export const authOptions: NextAuthOptions = {
                 // Allow temporarily all emails for testing, or check restricted domain
                 // const domain = process.env.SCHOOL_GOOGLE_DOMAIN || "smktelkom-mlg.sch.id";
                 // return profile.email_verified && profile.email.endsWith(`@${domain}`);
-                return !!profile.email_verified; // Allow any verified Google account for now to fix login
+                // Log Login Activity
+                try {
+                    const { supabase } = await import("@/lib/supabase");
+                    await supabase.from("user_progress").insert({
+                        user_email: profile.email,
+                        mission_id: "SYSTEM_LOGIN",
+                        score: 0,
+                        choice_label: "LOGIN_ON_" + new Date().toISOString().split('T')[0]
+                    });
+                } catch (e) { console.error("Login log failed", e); }
+
+                return !!profile.email_verified;
             }
             return true;
         },

@@ -318,6 +318,15 @@ export default async function Home() {
           </div>
         )}
       </div>
+
+      {/* Admin Panel Link */}
+      {userEmail === "hadhiee@gmail.com" && (
+        <div style={{ marginTop: 40, borderTop: '1px solid #f1f5f9', paddingTop: 24, textAlign: 'center' }}>
+          <Link href="/admin/logs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1a1a2e', color: 'white', padding: '12px 24px', borderRadius: 99, textDecoration: 'none', fontSize: 13, fontWeight: 800 }}>
+            <span>🔒</span> Control Center (Admin Status)
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
