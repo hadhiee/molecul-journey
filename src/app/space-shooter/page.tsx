@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Text, Stars, Sparkles, Float } from "@react-three/drei";
+import { Text, Stars, Sparkles, Float, Image } from "@react-three/drei";
 import * as THREE from "three";
 import { useSession } from "next-auth/react";
 import { supabase } from "@/lib/supabase";
@@ -16,6 +16,7 @@ const BULLET_SPEED = 12; // units per second
 const ENEMY_SPEED = 3;
 const SPAWN_INTERVAL = 1.5; // seconds
 const BOUNDS = { x: 8, y: 10 };
+const SPACESHIP_URL = "https://raw.githubusercontent.com/CompleteUnityDeveloper/Laser-Defender-Original/master/Assets/Entities/Player/playerShip1_blue.png";
 
 const CULTURE_VALUES = [
     "Jujur", "Disiplin", "Mandiri", "Kreatif",
@@ -346,27 +347,30 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
     useEffect(() => {
         const onMove = (e: PointerEvent) => {
             pointerPos.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+            pointerPos.current.y = -(e.clientY / window.innerHeight) * 2 + 1; // Invert Y
             pointerPos.current.x *= boundX;
+            pointerPos.current.y *= boundY;
         };
         const onDown = () => {
+            // ... existing onDown logic
             if (!isPlaying) return;
             if (Date.now() - lastShot.current > 200) {
                 const id = Date.now();
                 setBullets(prev => [...prev, {
                     id,
                     x: playerRef.current?.position.x || 0,
-                    y: -boundY + 2.5
+                    y: (playerRef.current?.position.y || 0) + 0.5
                 }]);
                 lastShot.current = Date.now();
             }
         };
         const onTouch = (e: TouchEvent) => {
             if (!isPlaying) return;
-            // Prevent default zooming/scrolling
-            // e.preventDefault(); // Can't prevent default in passive listener easily in React without ref
             const touch = e.touches[0];
             pointerPos.current.x = (touch.clientX / window.innerWidth) * 2 - 1;
+            pointerPos.current.y = -(touch.clientY / window.innerHeight) * 2 + 1;
             pointerPos.current.x *= boundX;
+            pointerPos.current.y *= boundY;
         };
 
         window.addEventListener("pointermove", onMove);
@@ -387,10 +391,16 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
 
         // 1. Move Player
         if (playerRef.current) {
+            // Lerp X and Y
             playerRef.current.position.x = THREE.MathUtils.lerp(playerRef.current.position.x, pointerPos.current.x, 0.2);
+            playerRef.current.position.y = THREE.MathUtils.lerp(playerRef.current.position.y, pointerPos.current.y, 0.2);
+
+            // Clamp Position to Screen
+            playerRef.current.position.x = THREE.MathUtils.clamp(playerRef.current.position.x, -boundX + 0.5, boundX - 0.5);
+            playerRef.current.position.y = THREE.MathUtils.clamp(playerRef.current.position.y, -boundY + 1, boundY - 3);
+
+            // Tilt effect based on movement
             playerRef.current.rotation.z = (pointerPos.current.x - playerRef.current.position.x) * -0.5;
-            // Update player Y if viewport changed
-            playerRef.current.position.y = -boundY + 2;
         }
 
         // 2. Spawn Enemies
@@ -466,25 +476,16 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
             <Background />
 
             <group ref={playerRef} position={[0, -boundY + 2, 0]}>
-                {/* Spaceship Body */}
-                <mesh rotation={[0, 0, 0]}>
-                    <coneGeometry args={[0.5, 1.8, 8]} />
-                    <meshStandardMaterial color="#fff" metalness={0.8} roughness={0.2} />
-                </mesh>
-                {/* Cockpit */}
-                <mesh position={[0, 0.2, 0.3]}>
-                    <sphereGeometry args={[0.25, 16, 16]} />
-                    <meshStandardMaterial color="#0ea5e9" emissive="#0ea5e9" emissiveIntensity={0.8} />
-                </mesh>
-                {/* Wings */}
-                <mesh position={[0, -0.4, 0]} rotation={[0, 0, 0]} scale={[1, 0.5, 0.2]}>
-                    <boxGeometry args={[2, 1, 0.1]} />
-                    <meshStandardMaterial color="#94a3b8" metalness={0.6} />
-                </mesh>
+                <Image
+                    url={SPACESHIP_URL}
+                    transparent
+                    scale={[1.2, 1.2]}
+                    toneMapped={false}
+                />
                 {/* Engine Glow */}
-                <mesh position={[0, -1, 0]}>
-                    <sphereGeometry args={[0.3]} />
-                    <meshBasicMaterial color="#f59e0b" />
+                <mesh position={[0, -0.6, 0]}>
+                    <sphereGeometry args={[0.15]} />
+                    <meshBasicMaterial color="#3b82f6" />
                 </mesh>
             </group>
 
