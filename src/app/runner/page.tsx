@@ -11,6 +11,7 @@ const VALUE_COLORS = ["#e11d48", "#f59e0b", "#8b5cf6", "#3b82f6", "#22c55e", "#e
 const GROUND_Y = 0.75;
 
 const AVATARS = [
+    { id: "moklet", name: "Siswa Moklet", body: "#1e1b4b", head: "#ffd4b5", glow: "#e11d48", trail: "#e11d48", emoji: "👦" },
     { id: "ninja", name: "Ninja", body: "#8b5cf6", head: "#c4b5fd", glow: "#8b5cf6", trail: "#6366f1", emoji: "🥷" },
     { id: "fire", name: "Api", body: "#ef4444", head: "#fca5a5", glow: "#ef4444", trail: "#f97316", emoji: "🔥" },
     { id: "ice", name: "Es", body: "#06b6d4", head: "#a5f3fc", glow: "#06b6d4", trail: "#22d3ee", emoji: "❄️" },
@@ -485,11 +486,63 @@ export default function MokletRunner() {
             ctx.roundRect(-bw / 2, -bh / 2 + 10, bw, bh - 10, 6);
             ctx.fill();
 
+            // Uniform Details (ONLY for Moklet Student)
+            if (avatar.id === "moklet") {
+                // White Shirt (Seragam)
+                ctx.fillStyle = "#ffffff";
+                ctx.beginPath();
+                ctx.moveTo(-8, -bh / 2 + 10);
+                ctx.lineTo(8, -bh / 2 + 10);
+                ctx.lineTo(0, -bh / 2 + 28);
+                ctx.fill();
+
+                // Red Tie (Dasi)
+                ctx.fillStyle = "#e11d48";
+                ctx.beginPath();
+                ctx.moveTo(-2.5, -bh / 2 + 10);
+                ctx.lineTo(2.5, -bh / 2 + 10);
+                ctx.lineTo(2.5, -bh / 2 + 22);
+                ctx.lineTo(0, -bh / 2 + 26);
+                ctx.lineTo(-2.5, -bh / 2 + 22);
+                ctx.fill();
+
+                // Blazer Lapels
+                ctx.strokeStyle = "rgba(255,255,255,0.1)";
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(-8, -bh / 2 + 10);
+                ctx.lineTo(-4, -bh / 2 + 22);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(8, -bh / 2 + 10);
+                ctx.lineTo(4, -bh / 2 + 22);
+                ctx.stroke();
+            }
+
             // Head
             ctx.beginPath();
             ctx.arc(0, -bh / 2 + 8, 11, 0, Math.PI * 2);
             ctx.fillStyle = avatar.head;
             ctx.fill();
+
+            // Topi SMA (School Hat)
+            if (avatar.id === "moklet") {
+                ctx.fillStyle = "#64748b"; // Gray Top
+                ctx.beginPath();
+                ctx.moveTo(-11, -bh / 2 + 2);
+                ctx.quadraticCurveTo(0, -bh / 2 - 12, 11, -bh / 2 + 2);
+                ctx.fill();
+
+                ctx.fillStyle = "white"; // White Front
+                ctx.beginPath();
+                ctx.rect(-11, -bh / 2 + 2, 22, 6);
+                ctx.fill();
+
+                ctx.fillStyle = "#475569"; // Visor
+                ctx.beginPath();
+                ctx.roundRect(8, -bh / 2 + 4, 8, 4, 2);
+                ctx.fill();
+            }
 
             // Eyes
             ctx.shadowBlur = 0;
@@ -519,7 +572,7 @@ export default function MokletRunner() {
             // Running legs animation
             if (!g.player.jumping) {
                 const legAnim = Math.sin(g.frameCount * 0.3) * 6;
-                ctx.strokeStyle = avatar.body;
+                ctx.strokeStyle = avatar.id === "moklet" ? "#1e1b4b" : avatar.body;
                 ctx.lineWidth = 4;
                 ctx.lineCap = "round";
                 ctx.beginPath();
