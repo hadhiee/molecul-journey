@@ -52,10 +52,10 @@ export default async function Home() {
   } catch (e) { }
 
   const chapterData = [
-    { name: "Kelas Tangguh: Fondasi ATTITUDE", emoji: "🛡️", bg: "#fff1f2" },
-    { name: "Lab Inovasi: Use Tech Wisely", emoji: "💻", bg: "#eff6ff" },
-    { name: "Simulasi Industri: BISA di Dunia Kerja", emoji: "🏭", bg: "#f0fdf4" },
-    { name: "Dampak Sosial: AKHLAK untuk Masyarakat", emoji: "🌍", bg: "#fefce8" }
+    { name: "Kelas Tangguh: Fondasi ATTITUDE", emoji: "🛡️", bg: "#fff1f2", color: "#e11d48", nodes: 12, completed: 7 },
+    { name: "Lab Inovasi: Use Tech Wisely", emoji: "💻", bg: "#eff6ff", color: "#3b82f6", nodes: 10, completed: 3 },
+    { name: "Simulasi Industri: BISA di Dunia Kerja", emoji: "🏭", bg: "#f0fdf4", color: "#22c55e", nodes: 15, completed: 0 },
+    { name: "Dampak Sosial: AKHLAK untuk Masyarakat", emoji: "🌍", bg: "#fefce8", color: "#f59e0b", nodes: 8, completed: 0 }
   ];
 
   const rankColors = [
@@ -338,26 +338,53 @@ export default async function Home() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 40 }}>
         {chapterData.map((ch, i) => (
           <Link key={i} href={`/chapter/${i + 1}`} style={{
-            background: 'white', borderRadius: 20, overflow: 'hidden',
+            background: 'white', borderRadius: 24, overflow: 'hidden',
             border: '1px solid #e5e7eb', textDecoration: 'none',
             display: 'flex', flexDirection: 'column' as const,
+            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+            transition: 'transform 0.2s',
           }}>
-            <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, background: ch.bg, position: 'relative' }}>
+            <div style={{ height: 90, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, background: ch.bg, position: 'relative' }}>
               <span className="animate-float" style={{ position: 'relative', zIndex: 1, animationDelay: `${i * 0.2}s` }}>{ch.emoji}</span>
-              <span style={{ position: 'absolute', right: 8, bottom: 0, fontSize: 48, fontWeight: 900, opacity: 0.06, lineHeight: 1 }}>0{i + 1}</span>
+              <span style={{ position: 'absolute', right: 12, bottom: 4, fontSize: 42, fontStyle: 'italic', fontWeight: 900, opacity: 0.08, lineHeight: 1 }}>{ch.completed > 0 ? `${Math.round((ch.completed / ch.nodes) * 100)}%` : `0${i + 1}`}</span>
             </div>
-            <div style={{ padding: 16, flex: 1, display: 'flex', flexDirection: 'column' as const }}>
-              <span style={{ display: 'inline-block', fontSize: 9, fontWeight: 800, color: '#e11d48', background: '#fff1f2', padding: '2px 8px', borderRadius: 6, marginBottom: 8, textTransform: 'uppercase' as const, width: 'fit-content' }}>
-                Chapter {i + 1}
-              </span>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a2e', lineHeight: 1.35, marginBottom: 12, flex: 1 }}>
+            <div style={{ padding: 18, flex: 1, display: 'flex', flexDirection: 'column' as const }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                <span style={{ display: 'inline-block', fontSize: 9, fontWeight: 800, color: ch.color, background: `${ch.color}15`, padding: '3px 10px', borderRadius: 8, textTransform: 'uppercase' as const, letterSpacing: '0.02em' }}>
+                  Chapter {i + 1}
+                </span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8' }}>
+                  {ch.completed}/{ch.nodes} Node
+                </span>
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a2e', lineHeight: 1.4, marginBottom: 12, flex: 1 }}>
                 {ch.name}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, borderTop: '1px solid #f3f4f6' }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8' }}>
-                  <strong style={{ color: '#1a1a2e' }}>10</strong> Misi
-                </span>
-                <span style={{ width: 24, height: 24, borderRadius: 8, background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#cbd5e1', fontSize: 12 }}>→</span>
+
+              {/* Progress Bar Component */}
+              <div style={{ height: 6, background: '#f1f5f9', borderRadius: 3, marginBottom: 16, overflow: 'hidden' }}>
+                <div style={{ width: `${(ch.completed / ch.nodes) * 100}%`, height: '100%', background: ch.color, borderRadius: 3 }} />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <div style={{ display: 'flex', flexDirection: 'column' as const }}>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' as const }}>Progress</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: '#1a1a2e' }}>{ch.completed} Nodes</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' as const, textAlign: 'right' as const }}>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: '#e11d48', textTransform: 'uppercase' as const }}>Next</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: '#1a1a2e' }}>1 Misi</span>
+                </div>
+              </div>
+
+              <div style={{
+                background: ch.completed > 0 ? ch.color : '#f8fafc',
+                color: ch.completed > 0 ? 'white' : '#94a3b8',
+                borderRadius: 12, padding: '10px', textAlign: 'center' as const,
+                fontSize: 12, fontWeight: 800, transition: 'all 0.2s',
+                border: ch.completed > 0 ? 'none' : '1px solid #e2e8f0'
+              }}>
+                {ch.completed > 0 ? 'Lanjutkan Chapter ⚡' : 'Mulai Chapter →'}
               </div>
             </div>
           </Link>
