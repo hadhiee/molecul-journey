@@ -226,6 +226,28 @@ export default async function Home() {
             </div>
           </div>
         </Link>
+
+        {/* Journey Map Sekolah */}
+        <Link href="/journey" style={{ textDecoration: 'none' }}>
+          <div style={{ background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)', borderRadius: 20, padding: 20, color: '#1a2e05', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(101,163,13,0.2)' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#65a30d', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🗺️</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: '#65a30d', textTransform: 'uppercase' as const, marginBottom: 2 }}>Adventure Map</div>
+              <div style={{ fontSize: 16, fontWeight: 800 }}>Journey Map Sekolah</div>
+            </div>
+          </div>
+        </Link>
+
+        {/* Culture Simulation */}
+        <Link href="/simulation" style={{ textDecoration: 'none' }}>
+          <div style={{ background: 'linear-gradient(135deg, #eff6ff, #dbeafe)', borderRadius: 20, padding: 20, color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(37,99,235,0.2)' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🔮</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: '#2563eb', textTransform: 'uppercase' as const, marginBottom: 2 }}>Decision Game</div>
+              <div style={{ fontSize: 16, fontWeight: 800 }}>Moklet Culture Simulation</div>
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* 5. Pilih Chapter (Skill Tree) */}
