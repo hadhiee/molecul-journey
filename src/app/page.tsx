@@ -312,6 +312,17 @@ export default async function Home() {
             </div>
           </div>
         </Link>
+
+        {/* Space Shooter */}
+        <Link href="/space-shooter" style={{ textDecoration: 'none' }}>
+          <div style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(99,102,241,0.3)' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #6366f1, #4338ca)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🚀</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: '#818cf8', textTransform: 'uppercase' as const, marginBottom: 2 }}>Galactic Mission</div>
+              <div style={{ fontSize: 16, fontWeight: 800 }}>Space Culture</div>
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* 5. Pilih Chapter (Skill Tree) */}
