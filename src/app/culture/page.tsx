@@ -42,6 +42,89 @@ export default async function CulturePage() {
         }
     ];
 
+    const attitudeData = [
+        {
+            letter: "A",
+            title: "Act Respectfully",
+            subtitle: "Menjaga adab kepada guru dan saling menghargai sesama teman.",
+            points: [
+                "Membudayakan 5S (Senyum, Salam, Sapa, Sopan, Santun) saat guru masuk.",
+                "Mendengarkan saat orang lain (guru/teman) berbicara (tidak menyela).",
+                "Duduk dengan postur yang baik sebagai tanda hormat."
+            ]
+        },
+        {
+            letter: "T",
+            title: "Talk Politely",
+            subtitle: "Bertutur kata santun, positif, dan menghindari ucapan kasar.",
+            points: [
+                "Menggunakan Magic Words: Maaf, Tolong, dan Terima Kasih.",
+                "Zero Tolerance terhadap kata-kata kasar atau body shaming.",
+                "Berbicara menggunakan intonasi yang rendah dan tenang."
+            ]
+        },
+        {
+            letter: "T",
+            title: "Turn Off Distraction",
+            subtitle: "Fokus penuh pada materi, tidak bermain game atau medsos saat jam belajar.",
+            points: [
+                "Meletakkan HP di tas/laci (silent mode) saat sesi penjelasan materi.",
+                "Hanya membuka tab browser yang relevan.",
+                "Meminta izin jika ada panggilan darurat dari orang tua."
+            ]
+        },
+        {
+            letter: "I",
+            title: "Involve Actively",
+            subtitle: "Hadir sepenuhnya, merespon instruksi, dan aktif berpartisipasi.",
+            points: [
+                "Mencatat poin penting tanpa disuruh.",
+                "Mengangkat tangan untuk menjadi relawan saat ada tantangan.",
+                "Tidak menjadi silent reader atau 'patung' di dalam kelas."
+            ]
+        },
+        {
+            letter: "T",
+            title: "Think Solutions",
+            subtitle: "Berorientasi pada penyelesaian masalah, bukan mengeluh.",
+            points: [
+                "Membaca pesan error (debugging) sebelum memanggil guru.",
+                "Mengubah mindset: 'Ini susah' menjadi 'Ini tantangan baru'.",
+                "Menawarkan solusi alternatif saat diskusi kelompok."
+            ]
+        },
+        {
+            letter: "U",
+            title: "Use Tech Wisely",
+            subtitle: "Memanfaatkan teknologi & AI sebagai alat bantu belajar, bukan untuk plagiasi.",
+            points: [
+                "Jujur mencantumkan sumber jika mengutip dari internet/AI.",
+                "Menggunakan internet sekolah untuk hal produktif.",
+                "Menjaga keamanan akun dan data pribadi."
+            ]
+        },
+        {
+            letter: "D",
+            title: "Dare to Ask",
+            subtitle: "Membangun rasa ingin tahu dan tidak malu bertanya saat belum paham.",
+            points: [
+                "Berani bertanya 'Mengapa?' dan 'Bagaimana jika?'.",
+                "Mengkonfirmasi pemahaman kepada guru/instruktur.",
+                "Tidak menertawakan teman yang sedang bertanya."
+            ]
+        },
+        {
+            letter: "E",
+            title: "Eager to Collaborate",
+            subtitle: "Terbuka untuk bekerja sama, berbagi ilmu, dan berkontribusi.",
+            points: [
+                "Tidak 'one man show' dalam tugas kelompok.",
+                "Membantu teman yang tertinggal (Tutor Sebaya).",
+                "Menerima pembagian tugas dengan lapang dada."
+            ]
+        }
+    ];
+
     const checklistItems = [
         "Saya datang siap (tepat waktu, perangkat siap, fokus)",
         "Saya aktif bertanya/menjawab minimal 1 kali hari ini",
@@ -91,7 +174,6 @@ export default async function CulturePage() {
                         </div>
                     </div>
                 </div>
-                {/* Background Decorative Element */}
                 <div style={{ position: 'absolute', right: -50, top: -50, width: 200, height: 200, background: 'radial-gradient(circle, #e11d48 0%, transparent 70%)', opacity: 0.2, filter: 'blur(40px)' }} />
             </div>
 
@@ -113,7 +195,6 @@ export default async function CulturePage() {
                         </div>
                     ))}
                 </div>
-
                 <div style={{ marginTop: 40, background: '#f8fafc', borderRadius: 24, padding: 32, border: '1px dashed #cbd5e1' }}>
                     <h4 style={{ fontSize: 16, fontWeight: 800, marginBottom: 20, color: '#1e293b' }}>Output yang diharapkan dari siswa:</h4>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
@@ -137,7 +218,6 @@ export default async function CulturePage() {
             <div style={{ marginBottom: 64, background: '#0f172a', borderRadius: 32, padding: 40, color: 'white' }}>
                 <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>Kenapa ini penting untuk karier?</h2>
                 <p style={{ color: '#94a3b8', marginBottom: 40 }}>Industri butuh sikap profesional, bukan cuma skill teknis.</p>
-
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                         {[
@@ -151,7 +231,6 @@ export default async function CulturePage() {
                             </div>
                         ))}
                     </div>
-
                     <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 24, padding: 24, border: '1px solid rgba(255,255,255,0.1)' }}>
                         <h4 style={{ fontSize: 12, fontWeight: 800, textTransform: 'uppercase', color: '#10b981', marginBottom: 16 }}>Contoh Konkret</h4>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -185,6 +264,54 @@ export default async function CulturePage() {
                                     </li>
                                 ))}
                             </ul>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* ATTITUDE Section */}
+            <div style={{ marginBottom: 64 }}>
+                <div style={{
+                    background: 'linear-gradient(135deg, #e11d48, #9f1239)',
+                    borderRadius: 24, padding: '32px 40px', color: 'white', marginBottom: 32,
+                    boxShadow: '0 20px 40px -10px rgba(225,29,72,0.2)'
+                }}>
+                    <h2 style={{ fontSize: 32, fontWeight: 900, letterSpacing: '0.1em', marginBottom: 8 }}>ATTITUDE</h2>
+                    <p style={{ fontSize: 16, opacity: 0.9, fontWeight: 500 }}>Nilai dasar pengembangan karakter di Moklet Learning Culture</p>
+                </div>
+
+                <div style={{ display: 'grid', gap: 20 }}>
+                    {attitudeData.map((item, i) => (
+                        <div key={i} style={{
+                            background: 'white', borderRadius: 24, padding: '24px 32px',
+                            border: '1px solid #f1f5f9', display: 'flex', gap: 24,
+                            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)',
+                            alignItems: 'center'
+                        }}>
+                            <div style={{
+                                width: 56, height: 56, minWidth: 56, borderRadius: 16,
+                                background: '#fff1f2', color: '#e11d48',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 28, fontWeight: 900,
+                                border: '1px solid #ffe4e6'
+                            }}>
+                                {item.letter}
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <h3 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b', marginBottom: 4 }}>{item.title}</h3>
+                                <p style={{ fontSize: 14, color: '#e11d48', fontWeight: 600, marginBottom: 12 }}>{item.subtitle}</p>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                    {item.points.map((point, pi) => (
+                                        <div key={pi} style={{
+                                            fontSize: 12, color: '#64748b', lineHeight: 1.4,
+                                            padding: '6px 14px', background: '#f8fafc', borderRadius: 99,
+                                            border: '1px solid #f1f5f9'
+                                        }}>
+                                            {point}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -229,7 +356,6 @@ export default async function CulturePage() {
                         </div>
                     ))}
                 </div>
-
                 <div style={{ marginTop: 24, background: 'linear-gradient(135deg, #eff6ff, #dbeafe)', borderRadius: 24, padding: 24 }}>
                     <div style={{ fontSize: 12, fontWeight: 800, color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>Mapping Quest × Culture</div>
                     <div style={{ display: 'grid', gap: 12 }}>
@@ -253,10 +379,10 @@ export default async function CulturePage() {
                     Mulai Refleksi Harian
                 </button>
                 <button style={{ background: 'white', border: '1px solid #e2e8f0', padding: '16px', borderRadius: 16, fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
-                    Lihat Nilai & Aturan Main
+                    Lihat Aturan Main
                 </button>
                 <button style={{ background: '#e11d48', color: 'white', border: 'none', padding: '16px', borderRadius: 16, fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>
-                    Mulai Quest Pertama: Culture Basics 🚀
+                    Mulai Quest Pertama 🚀
                 </button>
             </div>
         </div>
