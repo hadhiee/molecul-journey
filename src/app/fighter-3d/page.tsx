@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Image, Text, Sparkles } from "@react-three/drei";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import * as THREE from "three";
 
 // --- Assets ---
 const BG_URL = "https://images.unsplash.com/photo-1599058945522-28d584b6f0ff";
@@ -12,15 +9,15 @@ const GLOVE_URL = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated
 const ENEMY_URL = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Angry%20Face%20with%20Horns.png";
 
 const AVATARS = [
-    { id: "hero-rpl", name: "Inno-Bot", color: 0x3b82f6, power: 85, icon: "🤖" },
-    { id: "hero-tkj", name: "Net-Guard", color: 0x10b981, power: 90, icon: "🛡️" },
-    { id: "hero-dkv", name: "Art-Strike", color: 0xe11d48, power: 80, icon: "🎨" },
+    { id: "hero-rpl", name: "Inno-Bot", color: "#3b82f6", power: 85, icon: "🤖" },
+    { id: "hero-tkj", name: "Net-Guard", color: "#10b981", power: 90, icon: "🛡️" },
+    { id: "hero-dkv", name: "Art-Strike", color: "#e11d48", power: 80, icon: "🎨" },
 ];
 
 const ANTI_HEROES = [
-    { name: "Distraction Shadow", factor: "T - Turn Off Distractions", color: 0x475569, icon: "📵" },
-    { name: "Toxic Speaker", factor: "T - Talk Politely", color: 0x334155, icon: "🙊" },
-    { name: "Lone Blamer", factor: "E - Eager to Collaborate", color: 0x1e293b, icon: "👤" },
+    { name: "Distraction Shadow", factor: "T - Turn Off Distractions", color: "#475569", icon: "📵" },
+    { name: "Toxic Speaker", factor: "T - Talk Politely", color: "#334155", icon: "🙊" },
+    { name: "Lone Blamer", factor: "E - Eager to Collaborate", color: "#1e293b", icon: "👤" },
 ];
 
 const ATTITUDE_VALUES = [
@@ -29,160 +26,69 @@ const ATTITUDE_VALUES = [
     "Dare to Ask", "Eager to Collaborate"
 ];
 
-// --- Sub-components ---
+// --- 2D Sub-components ---
 
-function Glove({ position, isPunching, side }: { position: [number, number, number], isPunching: boolean, side: "left" | "right" }) {
-    const ref = useRef<THREE.Group>(null!);
-
-    useFrame((state, delta) => {
-        if (!ref.current) return;
-        const targetZ = isPunching ? -1 : 2; // Forward / Back
-        // Faster punch, slower return
-        const speed = isPunching ? 20 : 5;
-        ref.current.position.z = THREE.MathUtils.lerp(ref.current.position.z, targetZ, delta * speed);
-
-        // Slight bobbing
-        ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 2) * 0.05;
-    });
-
+function Glove2D({ side, isPunching }: { side: "left" | "right", isPunching: boolean }) {
     return (
-        <group ref={ref} position={[position[0], position[1], 2]}>
-            <Image
-                url={GLOVE_URL}
-                transparent
-                scale={[1.5, 1.5]}
-                scale-x={side === "left" ? -1.5 : 1.5} // Flip left glove
-                toneMapped={false}
-            />
-        </group>
+        <img
+            src={GLOVE_URL}
+            alt="Glove"
+            style={{
+                position: "absolute",
+                bottom: "10%",
+                [side]: "10%",
+                width: "min(40vw, 220px)",
+                transition: "transform 0.1s cubic-bezier(0.18, 0.89, 0.32, 1.28)",
+                transform: isPunching
+                    ? `scale(${side === 'left' ? '-1.1, 1.1' : '1.1, 1.1'}) translateY(-150px) rotate(${side === 'left' ? '15deg' : '-15deg'})`
+                    : `scale(${side === 'left' ? '-1, 1' : '1, 1'})`,
+                zIndex: 20,
+                pointerEvents: "none",
+                filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.5))"
+            }}
+        />
     );
 }
 
-// --- 3D Environment ---
-
-function BoxingRing() {
+function Enemy2D({ isHit, name }: { isHit: boolean, name: string }) {
     return (
-        <group position={[0, -2.5, -2]}>
-            {/* Floor Canvas */}
-            <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[20, 20]} />
-                <meshStandardMaterial color="#334155" roughness={0.8} />
-            </mesh>
-            {/* Ring Platform */}
-            <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-                <planeGeometry args={[12, 12]} />
-                <meshStandardMaterial color="#475569" roughness={0.5} />
-            </mesh>
-            {/* Inner Ring (Blue Canvas) */}
-            <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-                <planeGeometry args={[10, 10]} />
-                <meshStandardMaterial color="#1e293b" roughness={0.6} />
-            </mesh>
-
-            {/* Posts */}
-            <mesh position={[-5, 2, -5]} castShadow><cylinderGeometry args={[0.2, 0.2, 4]} /><meshStandardMaterial color="#ef4444" /></mesh>
-            <mesh position={[5, 2, -5]} castShadow><cylinderGeometry args={[0.2, 0.2, 4]} /><meshStandardMaterial color="#3b82f6" /></mesh>
-            <mesh position={[-5, 2, 5]} castShadow><cylinderGeometry args={[0.2, 0.2, 4]} /><meshStandardMaterial color="#3b82f6" /></mesh>
-            <mesh position={[5, 2, 5]} castShadow><cylinderGeometry args={[0.2, 0.2, 4]} /><meshStandardMaterial color="#ef4444" /></mesh>
-
-            {/* Ropes */}
-            {[1.2, 2.4, 3.6].map((y, i) => (
-                <group key={i} position={[0, y - 1, 0]}>
-                    {/* Horizontal Ropes */}
-                    <mesh position={[0, 0, -5]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.04, 0.04, 10]} /><meshStandardMaterial color="white" /></mesh>
-                    <mesh position={[0, 0, 5]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.04, 0.04, 10]} /><meshStandardMaterial color="white" /></mesh>
-                    <mesh position={[-5, 0, 0]} rotation={[Math.PI / 2, 0, 0]}><cylinderGeometry args={[0.04, 0.04, 10]} /><meshStandardMaterial color="white" /></mesh>
-                    <mesh position={[5, 0, 0]} rotation={[Math.PI / 2, 0, 0]}><cylinderGeometry args={[0.04, 0.04, 10]} /><meshStandardMaterial color="white" /></mesh>
-                </group>
-            ))}
-        </group>
-    );
-}
-
-function Enemy({ isHit, color }: { isHit: boolean, color: number }) {
-    const ref = useRef<THREE.Group>(null!);
-
-    useFrame((state) => {
-        if (!ref.current) return;
-        // Idle Animation
-        ref.current.position.y = Math.sin(state.clock.elapsedTime) * 0.1;
-
-        // Hit Shake
-        if (isHit) {
-            ref.current.position.x = Math.sin(state.clock.elapsedTime * 50) * 0.1;
-            ref.current.scale.setScalar(1.1); // Bulge on hit
-        } else {
-            ref.current.position.x = THREE.MathUtils.lerp(ref.current.position.x, 0, 0.1);
-            ref.current.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
-        }
-    });
-
-    return (
-        <group ref={ref} position={[0, 0, -3]}>
-            <Image
-                url={ENEMY_URL}
-                transparent
-                scale={[3.5, 3.5]}
-                toneMapped={false}
-                color={isHit ? "#ff0000" : "white"} // Flash red
+        <div style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: `translate(-50%, -50%) scale(${isHit ? 1.15 : 1})`,
+            transition: "transform 0.05s",
+            zIndex: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            justifyContent: "center"
+        }}>
+            <img
+                src={ENEMY_URL}
+                alt="Enemy"
+                style={{
+                    width: "min(60vw, 350px)",
+                    filter: isHit ? "brightness(0.5) sepia(1) hue-rotate(-50deg) saturate(5) drop-shadow(0 0 30px red)" : "drop-shadow(0 20px 40px rgba(0,0,0,0.6))",
+                    animation: isHit ? "shake 0.2s" : "float 3s infinite ease-in-out",
+                    transition: "filter 0.1s"
+                }}
             />
-        </group>
-    );
-}
-
-function ArenaScene({
-    gameState,
-    lastPunchTime,
-    punchSide,
-    enemyHitTime,
-    onEnemyTurn
-}: any) {
-    const isLeftPunching = (Date.now() - lastPunchTime < 150) && punchSide === "left";
-    const isRightPunching = (Date.now() - lastPunchTime < 150) && punchSide === "right";
-    const isEnemyHit = (Date.now() - enemyHitTime < 200);
-
-    // Enemy AI Loop
-    const cooldownRef = useRef(0);
-    useFrame(() => {
-        if (gameState === "PLAYING") {
-            cooldownRef.current++;
-            if (cooldownRef.current > 60) { // Approx 1 sec
-                onEnemyTurn();
-                cooldownRef.current = 0;
-            }
-        }
-    });
-
-    return (
-        <>
-            <ambientLight intensity={0.4} />
-            <spotLight position={[0, 10, 5]} angle={0.5} penumbra={1} intensity={2} castShadow />
-            <pointLight position={[0, 5, 0]} intensity={1.5} color="#e2e8f0" />
-
-            {/* Distant Stadium Background */}
-            <Image
-                url={BG_URL}
-                scale={[40, 20]}
-                position={[0, 5, -15]}
-                transparent
-                opacity={0.5}
-                color="#222"
-                toneMapped={false}
-            />
-
-            <BoxingRing />
-
-            <Sparkles count={50} scale={10} size={4} speed={0.4} opacity={0.5} color="#fff" />
-
-            {/* Enemy */}
-            <Enemy isHit={isEnemyHit} color={0xffffff} />
-
-            {/* Player Gloves (FPP) */}
-            <Glove position={[-1.2, -1.5, 0]} isPunching={isLeftPunching} side="left" />
-            <Glove position={[1.2, -1.5, 0]} isPunching={isRightPunching} side="right" />
-
-            <fog attach="fog" args={['#0a0a0f', 2, 18]} />
-        </>
+            <div style={{
+                marginTop: 20,
+                background: "rgba(0,0,0,0.7)",
+                color: "white",
+                padding: "8px 16px",
+                borderRadius: 99,
+                fontWeight: 800,
+                fontSize: "clamp(12px, 4vw, 16px)",
+                border: "1px solid rgba(255,255,255,0.2)",
+                backdropFilter: "blur(4px)"
+            }}>
+                {name}
+            </div>
+        </div>
     );
 }
 
@@ -206,6 +112,11 @@ export default function FighterPage() {
     const [punchSide, setPunchSide] = useState<"left" | "right">("right");
     const [hitPopups, setHitPopups] = useState<{ id: number, text: string, x: number, y: number }[]>([]);
     const popupIdCounter = useRef(0);
+
+    // Helpers
+    const isLeftPunching = (Date.now() - lastPunchTime < 150) && punchSide === "left";
+    const isRightPunching = (Date.now() - lastPunchTime < 150) && punchSide === "right";
+    const isEnemyHit = (Date.now() - enemyHitTime < 200);
 
     // Logic
     const spawnHitPopup = () => {
@@ -244,19 +155,24 @@ export default function FighterPage() {
         setPlayerScore(s => s + 50);
     };
 
-    const handleEnemyAttack = () => {
+    // Enemy AI Loop using setInterval (Pure React)
+    useEffect(() => {
         if (gameState !== "PLAYING") return;
 
-        // Enemy punches back
-        setPlayerHp(hp => {
-            const newHp = Math.max(0, hp - 5); // Constant damage
-            if (newHp <= 0) {
-                setWinner("ENEMY");
-                setGameState("RESULT");
-            }
-            return newHp;
-        });
-    };
+        const interval = setInterval(() => {
+            setPlayerHp(hp => {
+                const newHp = Math.max(0, hp - 5);
+                if (newHp <= 0) {
+                    setWinner("ENEMY");
+                    setGameState("RESULT");
+                }
+                return newHp;
+            });
+            // Visual feedback for player getting hit could go here (e.g. screen shake)
+        }, 1500);
+
+        return () => clearInterval(interval);
+    }, [gameState]);
 
     // Reset Enemy on Start
     useEffect(() => {
@@ -352,7 +268,6 @@ export default function FighterPage() {
                         <div className="instruction-badge">
                             Tap Screen to Punch! 🥊
                         </div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>Graphics by Fluent Emoji & Unsplash</div>
                     </div>
                 </>
             )}
@@ -386,27 +301,45 @@ export default function FighterPage() {
                 </div>
             )}
 
-            {/* --- 3D Scene --- */}
-            <div style={{ width: "100%", height: "100%", cursor: "crosshair" }}>
-                <Canvas
-                    shadows
-                    camera={{ position: [0, 0, 5], fov: 60 }}
-                    onClick={handlePunch} // Handle clicks on canvas
-                >
-                    <React.Suspense fallback={null}>
-                        <ArenaScene
-                            gameState={gameState}
-                            lastPunchTime={lastPunchTime}
-                            punchSide={punchSide}
-                            enemyHitTime={enemyHitTime}
-                            onEnemyTurn={handleEnemyAttack}
-                        />
-                    </React.Suspense>
-                </Canvas>
+            {/* --- 2D Arena --- */}
+            <div
+                onClick={handlePunch}
+                className="arena-2d"
+                style={{
+                    width: "100%", height: "100%",
+                    position: "relative",
+                    backgroundImage: `url(${BG_URL})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    cursor: "crosshair",
+                    overflow: "hidden"
+                }}
+            >
+                {/* Overlay Darkness */}
+                <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }} />
+
+                {gameState === "PLAYING" && (
+                    <>
+                        <Enemy2D isHit={isEnemyHit} name={enemyData.name} />
+                        <Glove2D side="left" isPunching={isLeftPunching} />
+                        <Glove2D side="right" isPunching={isRightPunching} />
+                    </>
+                )}
             </div>
 
             {/* --- Styles --- */}
             <style>{`
+                @keyframes float {
+                    0%, 100% { transform: translateY(0) scale(1.05); }
+                    50% { transform: translateY(-15px) scale(1); }
+                }
+                @keyframes shake {
+                    0% { transform: translate(-50%, -50%) rotate(0deg); }
+                    25% { transform: translate(-55%, -50%) rotate(-5deg); }
+                    75% { transform: translate(-45%, -50%) rotate(5deg); }
+                    100% { transform: translate(-50%, -50%) rotate(0deg); }
+                }
+
                 .avatar-grid {
                     display: flex;
                     gap: 16px;
@@ -439,7 +372,7 @@ export default function FighterPage() {
                     justify-content: space-between;
                     align-items: center;
                     z-index: 10;
-                    pointer-events: none; /* Let clicks pass through to Canvas */
+                    pointer-events: none;
                 }
                 .hp-block {
                     flex: 1;
