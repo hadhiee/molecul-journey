@@ -14,6 +14,7 @@ export default async function Home() {
 
   const userEmail = session.user?.email || "";
   const userName = session.user?.name || "Agent";
+  const userImage = session.user?.image || "";
 
   // Fetch real XP & mission count from Supabase
   let totalXP = 0;
@@ -75,14 +76,44 @@ export default async function Home() {
         boxShadow: '0 16px 48px -8px rgba(225,29,72,0.4)',
       }}>
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-            <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase' as const, opacity: 0.7 }}>
-              Moklet Learning Culture
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              {userImage ? (
+                <img
+                  src={userImage}
+                  alt={userName}
+                  style={{
+                    width: 52,
+                    height: 52,
+                    borderRadius: 18,
+                    border: '2px solid rgba(255,255,255,0.4)',
+                    boxShadow: '0 8px 16px rgba(0,0,0,0.15)'
+                  }}
+                />
+              ) : (
+                <div style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: 18,
+                  background: 'rgba(255,255,255,0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 24
+                }}>
+                  👤
+                </div>
+              )}
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase' as const, opacity: 0.8, marginBottom: 2 }}>
+                  Moklet Learning Culture
+                </div>
+                <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>
+                  Hai, {userName.split(" ")[0]}! 👋
+                </div>
+              </div>
             </div>
             <SignOutButton />
-          </div>
-          <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4, lineHeight: 1.2 }}>
-            Selamat Datang, {userName.split(" ")[0]} 👋
           </div>
           <div style={{ fontSize: 13, opacity: 0.7, fontWeight: 500, marginBottom: 20 }}>
             {userEmail}
@@ -128,7 +159,7 @@ export default async function Home() {
             fontSize: 24, flexShrink: 0,
             boxShadow: '0 4px 16px rgba(139,92,246,0.4)',
           }}>
-            ⚡
+            <span className="animate-float">⚡</span>
           </div>
         </div>
       </Link>
@@ -161,7 +192,7 @@ export default async function Home() {
             fontSize: 24, flexShrink: 0,
             boxShadow: '0 4px 16px rgba(14,165,233,0.4)',
           }}>
-            🏗️
+            <span className="animate-float" style={{ animationDelay: '0.5s' }}>🏗️</span>
           </div>
         </div>
       </Link>
@@ -194,7 +225,7 @@ export default async function Home() {
             fontSize: 24, flexShrink: 0,
             boxShadow: '0 4px 16px rgba(139,92,246,0.4)',
           }}>
-            🏃
+            <span className="animate-float" style={{ animationDelay: '1s' }}>🏃</span>
           </div>
         </div>
       </Link>
@@ -227,7 +258,7 @@ export default async function Home() {
             fontSize: 24, flexShrink: 0,
             boxShadow: '0 4px 16px rgba(101,163,13,0.3)',
           }}>
-            🧑‍🎓
+            <span className="animate-float" style={{ animationDelay: '1.5s' }}>🧑‍🎓</span>
           </div>
         </div>
       </Link>
@@ -260,7 +291,7 @@ export default async function Home() {
             fontSize: 24, flexShrink: 0,
             boxShadow: '0 4px 16px rgba(37,99,235,0.3)',
           }}>
-            🔮
+            <span className="animate-float" style={{ animationDelay: '2s' }}>🔮</span>
           </div>
         </div>
       </Link>
@@ -279,7 +310,7 @@ export default async function Home() {
             display: 'flex', flexDirection: 'column' as const,
           }}>
             <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, background: ch.bg, position: 'relative' }}>
-              <span style={{ position: 'relative', zIndex: 1 }}>{ch.emoji}</span>
+              <span className="animate-float" style={{ position: 'relative', zIndex: 1, animationDelay: `${i * 0.2}s` }}>{ch.emoji}</span>
               <span style={{ position: 'absolute', right: 8, bottom: 0, fontSize: 48, fontWeight: 900, opacity: 0.06, lineHeight: 1 }}>0{i + 1}</span>
             </div>
             <div style={{ padding: 16, flex: 1, display: 'flex', flexDirection: 'column' as const }}>
