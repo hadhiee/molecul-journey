@@ -6,15 +6,20 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import Link from "next/link";
 
 const TRAITS = [
-    { title: "Sang Inovator", icon: "💡", color: 0x3b82f6, desc: "Kamu suka menciptakan solusi baru dari nol.", type: "RPL" },
-    { title: "Arsitek Jaringan", icon: "🌐", color: 0x10b981, desc: "Kamu ahli dalam menghubungkan berbagai sistem.", type: "TKJ" },
-    { title: "Visual Storyteller", icon: "🎨", color: 0xe11d48, desc: "Kamu melihat dunia melalui estetika dan pesan.", type: "DKV" },
-    { title: "Problem Solver", icon: "🧩", color: 0xf59e0b, desc: "Tidak ada bug yang terlalu sulit untukmu.", type: "Character" },
+    { title: "Act Respectfully", icon: "A", color: 0xe11d48, desc: "Menjaga adab kepada guru dan saling menghargai sesama teman.", type: "Character" },
+    { title: "Talk Politely", icon: "T", color: 0xbe123c, desc: "Bertutur kata santun, positif, dan menghindari ucapan kasar.", type: "Communication" },
+    { title: "Turn Off Distractions", icon: "T", color: 0x9f1239, desc: "Fokus penuh pada materi, tidak terdistraksi hal lain.", type: "Character" },
+    { title: "Involve Actively", icon: "I", color: 0x2563eb, desc: "Hadir sepenuhnya dan aktif berpartisipasi dalam diskusi.", type: "Collaboration" },
+    { title: "Think Solutions", icon: "T", color: 0x059669, desc: "Berorientasi pada penyelesaian masalah, bukan mengeluh.", type: "Critical Thinking" },
+    { title: "Use Tech Wisely", icon: "U", color: 0xd97706, desc: "Memanfaatkan teknologi & AI sebagai alat bantu belajar.", type: "Industry" },
+    { title: "Dare to Ask", icon: "D", color: 0x7c3aed, desc: "Membangun rasa ingin tahu dan tidak malu bertanya.", type: "Critical Thinking" },
+    { title: "Eager to Collaborate", icon: "E", color: 0x0891b2, desc: "Terbuka untuk bekerja sama dan berbagi ilmu.", type: "Collaboration" },
 ];
 
 export default function Discovery3DGame() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [foundTraits, setFoundTraits] = useState<string[]>([]);
+    const [score, setScore] = useState(0);
     const [activeTrait, setActiveTrait] = useState<any>(null);
     const [gameState, setGameState] = useState<"START" | "PLAYING" | "RESULT">("START");
 
@@ -76,40 +81,43 @@ export default function Discovery3DGame() {
             const sphereMat = new THREE.MeshStandardMaterial({
                 color: trait.color,
                 transparent: true,
-                opacity: 0.3,
+                opacity: 0.4,
                 emissive: trait.color,
                 emissiveIntensity: 1
             });
             const sphere = new THREE.Mesh(sphereGeo, sphereMat);
             group.add(sphere);
 
-            // Core
-            const coreGeo = new THREE.OctahedronGeometry(0.4, 0);
+            // Core with Label
+            const coreGeo = new THREE.BoxGeometry(0.6, 0.6, 0.6);
             const coreMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
             const core = new THREE.Mesh(coreGeo, coreMat);
             group.add(core);
 
-            // Random Position
+            // Random Position in a wider circle
             const angle = (i / TRAITS.length) * Math.PI * 2;
-            const dist = 8 + Math.random() * 5;
+            const dist = 10 + Math.random() * 8;
             group.position.set(Math.cos(angle) * dist, 1, Math.sin(angle) * dist);
 
-            group.userData = { trait };
+            group.userData = { trait, id: i };
             scene.add(group);
             orbs.push(group);
         });
 
         // Movement State
         const keys: Record<string, boolean> = {};
-        window.onkeydown = (e) => keys[e.key.toLowerCase()] = true;
-        window.onkeyup = (e) => keys[e.key.toLowerCase()] = false;
+        const onKey = (e: KeyboardEvent, isDown: boolean) => {
+            keys[e.key.toLowerCase()] = isDown;
+        };
+        window.addEventListener('keydown', (e) => onKey(e, true));
+        window.addEventListener('keyup', (e) => onKey(e, false));
 
         let animationId: number;
         const animate = () => {
             animationId = requestAnimationFrame(animate);
 
             // Movement Logic
-            const speed = 0.15;
+            const speed = 0.18;
             if (keys['w']) character.position.z -= speed;
             if (keys['s']) character.position.z += speed;
             if (keys['a']) character.position.x -= speed;
@@ -117,17 +125,18 @@ export default function Discovery3DGame() {
 
             // Orb Animations & Collision
             orbs.forEach(orb => {
-                orb.rotation.y += 0.02;
-                orb.position.y = 1 + Math.sin(Date.now() * 0.002) * 0.2;
+                orb.rotation.y += 0.03;
+                orb.position.y = 1 + Math.sin(Date.now() * 0.003) * 0.2;
 
                 const distance = character.position.distanceTo(orb.position);
                 if (distance < 1.5 && orb.visible) {
                     orb.visible = false;
                     const trait = orb.userData.trait;
                     setFoundTraits(prev => {
-                        if (prev.includes(trait.title)) return prev;
+                        if (prev.includes(trait.title + orb.userData.id)) return prev;
                         setActiveTrait(trait);
-                        return [...prev, trait.title];
+                        setScore(s => s + 50);
+                        return [...prev, trait.title + orb.userData.id];
                     });
                 }
             });
@@ -154,10 +163,6 @@ export default function Discovery3DGame() {
         };
     }, [gameState]);
 
-    const finishDiscovery = () => {
-        setGameState("RESULT");
-    };
-
     return (
         <div style={{ position: "relative", width: "100vw", height: "100vh", overflow: "hidden", background: "#0f172a", fontFamily: "Inter, sans-serif" }}>
             {/* HUD */}
@@ -169,26 +174,36 @@ export default function Discovery3DGame() {
                         </Link>
                     </div>
 
-                    <div style={{ position: "absolute", top: 24, right: 24, zIndex: 10 }}>
+                    <div style={{ position: "absolute", top: 24, right: 24, zIndex: 10, display: "flex", gap: 12 }}>
+                        <div style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", padding: "16px 24px", borderRadius: 20, color: "white", border: "1px solid rgba(255,255,255,0.2)", textAlign: "right" }}>
+                            <div style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", opacity: 0.6, marginBottom: 4 }}>Score</div>
+                            <div style={{ fontSize: 24, fontWeight: 900 }}>{score}</div>
+                        </div>
                         <div style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", padding: "16px 24px", borderRadius: 20, color: "white", border: "1px solid rgba(255,255,255,0.2)" }}>
-                            <div style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", opacity: 0.6, marginBottom: 4 }}>Trait Ditemukan</div>
-                            <div style={{ fontSize: 24, fontWeight: 900 }}>{foundTraits.length} / {TRAITS.length}</div>
+                            <div style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", opacity: 0.6, marginBottom: 4 }}>ATTITUDE Crystal</div>
+                            <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: '2px' }}>
+                                {"ATTITUDE".split("").map((letter, i) => (
+                                    <span key={i} style={{ opacity: i < foundTraits.length ? 1 : 0.2, color: i < foundTraits.length ? '#10b981' : 'white' }}>
+                                        {letter}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
                     <div style={{ position: "absolute", bottom: 40, width: "100%", display: "flex", justifyContent: "center", zIndex: 10, pointerEvents: "none" }}>
                         <div style={{ background: "rgba(0,0,0,0.5)", color: "white", padding: "12px 24px", borderRadius: 99, fontSize: 14, fontWeight: 600 }}>
-                            Gunakan WASD untuk jalan & Mouse untuk putar kamera 🕹️
+                            Gunakan WASD untuk jalan & kumpulkan 8 Crystal ATTITUDE! 🕹️
                         </div>
                     </div>
 
                     {foundTraits.length === TRAITS.length && (
                         <div style={{ position: "absolute", bottom: 100, width: "100%", display: "flex", justifyContent: "center", zIndex: 10 }}>
                             <button
-                                onClick={finishDiscovery}
+                                onClick={() => setGameState("RESULT")}
                                 style={{ background: "#10b981", color: "white", border: "none", padding: "16px 32px", borderRadius: 16, fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 8px 24px rgba(16,185,129,0.4)" }}
                             >
-                                Selesaikan Jati Diri ✨
+                                KLAIM KEMENANGAN ✨
                             </button>
                         </div>
                     )}
@@ -199,14 +214,14 @@ export default function Discovery3DGame() {
             {activeTrait && (
                 <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 30, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}>
                     <div style={{ background: "white", padding: 40, borderRadius: 32, maxWidth: 400, textAlign: "center", boxShadow: "0 32px 64px -12px rgba(0,0,0,0.5)" }}>
-                        <div style={{ fontSize: 64, marginBottom: 16 }}>{activeTrait.icon}</div>
-                        <h3 style={{ fontSize: 24, fontWeight: 900, marginBottom: 12 }}>Kamu Menemukan: {activeTrait.title}!</h3>
+                        <div style={{ fontSize: 80, fontWeight: 900, color: "#e11d48", marginBottom: 16 }}>{activeTrait.icon}</div>
+                        <h3 style={{ fontSize: 24, fontWeight: 900, marginBottom: 12 }}>Crystal {activeTrait.title}</h3>
                         <p style={{ fontSize: 16, color: "#64748b", lineHeight: 1.6, marginBottom: 32 }}>{activeTrait.desc}</p>
                         <button
                             onClick={() => setActiveTrait(null)}
                             style={{ background: "#0f172a", color: "white", border: "none", width: "100%", padding: "16px", borderRadius: 16, fontSize: 16, fontWeight: 800, cursor: "pointer" }}
                         >
-                            Lanjut Jelajah
+                            Dapatkan +50 Score ⚡
                         </button>
                     </div>
                 </div>
@@ -215,35 +230,30 @@ export default function Discovery3DGame() {
             {/* Screens */}
             {gameState === "START" && (
                 <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 20, background: "linear-gradient(to bottom, #0f172a, #1e293b)", color: "white" }}>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: "#3b82f6", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 12 }}>Next-Gen 3D Simulation</div>
-                    <h1 style={{ fontSize: 56, fontWeight: 900, marginBottom: 16, textAlign: "center", letterSpacing: "-0.04em" }}>THE CRYSTAL OF <br /> SELF DISCOVERY</h1>
+                    <div style={{ fontSize: 12, fontWeight: 800, color: "#3b82f6", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 12 }}>3D Discovery Quest</div>
+                    <h1 style={{ fontSize: 56, fontWeight: 900, marginBottom: 16, textAlign: "center", letterSpacing: "-0.04em" }}>THE CRYSTAL OF <br /> ATTITUDE</h1>
                     <p style={{ fontSize: 18, color: "#94a3b8", maxWidth: 500, textAlign: "center", marginBottom: 48, lineHeight: 1.6 }}>
-                        Jelajahi dunia 3D MoLeCul, kumpulkan kristal jati diri, dan temukan potensi terpendammu sebagai warga Moklet.
+                        Cari dan kumpulkan 8 Crystal yang tersebar di dunia digital ini untuk melengkapi jiwa ATTITUDE-mu!
                     </p>
                     <button
                         onClick={() => setGameState("PLAYING")}
                         style={{ background: "white", color: "#0f172a", border: "none", padding: "20px 48px", borderRadius: 20, fontSize: 18, fontWeight: 800, cursor: "pointer", boxShadow: "0 10px 30px rgba(255,255,255,0.2)" }}
                     >
-                        Masuki Dunia (Beta) 🚀
+                        Mulai Petualangan 🚀
                     </button>
                 </div>
             )}
 
             {gameState === "RESULT" && (
                 <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 20, background: "white", padding: 24 }}>
-                    <div style={{ fontSize: 64, marginBottom: 24 }}>🏆</div>
-                    <h2 style={{ fontSize: 32, fontWeight: 900, color: "#0f172a", marginBottom: 12 }}>Analisis Jati Diri Selesai!</h2>
-                    <p style={{ fontSize: 18, color: "#64748b", textAlign: "center", maxWidth: 500, marginBottom: 40 }}>
-                        Berdasarkan eksplorasimu, kamu memiliki jiwa yang sangat dominan di bidang Digital Creative.
+                    <div style={{ fontSize: 80, marginBottom: 24 }}>🎊</div>
+                    <h2 style={{ fontSize: 36, fontWeight: 900, color: "#0f172a", marginBottom: 12 }}>MISI SELESAI!</h2>
+                    <p style={{ fontSize: 20, color: "#64748b", textAlign: "center", maxWidth: 500, marginBottom: 40 }}>
+                        Selamat! Kamu telah berhasil mengumpulkan seluruh Crystal ATTITUDE dan siap menjadi warga Moklet teladan.
                     </p>
-                    <div style={{ background: "#f8fafc", padding: 32, borderRadius: 24, width: "100%", maxWidth: 500, border: "1px solid #e2e8f0", marginBottom: 40 }}>
-                        <div style={{ fontSize: 12, fontWeight: 800, color: "#e11d48", textTransform: "uppercase", marginBottom: 16 }}>Potential Role</div>
-                        {foundTraits.map((t, i) => (
-                            <div key={i} style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, paddingBottom: 12, borderBottom: i < foundTraits.length - 1 ? "1px solid #e2e8f0" : "none" }}>
-                                <span style={{ fontWeight: 700 }}>{t}</span>
-                                <span style={{ color: "#10b981", fontWeight: 800 }}>Mastered</span>
-                            </div>
-                        ))}
+                    <div style={{ background: "linear-gradient(135deg, #10b981, #059669)", padding: '32px 48px', borderRadius: 24, color: 'white', textAlign: 'center', boxShadow: '0 20px 40px -12px rgba(16,185,129,0.3)', marginBottom: 48 }}>
+                        <div style={{ fontSize: 14, fontWeight: 800, textTransform: "uppercase", opacity: 0.8, marginBottom: 8 }}>Total Score Kamu</div>
+                        <div style={{ fontSize: 64, fontWeight: 900 }}>{score} XP</div>
                     </div>
                     <Link href="/" style={{ background: "#0f172a", color: "white", padding: "20px 64px", borderRadius: 20, fontSize: 18, fontWeight: 800, textDecoration: "none" }}>
                         Kembali ke Beranda
