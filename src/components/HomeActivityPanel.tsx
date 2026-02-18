@@ -41,7 +41,7 @@ const Modal = ({ title, children, onClose }: { title: string, children: React.Re
     </div>
 );
 
-export default function HomeActivityPanel() {
+export default function HomeActivityPanel({ userEmail }: { userEmail: string }) {
     const [activeModal, setActiveModal] = useState<"CHECKIN" | "EVIDENCE" | "REFLECTION" | null>(null);
     const [reflection, setReflection] = useState("");
     const [isSaving, setIsSaving] = useState(false);
@@ -59,42 +59,91 @@ export default function HomeActivityPanel() {
         const date = new Date().getDate();
         setDayValue(ATTITUDE_VALUES[date % ATTITUDE_VALUES.length]);
 
-        // Load history from localStorage
-        const savedReflections = localStorage.getItem("user_reflections_history");
-        if (savedReflections) setReflectionsHistory(JSON.parse(savedReflections));
+        if (userEmail) {
+            fetchUserHistory();
+        }
 
-        const savedEvidence = localStorage.getItem("user_evidence_history");
-        if (savedEvidence) setEvidenceHistory(JSON.parse(savedEvidence));
-
-        // Load today's draft
-        const draft = localStorage.getItem("user_reflection_draft");
+        // Load today's draft (still okay in localStorage as it's a transient draft)
+        const draftKey = `user_reflection_draft_${userEmail?.split('@')[0]}`;
+        const draft = localStorage.getItem(draftKey);
         if (draft) setReflection(draft);
-    }, []);
+    }, [userEmail]);
 
-    const handleSaveReflection = () => {
+    async function fetchUserHistory() {
+        try {
+            // Fetch reflections and evidence from Supabase for this specific user
+            const { data, error } = await supabase
+                .from("user_progress")
+                .select("*")
+                .eq("user_email", userEmail)
+                .in("mission_id", ["SYSTEM_REFLECTION", "SYSTEM_EVIDENCE"])
+                .order("created_at", { ascending: false });
+
+            if (data) {
+                const refs = data
+                    .filter(item => item.mission_id === "SYSTEM_REFLECTION")
+                    .map(item => ({
+                        id: item.id,
+                        content: item.choice_label,
+                        timestamp: item.created_at,
+                        type: 'reflection'
+                    }));
+
+                const evs = data
+                    .filter(item => item.mission_id === "SYSTEM_EVIDENCE")
+                    .map(item => ({
+                        id: item.id,
+                        content: item.choice_label,
+                        timestamp: item.created_at,
+                        type: 'evidence'
+                    }));
+
+                setReflectionsHistory(refs);
+                setEvidenceHistory(evs);
+            }
+        } catch (e) {
+            console.error("Failed to fetch history", e);
+        }
+    }
+
+    const handleSaveReflection = async () => {
         if (!reflection.trim()) return;
         setIsSaving(true);
 
-        setTimeout(() => {
+        try {
+            const { error } = await supabase.from("user_progress").insert({
+                user_email: userEmail,
+                mission_id: "SYSTEM_REFLECTION",
+                score: 0,
+                choice_label: reflection
+            });
+
+            if (error) throw error;
+
+            // Update local state immediately for better UX
             const newItem: HistoryItem = {
                 id: Date.now().toString(),
                 content: reflection,
                 timestamp: new Date().toISOString(),
                 type: 'reflection'
             };
+            setReflectionsHistory([newItem, ...reflectionsHistory]);
 
-            const newHistory = [newItem, ...reflectionsHistory];
-            setReflectionsHistory(newHistory);
-            localStorage.setItem("user_reflections_history", JSON.stringify(newHistory));
-            localStorage.removeItem("user_reflection_draft");
+            // Clear draft
+            const draftKey = `user_reflection_draft_${userEmail?.split('@')[0]}`;
+            localStorage.removeItem(draftKey);
             setReflection("");
 
             setIsSaving(false);
-            alert("Refleksi berhasil disimpan ke riwayat! ✨");
-        }, 800);
+            alert("Refleksi berhasil disimpan! ✨");
+        } catch (e) {
+            console.error("Save failure", e);
+            setIsSaving(false);
+            alert("Gagal menyimpan refleksi. Silakan coba lagi.");
+        }
     };
 
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             if (file.type !== "application/pdf") {
@@ -103,7 +152,17 @@ export default function HomeActivityPanel() {
             }
             setUploadStatus("Mengunggah...");
 
-            setTimeout(() => {
+            try {
+                // Record evidence in database
+                const { error } = await supabase.from("user_progress").insert({
+                    user_email: userEmail,
+                    mission_id: "SYSTEM_EVIDENCE",
+                    score: 0,
+                    choice_label: `File: ${file.name}`
+                });
+
+                if (error) throw error;
+
                 const newItem: HistoryItem = {
                     id: Date.now().toString(),
                     content: file.name,
@@ -111,21 +170,20 @@ export default function HomeActivityPanel() {
                     type: 'evidence'
                 };
 
-                const newHistory = [newItem, ...evidenceHistory];
-                setEvidenceHistory(newHistory);
-                localStorage.setItem("user_evidence_history", JSON.stringify(newHistory));
-
+                setEvidenceHistory([newItem, ...evidenceHistory]);
                 setUploadStatus(`Berhasil: ${file.name} ✅`);
-                setTimeout(() => {
-                    setUploadStatus(null);
-                }, 2000);
-            }, 1200);
+                setTimeout(() => setUploadStatus(null), 2000);
+            } catch (e) {
+                console.error("Upload record failed", e);
+                setUploadStatus("Gagal mencatat unggahan.");
+            }
         }
     };
 
     const onReflectionChange = (val: string) => {
         setReflection(val);
-        localStorage.setItem("user_reflection_draft", val);
+        const draftKey = `user_reflection_draft_${userEmail?.split('@')[0]}`;
+        localStorage.setItem(draftKey, val);
     };
 
     if (!mounted) {

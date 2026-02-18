@@ -128,7 +128,7 @@ export default async function Home() {
       </div>
 
       {/* 2. Panel Hari Ini (Check-in/Bukti/Refleksi) */}
-      <HomeActivityPanel />
+      <HomeActivityPanel userEmail={userEmail} />
 
       {/* 3. Culture Hub Card */}
       <Link href="/culture" style={{ textDecoration: 'none', display: 'block', marginBottom: 40 }}>
