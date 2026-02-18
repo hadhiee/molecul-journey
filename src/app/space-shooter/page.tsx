@@ -504,10 +504,22 @@ export default function SpaceShooterPage() {
     return (
         <div style={{ width: "100vw", height: "100vh", background: "#020617", userSelect: "none" }}>
             {/* UI Layer */}
-            <div style={{ position: "absolute", zIndex: 10, pointerEvents: "none", inset: 0, padding: 20 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <Link href="/" style={{ color: "#94a3b8", textDecoration: "none", fontWeight: 700, pointerEvents: "auto" }}>← EXIT</Link>
-                    <div style={{ fontSize: 32, fontWeight: 900, color: "white", textShadow: "0 0 10px #0ea5e9" }}>{score} XP</div>
+            <div style={{ position: "absolute", zIndex: 10, pointerEvents: "none", inset: 0, padding: 24, paddingTop: 48 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <Link href="/" style={{
+                        color: "white", textDecoration: "none", fontWeight: 700, pointerEvents: "auto",
+                        background: "rgba(255,255,255,0.1)", padding: "10px 20px", borderRadius: 99,
+                        backdropFilter: "blur(4px)", border: "1px solid rgba(255,255,255,0.2)"
+                    }}>
+                        ← KEMBALI
+                    </Link>
+                    <div style={{
+                        fontSize: 28, fontWeight: 900, color: "white", textShadow: "0 0 20px #0ea5e9",
+                        background: "rgba(14, 165, 233, 0.2)", padding: "8px 24px", borderRadius: 99,
+                        backdropFilter: "blur(4px)", border: "1px solid rgba(14, 165, 233, 0.4)"
+                    }}>
+                        {score} XP
+                    </div>
                 </div>
             </div>
 
