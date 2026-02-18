@@ -227,6 +227,17 @@ export default async function Home() {
           </div>
         </Link>
 
+        {/* 3D Attitude Fighter */}
+        <Link href="/fighter-3d" style={{ textDecoration: 'none' }}>
+          <div style={{ background: 'linear-gradient(135deg, #0f172a, #450a0a)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(225,29,72,0.3)' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #ef4444, #991b1b)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🥊</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: '#f87171', textTransform: 'uppercase' as const, marginBottom: 2 }}>Combat 3D</div>
+              <div style={{ fontSize: 16, fontWeight: 800 }}>Attitude Fighter 3D</div>
+            </div>
+          </div>
+        </Link>
+
         {/* Self Discovery 3D */}
         <Link href="/discovery-3d" style={{ textDecoration: 'none' }}>
           <div style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(255,255,255,0.2)' }}>
