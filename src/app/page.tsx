@@ -25,14 +25,20 @@ export default async function Home() {
     const { SYSTEM_IDS } = await import("@/lib/ids"); // Import dynamically for Server Component
     const { data: progress } = await supabase
       .from("user_progress")
-      .select("score, mission_id")
+      .select("score, mission_id, user_email")
+      // We need to handle potential case mismatch if DB has mixed case.
+      // Since we can't easily do ilike on all DBs, we'll try to be safe.
+      // But standardizing on userEmail (lowercase) is best if data was inserted that way.
       .eq("user_email", userEmail);
 
     if (progress && progress.length > 0) {
-      const systemValues = Object.values(SYSTEM_IDS);
-      const actualMissions = progress.filter((p: any) => !systemValues.includes(p.mission_id));
-      totalXP = progress.reduce((sum: number, p: any) => sum + (p.score || 0), 0); // Count all XP, including system events? Or just missions? 
-      // Usually all XP counts.
+      const systemValues = new Set([...Object.values(SYSTEM_IDS), "SYSTEM_LOGIN", "SYSTEM_HEARTBEAT", "SYSTEM_REFLECTION", "SYSTEM_CHECKIN", "SYSTEM_EVIDENCE", "JOURNEY_MAP"]);
+      const actualMissions = progress.filter((p: any) => !systemValues.has(p.mission_id) && !systemValues.has(p.mission_id?.toUpperCase())); // safety check
+
+      // Calculate XP only from non-system missions OR if business logic allows system XP, ensure it's not double counting
+      // Assuming system events (like login) should NOT contribute to "Total XP" if they are spammy.
+      // If we want ALL XP:
+      totalXP = progress.reduce((sum: number, p: any) => sum + (p.score || 0), 0);
       missionCount = actualMissions.length;
     }
   } catch (e) { }
@@ -48,7 +54,8 @@ export default async function Home() {
       const scoreMap: Record<string, number> = {};
       allProgress.forEach((p: any) => {
         if (p.user_email) {
-          scoreMap[p.user_email] = (scoreMap[p.user_email] || 0) + (p.score || 0);
+          const email = p.user_email.toLowerCase().trim();
+          scoreMap[email] = (scoreMap[email] || 0) + (p.score || 0);
         }
       });
       leaderboard = Object.entries(scoreMap)
@@ -58,12 +65,49 @@ export default async function Home() {
     }
   } catch (e) { }
 
+  // Fetch chapter progress
   const chapterData = [
-    { name: "Kelas Tangguh: Fondasi ATTITUDE", emoji: "🛡️", bg: "#fff1f2", color: "#e11d48", nodes: 12, completed: 7 },
-    { name: "Lab Inovasi: Use Tech Wisely", emoji: "💻", bg: "#eff6ff", color: "#3b82f6", nodes: 10, completed: 3 },
-    { name: "Simulasi Industri: BISA di Dunia Kerja", emoji: "🏭", bg: "#f0fdf4", color: "#22c55e", nodes: 15, completed: 0 },
-    { name: "Dampak Sosial: AKHLAK untuk Masyarakat", emoji: "🌍", bg: "#fefce8", color: "#f59e0b", nodes: 8, completed: 0 }
+    { name: "Kelas Tangguh: Fondasi ATTITUDE", emoji: "🛡️", bg: "#fff1f2", color: "#e11d48", nodes: 0, completed: 0 },
+    { name: "Lab Inovasi: Use Tech Wisely", emoji: "💻", bg: "#eff6ff", color: "#3b82f6", nodes: 0, completed: 0 },
+    { name: "Simulasi Industri: BISA di Dunia Kerja", emoji: "🏭", bg: "#f0fdf4", color: "#22c55e", nodes: 0, completed: 0 },
+    { name: "Dampak Sosial: AKHLAK untuk Masyarakat", emoji: "🌍", bg: "#fefce8", color: "#f59e0b", nodes: 0, completed: 0 }
   ];
+
+  try {
+    // Fetch generic scenario counts per chapter
+    // Since this is a simple app, we can just fetch all scenarios light-weight
+    // Or we can rely on hardcoded nodes count, but fetching is better for sync.
+    const { data: allScenarios } = await supabase.from("scenarios").select("id, chapter");
+
+    if (allScenarios) {
+      allScenarios.forEach(s => {
+        const chIdx = (s.chapter || 1) - 1;
+        if (chapterData[chIdx]) {
+          chapterData[chIdx].nodes++;
+        }
+      });
+    }
+
+    if (userEmail && allScenarios) {
+      const { data: userProg } = await supabase
+        .from("user_progress")
+        .select("mission_id")
+        .eq("user_email", userEmail)
+        .in("mission_id", allScenarios.map(s => s.id));
+
+      if (userProg) {
+        const completedSet = new Set(userProg.map(p => p.mission_id));
+        allScenarios.forEach(s => {
+          if (completedSet.has(s.id)) {
+            const chIdx = (s.chapter || 1) - 1;
+            if (chapterData[chIdx]) {
+              chapterData[chIdx].completed++;
+            }
+          }
+        });
+      }
+    }
+  } catch (e) { console.error("Chapter sync error", e); }
 
   const rankColors = [
     { bg: '#fef3c7', text: '#d97706' },

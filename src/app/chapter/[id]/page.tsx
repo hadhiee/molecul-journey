@@ -1,14 +1,31 @@
 import { supabase } from "@/lib/supabase";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import Link from "next/link";
 
 export default async function ChapterPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: chapterId } = await params;
+    const session = await getServerSession(authOptions);
+    const userEmail = session?.user?.email?.toLowerCase();
 
     const { data: scenarios } = await supabase
         .from("scenarios")
         .select("*")
         .eq("chapter", chapterId)
         .order("created_at", { ascending: true });
+
+    let completedIds = new Set<string>();
+    if (userEmail && scenarios && scenarios.length > 0) {
+        const { data: progress } = await supabase
+            .from("user_progress")
+            .select("mission_id")
+            .eq("user_email", userEmail)
+            .in("mission_id", scenarios.map(s => s.id));
+
+        if (progress) {
+            progress.forEach(p => completedIds.add(p.mission_id));
+        }
+    }
 
     const chapterNames: Record<string, string> = {
         "1": "Kelas Tangguh: Fondasi ATTITUDE",
@@ -37,11 +54,21 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
                         textDecoration: 'none', gap: 12, transition: 'all 0.3s',
                     }}>
                         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 20, fontWeight: 900, color: '#e5e7eb', minWidth: 32, flexShrink: 0 }}>
-                                {String(i + 1).padStart(2, '0')}
+                            <div style={{
+                                fontSize: 20, fontWeight: 900,
+                                color: completedIds.has(s.id) ? '#22c55e' : '#e5e7eb',
+                                minWidth: 32, flexShrink: 0
+                            }}>
+                                {completedIds.has(s.id) ? '✓' : String(i + 1).padStart(2, '0')}
                             </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a2e', marginBottom: 6, lineHeight: 1.4 }}>
+                                <div style={{
+                                    fontSize: 14, fontWeight: 700,
+                                    color: completedIds.has(s.id) ? '#059669' : '#1a1a2e',
+                                    marginBottom: 6, lineHeight: 1.4,
+                                    textDecoration: completedIds.has(s.id) ? 'line-through' : 'none',
+                                    opacity: completedIds.has(s.id) ? 0.7 : 1
+                                }}>
                                     {s.title}
                                 </div>
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
