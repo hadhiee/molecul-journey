@@ -53,9 +53,11 @@ export default function MissionPlay() {
         const choice = scenario.choices[selectedChoice];
         const score = getScore(choice.id) * 100;
 
+        const { stringToUUID } = await import("@/lib/ids");
+
         await supabase.from("user_progress").insert({
             user_email: session.user.email,
-            mission_id: scenario.id,
+            mission_id: stringToUUID(scenario.id),
             score: score,
             choice_label: choice.id
         });

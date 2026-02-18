@@ -321,7 +321,8 @@ export default function SimulationPage() {
         setHistory(h => [...h, { s: currentScenario.title, c: c.label, f: c.feedback, ch: currentChapter }]);
 
         if (session?.user?.email) {
-            supabase.from("user_progress").insert({ user_email: session.user.email, mission_id: currentScenario.id, score: pts * 10, choice_label: c.id }).then(() => { });
+            const { stringToUUID } = require("@/lib/ids");
+            supabase.from("user_progress").insert({ user_email: session.user.email, mission_id: stringToUUID(currentScenario.id.toString()), score: pts * 10, choice_label: c.id }).then(() => { });
         }
     };
 

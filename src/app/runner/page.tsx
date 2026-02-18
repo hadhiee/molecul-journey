@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { stringToUUID } from "@/lib/ids";
 import Link from "next/link";
 
 const VALUES = ["A", "T", "T", "I", "T", "U", "D", "E"];
@@ -172,7 +173,7 @@ export default function MokletRunner() {
         if (session?.user?.email && finalScore > 0) {
             await supabase.from("user_progress").insert({
                 user_email: session.user.email,
-                mission_id: null,
+                mission_id: stringToUUID("RUNNER"),
                 score: finalScore,
                 choice_label: "RUNNER"
             });

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
+import { SYSTEM_IDS } from "@/lib/ids";
 
 const ATTITUDE_VALUES = [
     { letter: "A", title: "Act Respectfully", desc: "Menjaga adab kepada guru dan saling menghargai sesama teman.", color: "#e11d48" },
@@ -70,7 +71,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                 .from("user_progress")
                 .select("*")
                 .eq("user_email", normalizedEmail)
-                .in("mission_id", ["SYSTEM_REFLECTION", "SYSTEM_EVIDENCE", "SYSTEM_CHECKIN"])
+                .in("mission_id", [SYSTEM_IDS.REFLECTION, SYSTEM_IDS.EVIDENCE, SYSTEM_IDS.CHECKIN])
                 .order("created_at", { ascending: false });
 
             if (error) {
@@ -80,9 +81,9 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
 
             if (data) {
                 console.log("Supabase [History] Loaded:", data.length, "items");
-                setReflectionsHistory(data.filter(i => i.mission_id === "SYSTEM_REFLECTION").map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'reflection' })));
-                setEvidenceHistory(data.filter(i => i.mission_id === "SYSTEM_EVIDENCE").map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'evidence' })));
-                setCheckinHistory(data.filter(i => i.mission_id === "SYSTEM_CHECKIN").map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'checkin' })));
+                setReflectionsHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.REFLECTION.toLowerCase()).map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'reflection' })));
+                setEvidenceHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.EVIDENCE.toLowerCase()).map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'evidence' })));
+                setCheckinHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.CHECKIN.toLowerCase()).map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'checkin' })));
             }
         } catch (e) {
             console.error("History fetch catch error:", e);
@@ -115,7 +116,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
         try {
             const payload = {
                 user_email: normalizedEmail,
-                mission_id: "SYSTEM_CHECKIN",
+                mission_id: SYSTEM_IDS.CHECKIN,
                 score: 0,
                 choice_label: `LOK: ${dayValue.title}`
             };
@@ -152,7 +153,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
         try {
             const payload = {
                 user_email: normalizedEmail,
-                mission_id: "SYSTEM_REFLECTION",
+                mission_id: SYSTEM_IDS.REFLECTION,
                 score: 0,
                 choice_label: reflection
             };
@@ -186,7 +187,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
         setUploadStatus("Menyimpan...");
         try {
             const { error } = await supabase.from("user_progress").insert({
-                user_email: normalizedEmail, mission_id: "SYSTEM_EVIDENCE", score: 0, choice_label: `File: ${file.name}`
+                user_email: normalizedEmail, mission_id: SYSTEM_IDS.EVIDENCE, score: 0, choice_label: `File: ${file.name}`
             });
             if (error) {
                 console.error("Supabase Error [Evidence]:", error);

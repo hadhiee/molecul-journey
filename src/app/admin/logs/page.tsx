@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { SYSTEM_IDS } from "@/lib/ids";
 import Link from "next/link";
 
 export default function AdminLogs() {
@@ -15,12 +16,7 @@ export default function AdminLogs() {
 
     useEffect(() => {
         setMounted(true);
-        if (status === "unauthenticated") {
-            router.push("/auth/signin");
-        } else if (status === "authenticated" && session?.user?.email !== "hadhiee@gmail.com") {
-            router.push("/");
-        }
-    }, [status, session, router]);
+    }, []);
 
     useEffect(() => {
         if (session?.user?.email === "hadhiee@gmail.com") {
@@ -64,13 +60,14 @@ export default function AdminLogs() {
 
     // Logic for Online Users (active in last 5 minutes)
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-    const onlineUsers = allLogs.filter(l => l.mission_id === 'SYSTEM_HEARTBEAT' && l.created_at > fiveMinutesAgo);
+    const onlineUsers = allLogs.filter(l => l.mission_id?.toLowerCase() === SYSTEM_IDS.HEARTBEAT!.toLowerCase() && l.created_at > fiveMinutesAgo);
 
     // Login Logs
-    const loginLogs = allLogs.filter(l => l.mission_id === 'SYSTEM_LOGIN' || l.mission_id === 'SYSTEM_LOGIN_INIT');
+    const loginLogs = allLogs.filter(l => l.mission_id?.toLowerCase() === SYSTEM_IDS.LOGIN!.toLowerCase() || l.mission_id?.toLowerCase() === SYSTEM_IDS.LOGIN_INIT!.toLowerCase());
 
     // Activity Logs (Game sessions)
-    const missionLogs = allLogs.filter(l => l.mission_id !== 'SYSTEM_LOGIN' && l.mission_id !== 'SYSTEM_HEARTBEAT' && l.mission_id !== 'SYSTEM_LOGIN_INIT');
+    const systemIdsValues = Object.values(SYSTEM_IDS);
+    const missionLogs = allLogs.filter(l => l.mission_id?.toLowerCase() !== SYSTEM_IDS.LOGIN!.toLowerCase() && l.mission_id?.toLowerCase() !== SYSTEM_IDS.HEARTBEAT!.toLowerCase() && l.mission_id?.toLowerCase() !== SYSTEM_IDS.LOGIN_INIT!.toLowerCase());
 
     return (
         <div style={{ minHeight: '100vh', background: '#0a0a0f', color: 'white', padding: "40px 20px", fontFamily: 'Inter, sans-serif' }}>
@@ -98,7 +95,7 @@ export default function AdminLogs() {
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
                         {onlineUsers.length > 0 ? onlineUsers.map((user, i) => (
                             <div key={i} style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '12px 20px', borderRadius: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
-                                <div style={{ fontSize: 14, fontWeight: 800 }}>{user.user_email?.split('@')[0]}</div>
+                                <div style={{ fontSize: 14, fontWeight: 800 }}>{(user.user_email || "Anon").split('@')[0]}</div>
                                 <div style={{ fontSize: 9, fontWeight: 700, color: '#10b981', textTransform: 'uppercase' }}>Active</div>
                             </div>
                         )) : (
@@ -120,7 +117,7 @@ export default function AdminLogs() {
                                 {loginLogs.length > 0 ? loginLogs.map((log, i) => (
                                     <div key={i} style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div>
-                                            <div style={{ fontWeight: 800, fontSize: 14 }}>{log.user_email?.split('@')[0]}</div>
+                                            <div style={{ fontWeight: 800, fontSize: 14 }}>{(log.user_email || "Anon").split('@')[0]}</div>
                                             <div style={{ fontSize: 11, color: '#64748b' }}>{log.user_email}</div>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
@@ -145,22 +142,23 @@ export default function AdminLogs() {
                                 {missionLogs.length > 0 ? missionLogs.map((log, i) => (
                                     <div key={i} style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: 800, fontSize: 14 }}>{log.user_email?.split('@')[0]}</div>
+                                            <div style={{ fontWeight: 800, fontSize: 14 }}>{(log.user_email || "Anon").split('@')[0]}</div>
                                             <div style={{
                                                 fontSize: 11, color:
-                                                    log.mission_id === 'SYSTEM_REFLECTION' ? '#fb7185' :
-                                                        log.mission_id === 'SYSTEM_EVIDENCE' ? '#38bdf8' :
-                                                            log.mission_id === 'SYSTEM_CHECKIN' ? '#c084fc' : '#3b82f6',
+                                                    log.mission_id?.toLowerCase() === SYSTEM_IDS.REFLECTION!.toLowerCase() ? '#fb7185' :
+                                                        log.mission_id?.toLowerCase() === SYSTEM_IDS.EVIDENCE!.toLowerCase() ? '#38bdf8' :
+                                                            log.mission_id?.toLowerCase() === SYSTEM_IDS.CHECKIN!.toLowerCase() ? '#c084fc' : '#3b82f6',
                                                 fontWeight: 700
                                             }}>
-                                                {log.mission_id === 'SYSTEM_REFLECTION' ? '📝 REFLEKSI' :
-                                                    log.mission_id === 'SYSTEM_EVIDENCE' ? '📂 PORTOFOLIO' :
-                                                        log.mission_id === 'SYSTEM_CHECKIN' ? '🗓️ CHECK-IN' : `🎯 MISI: ${log.mission_id}`}
+                                                {log.mission_id?.toLowerCase() === SYSTEM_IDS.REFLECTION!.toLowerCase() ? '📝 REFLEKSI' :
+                                                    log.mission_id?.toLowerCase() === SYSTEM_IDS.EVIDENCE!.toLowerCase() ? '📂 PORTOFOLIO' :
+                                                        log.mission_id?.toLowerCase() === SYSTEM_IDS.CHECKIN!.toLowerCase() ? '🗓️ CHECK-IN' :
+                                                            `🎯 MISI: ${log.choice_label || log.mission_id}`}
                                             </div>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
                                             <div style={{ fontSize: 12, fontWeight: 900, color: '#fff' }}>
-                                                {log.mission_id.startsWith('SYSTEM_') ? 'PRIVATE' : (log.score > 0 ? `+${log.score} XP` : 'Done')}
+                                                {Object.values(SYSTEM_IDS).some(s => s === log.mission_id?.toLowerCase()) ? 'PRIVATE' : ((log.score || 0) > 0 ? `+${log.score} XP` : 'Done')}
                                             </div>
                                             <div style={{ fontSize: 10, color: '#475569' }}>{new Date(log.created_at).toLocaleString('id-ID')}</div>
                                         </div>

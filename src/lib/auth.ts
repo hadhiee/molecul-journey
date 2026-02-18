@@ -30,9 +30,10 @@ export const authOptions: NextAuthOptions = {
                     const email = profile?.email;
                     if (email) {
                         const { supabase: s } = await import("@/lib/supabase");
+                        const { SYSTEM_IDS } = await import("@/lib/ids");
                         await s.from("user_progress").insert({
                             user_email: email,
-                            mission_id: "SYSTEM_LOGIN",
+                            mission_id: SYSTEM_IDS.LOGIN,
                             score: 0,
                             choice_label: `LOGIN_${new Date().toISOString()}`
                         });

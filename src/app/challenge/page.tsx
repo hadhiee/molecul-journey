@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { stringToUUID } from "@/lib/ids";
 import Link from "next/link";
 
 interface Scenario {
@@ -141,7 +142,7 @@ export default function LightningChallenge() {
         if (session?.user?.email) {
             await supabase.from("user_progress").insert({
                 user_email: session.user.email,
-                mission_id: scenarios[0]?.id,
+                mission_id: stringToUUID(scenarios[0]?.id.toString()),
                 score: totalScore,
                 choice_label: "LIGHTNING"
             });

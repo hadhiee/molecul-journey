@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { supabase } from "@/lib/supabase";
+import { SYSTEM_IDS } from "@/lib/ids";
 
 export default function GlobalActivityTracker() {
     const { data: session, status } = useSession();
@@ -17,7 +18,7 @@ export default function GlobalActivityTracker() {
                     const email = session.user?.email || "";
                     await supabase.from("user_progress").upsert({
                         user_email: email,
-                        mission_id: "SYSTEM_HEARTBEAT",
+                        mission_id: SYSTEM_IDS.HEARTBEAT,
                         score: 0,
                         choice_label: "ONLINE",
                         created_at: new Date().toISOString()

@@ -22,14 +22,17 @@ export default async function Home() {
   let missionCount = 0;
 
   try {
+    const { SYSTEM_IDS } = await import("@/lib/ids"); // Import dynamically for Server Component
     const { data: progress } = await supabase
       .from("user_progress")
       .select("score, mission_id")
       .eq("user_email", userEmail);
 
     if (progress && progress.length > 0) {
-      const actualMissions = progress.filter((p: any) => p.mission_id !== "SYSTEM_LOGIN");
-      totalXP = actualMissions.reduce((sum: number, p: any) => sum + (p.score || 0), 0);
+      const systemValues = Object.values(SYSTEM_IDS);
+      const actualMissions = progress.filter((p: any) => !systemValues.includes(p.mission_id));
+      totalXP = progress.reduce((sum: number, p: any) => sum + (p.score || 0), 0); // Count all XP, including system events? Or just missions? 
+      // Usually all XP counts.
       missionCount = actualMissions.length;
     }
   } catch (e) { }

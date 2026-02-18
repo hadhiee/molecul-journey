@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { SYSTEM_IDS } from "@/lib/ids";
 import Link from "next/link";
 import { LEVELS, ATTITUDE_META, getGrade, type AttitudeScores, type Location, type Scenario, type Choice, type Level } from "./data";
 
@@ -96,7 +97,7 @@ export default function JourneyMap() {
         setPhase("result");
         const total = Object.values(scores).reduce((a, b) => a + b, 0);
         if (session?.user?.email) {
-            await supabase.from("user_progress").insert({ user_email: session.user.email, mission_id: null, score: total * 10, choice_label: "JOURNEY_MAP" });
+            await supabase.from("user_progress").insert({ user_email: session.user.email, mission_id: SYSTEM_IDS.JOURNEY_MAP, score: total * 10, choice_label: "JOURNEY_MAP" });
         }
     };
 

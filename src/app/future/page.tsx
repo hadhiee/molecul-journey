@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { stringToUUID } from "@/lib/ids";
 import Link from "next/link";
 import { useEffect } from "react";
 
@@ -209,7 +210,7 @@ export default function FutureArchitect() {
             const total = Object.values(finalStats).reduce((a, b) => a + b, 0);
             await supabase.from("user_progress").insert({
                 user_email: session.user.email,
-                mission_id: null,
+                mission_id: stringToUUID("FUTURE_ARCHITECT"),
                 score: total * 10,
                 choice_label: "FUTURE_ARCHITECT"
             });
