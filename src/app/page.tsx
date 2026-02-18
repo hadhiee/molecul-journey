@@ -227,6 +227,17 @@ export default async function Home() {
           </div>
         </Link>
 
+        {/* 3D Integrity Tower */}
+        <Link href="/integrity-3d" style={{ textDecoration: 'none' }}>
+          <div style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(225,29,72,0.3)' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#e11d48', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🧱</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: '#fb7185', textTransform: 'uppercase' as const, marginBottom: 2 }}>New 3D Mode</div>
+              <div style={{ fontSize: 16, fontWeight: 800 }}>Integrity Tower 3D</div>
+            </div>
+          </div>
+        </Link>
+
         {/* Journey Map Sekolah */}
         <Link href="/journey" style={{ textDecoration: 'none' }}>
           <div style={{ background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)', borderRadius: 20, padding: 20, color: '#1a2e05', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(101,163,13,0.2)' }}>
