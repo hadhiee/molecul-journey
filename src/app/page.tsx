@@ -13,7 +13,7 @@ export default async function Home() {
     redirect("/auth/signin");
   }
 
-  const userEmail = session.user?.email || "";
+  const userEmail = (session.user?.email || "").toLowerCase();
   const userName = session.user?.name || "Agent";
   const userImage = session.user?.image || "";
 

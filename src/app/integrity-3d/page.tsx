@@ -107,7 +107,7 @@ export default function Integrity3DGame() {
         // Moving Box
         let currentBox: THREE.Mesh | null = null;
         let direction = 1;
-        let speed = 0.04;
+        let speed = 0.035; // Slightly slower for better control
         let axis: "x" | "z" = "x";
 
         const spawnBox = () => {
@@ -116,12 +116,17 @@ export default function Integrity3DGame() {
 
             const y = (stack.length * boxHeight) + (boxHeight / 2);
             currentBox = createBox(y, value.color, value.letter);
-            currentBox.position[axis] = -5;
 
-            // Adjust camera
+            const lastBox = stack[stack.length - 1];
+            // Swing range is now relative to the previous box
+            currentBox.position[axis === "x" ? "z" : "x"] = lastBox.position[axis === "x" ? "z" : "x"];
+            currentBox.position[axis] = lastBox.position[axis] - 5;
+            direction = 1;
+
+            // Adjust camera to follow the top of the tower
             if (stack.length > 5) {
-                camera.position.y += boxHeight;
-                camera.lookAt(0, stack.length * boxHeight / 2, 0);
+                camera.position.y = (stack.length * boxHeight) + 5;
+                camera.lookAt(lastBox.position.x, stack.length * boxHeight, lastBox.position.z);
             }
         };
 
@@ -133,16 +138,16 @@ export default function Integrity3DGame() {
             const lastBox = stack[stack.length - 1];
             const diff = currentBox.position[axis] - lastBox.position[axis];
 
-            // "Lebih tidak presisi": Tolerance increased to 130% of width
-            const limit = baseWidth * 1.3;
+            // Tumpuk tanpa presisi: Massive tolerance
+            const limit = baseWidth * 1.5;
 
             if (Math.abs(diff) >= limit) {
                 setGameState("GAMEOVER");
                 return;
             }
 
-            // Successfully stacked - Snap to center of last box to keep tower straight
-            currentBox.position[axis] = lastBox.position[axis];
+            // STAY CROOKED: We don't snap at all, just a very tiny nudge to prevent floating away
+            currentBox.position[axis] = currentBox.position[axis]; // Keep it where it is
 
             const valueIdx = (stack.length) % ATTITUDE_VALUES.length;
             setActiveValue(ATTITUDE_VALUES[valueIdx]);
@@ -151,7 +156,7 @@ export default function Integrity3DGame() {
             setScore(prev => prev + 10);
 
             axis = axis === "x" ? "z" : "x";
-            speed += 0.003;
+            speed = Math.min(speed + 0.002, 0.15); // Cap speed
             spawnBox();
         };
 
@@ -165,8 +170,11 @@ export default function Integrity3DGame() {
         let animationId: number;
         const animate = () => {
             if (currentBox) {
+                const lastBox = stack[stack.length - 1];
                 currentBox.position[axis] += direction * speed;
-                if (Math.abs(currentBox.position[axis]) > 5) {
+
+                // Swing limits relative to the last box
+                if (Math.abs(currentBox.position[axis] - lastBox.position[axis]) > 5) {
                     direction *= -1;
                 }
             }

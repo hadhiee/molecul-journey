@@ -63,21 +63,29 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
 
     const fetchUserHistory = useCallback(async () => {
         if (!userEmail) return;
+        const normalizedEmail = userEmail.toLowerCase();
         setIsFetching(true);
         try {
             const { data, error } = await supabase
                 .from("user_progress")
                 .select("*")
-                .eq("user_email", userEmail)
+                .eq("user_email", normalizedEmail)
                 .in("mission_id", ["SYSTEM_REFLECTION", "SYSTEM_EVIDENCE", "SYSTEM_CHECKIN"])
                 .order("created_at", { ascending: false });
+
+            if (error) {
+                console.error("Supabase Error [History]:", error);
+                throw error;
+            }
 
             if (data) {
                 setReflectionsHistory(data.filter(i => i.mission_id === "SYSTEM_REFLECTION").map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'reflection' })));
                 setEvidenceHistory(data.filter(i => i.mission_id === "SYSTEM_EVIDENCE").map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'evidence' })));
                 setCheckinHistory(data.filter(i => i.mission_id === "SYSTEM_CHECKIN").map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'checkin' })));
             }
-        } catch (e) { console.error("History fetch error", e); }
+        } catch (e) {
+            console.error("History fetch catch error:", e);
+        }
         finally { setIsFetching(false); }
     }, [userEmail]);
 
@@ -88,7 +96,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
 
         if (userEmail) {
             fetchUserHistory();
-            const draftKey = `user_reflection_draft_${userEmail?.split('@')[0]}`;
+            const draftKey = `user_reflection_draft_${userEmail.toLowerCase().split('@')[0]}`;
             const draft = localStorage.getItem(draftKey);
             if (draft) setReflection(draft);
         }
@@ -96,12 +104,16 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
 
     const handleCheckin = async () => {
         if (!userEmail || isSaving) return;
+        const normalizedEmail = userEmail.toLowerCase();
         setIsSaving(true);
         try {
             const { error } = await supabase.from("user_progress").insert({
-                user_email: userEmail, mission_id: "SYSTEM_CHECKIN", score: 0, choice_label: `LOK: ${dayValue.title}`
+                user_email: normalizedEmail, mission_id: "SYSTEM_CHECKIN", score: 0, choice_label: `LOK: ${dayValue.title}`
             });
-            if (error) throw error;
+            if (error) {
+                console.error("Supabase Error [Checkin]:", error);
+                throw error;
+            }
             await fetchUserHistory();
             alert(`Komitmen diterima! Mari kita bersama-sama: ${dayValue.title} 💪`);
             setActiveModal(null);
@@ -111,18 +123,25 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
 
     const handleSaveReflection = async () => {
         if (!reflection.trim() || !userEmail || isSaving) return;
+        const normalizedEmail = userEmail.toLowerCase();
         setIsSaving(true);
         try {
             const { error } = await supabase.from("user_progress").insert({
-                user_email: userEmail, mission_id: "SYSTEM_REFLECTION", score: 0, choice_label: reflection
+                user_email: normalizedEmail, mission_id: "SYSTEM_REFLECTION", score: 0, choice_label: reflection
             });
-            if (error) throw error;
-            const draftKey = `user_reflection_draft_${userEmail?.split('@')[0]}`;
+            if (error) {
+                console.error("Supabase Error [Reflection]:", error);
+                throw error;
+            }
+            const draftKey = `user_reflection_draft_${normalizedEmail.split('@')[0]}`;
             localStorage.removeItem(draftKey);
             setReflection("");
             await fetchUserHistory();
             alert("Refleksi berhasil disimpan ke riwayat pribadi Anda! ✨");
-        } catch (e) { alert("Gagal menyimpan refleksi."); }
+        } catch (e) {
+            console.error("Save reflection error catch:", e);
+            alert("Gagal menyimpan refleksi. Pastikan koneksi internet stabil.");
+        }
         finally { setIsSaving(false); }
     };
 
@@ -131,12 +150,16 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
         if (!file || !userEmail) return;
         if (file.type !== "application/pdf") { alert("Mohon unggah file format PDF."); return; }
 
+        const normalizedEmail = userEmail.toLowerCase();
         setUploadStatus("Menyimpan...");
         try {
             const { error } = await supabase.from("user_progress").insert({
-                user_email: userEmail, mission_id: "SYSTEM_EVIDENCE", score: 0, choice_label: `File: ${file.name}`
+                user_email: normalizedEmail, mission_id: "SYSTEM_EVIDENCE", score: 0, choice_label: `File: ${file.name}`
             });
-            if (error) throw error;
+            if (error) {
+                console.error("Supabase Error [Evidence]:", error);
+                throw error;
+            }
             await fetchUserHistory();
             setUploadStatus(`Berhasil: ${file.name} ✅`);
             setTimeout(() => setUploadStatus(null), 2000);
