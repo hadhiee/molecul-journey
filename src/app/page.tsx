@@ -43,7 +43,9 @@ export default async function Home() {
     if (allProgress && allProgress.length > 0) {
       const scoreMap: Record<string, number> = {};
       allProgress.forEach((p: any) => {
-        scoreMap[p.user_email] = (scoreMap[p.user_email] || 0) + (p.score || 0);
+        if (p.user_email) {
+          scoreMap[p.user_email] = (scoreMap[p.user_email] || 0) + (p.score || 0);
+        }
       });
       leaderboard = Object.entries(scoreMap)
         .map(([email, score]) => ({ name: email.split("@")[0], score }))

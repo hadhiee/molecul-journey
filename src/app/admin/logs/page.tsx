@@ -76,8 +76,8 @@ export default function AdminLogs() {
                                 alignItems: 'center'
                             }}>
                                 <div style={{ fontWeight: 700 }}>
-                                    {log.user_email.split("@")[0]}
-                                    <div style={{ fontSize: 10, color: '#64748b', fontWeight: 500 }}>{log.user_email}</div>
+                                    {log.user_email ? log.user_email.split("@")[0] : "Unknown"}
+                                    <div style={{ fontSize: 10, color: '#64748b', fontWeight: 500 }}>{log.user_email || "no-email"}</div>
                                 </div>
                                 <div style={{ color: log.mission_id === 'SYSTEM_LOGIN' ? '#10b981' : '#3b82f6', fontWeight: 700 }}>
                                     {log.mission_id === 'SYSTEM_LOGIN' ? '🟢 USER LOGIN' : `🎯 MISI: ${log.mission_id.slice(0, 10)}...`}

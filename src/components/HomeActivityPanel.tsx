@@ -14,16 +14,40 @@ const ATTITUDE_VALUES = [
     { letter: "E", title: "Eager to Collaborate", desc: "Terbuka untuk bekerja sama dan berbagi ilmu.", color: "#0891b2" },
 ];
 
+const Modal = ({ title, children, onClose }: { title: string, children: React.ReactNode, onClose: () => void }) => (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+        <div
+            onClick={onClose}
+            style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(8px)' }}
+        />
+        <div style={{
+            position: 'relative', background: 'white', borderRadius: 28, width: '100%', maxWidth: 440,
+            padding: 32, boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', animation: 'modalIn 0.3s ease-out'
+        }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <h3 style={{ fontSize: 20, fontWeight: 800, color: '#1a1a2e' }}>{title}</h3>
+                <button onClick={onClose} style={{ background: '#f1f5f9', border: 'none', width: 32, height: 32, borderRadius: 10, cursor: 'pointer', fontWeight: 900 }}>×</button>
+            </div>
+            {children}
+        </div>
+    </div>
+);
+
 export default function HomeActivityPanel() {
     const [activeModal, setActiveModal] = useState<"CHECKIN" | "EVIDENCE" | "REFLECTION" | null>(null);
     const [reflection, setReflection] = useState("");
     const [isSaving, setIsSaving] = useState(false);
     const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+    const [mounted, setMounted] = useState(false);
 
-    // Get value of the day
-    const dayValue = ATTITUDE_VALUES[new Date().getDate() % ATTITUDE_VALUES.length];
+    // Get value of the day - calculated after mount to avoid hydration mismatch
+    const [dayValue, setDayValue] = useState(ATTITUDE_VALUES[0]);
 
     useEffect(() => {
+        setMounted(true);
+        const date = new Date().getDate();
+        setDayValue(ATTITUDE_VALUES[date % ATTITUDE_VALUES.length]);
+
         const saved = localStorage.getItem("user_reflection_daily");
         if (saved) setReflection(saved);
     }, []);
@@ -31,7 +55,9 @@ export default function HomeActivityPanel() {
     const handleSaveReflection = () => {
         setIsSaving(true);
         setTimeout(() => {
-            localStorage.setItem("user_reflection_daily", reflection);
+            if (typeof window !== "undefined") {
+                localStorage.setItem("user_reflection_daily", reflection);
+            }
             setIsSaving(false);
             alert("Refleksi berhasil disimpan! ✨");
             setActiveModal(null);
@@ -46,7 +72,6 @@ export default function HomeActivityPanel() {
                 return;
             }
             setUploadStatus("Mengunggah...");
-            // Simulate upload
             setTimeout(() => {
                 setUploadStatus(`Berhasil mengunggah: ${file.name} ✅`);
                 setTimeout(() => {
@@ -57,24 +82,16 @@ export default function HomeActivityPanel() {
         }
     };
 
-    const Modal = ({ title, children, onClose }: { title: string, children: React.ReactNode, onClose: () => void }) => (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-            <div
-                onClick={onClose}
-                style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(8px)' }}
-            />
+    if (!mounted) {
+        return (
             <div style={{
-                position: 'relative', background: 'white', borderRadius: 28, width: '100%', maxWidth: 440,
-                padding: 32, boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', animation: 'modalIn 0.3s ease-out'
+                background: 'white', borderRadius: 24, padding: '24px', marginBottom: 32,
+                border: '1px solid #e5e7eb', height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                    <h3 style={{ fontSize: 20, fontWeight: 800, color: '#1a1a2e' }}>{title}</h3>
-                    <button onClick={onClose} style={{ background: '#f1f5f9', border: 'none', width: 32, height: 32, borderRadius: 10, cursor: 'pointer', fontWeight: 900 }}>×</button>
-                </div>
-                {children}
+                <div style={{ color: '#94a3b8', fontSize: 13, fontWeight: 700 }}>Memuat Panel Aktivitas...</div>
             </div>
-        </div>
-    );
+        );
+    }
 
     return (
         <>
