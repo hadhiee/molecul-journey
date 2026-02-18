@@ -394,7 +394,7 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
             <pointLight position={[10, 10, 10]} />
             <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
 
-            <group ref={playerRef} position={[0, -BOUNDS.y + 2, 0]}>
+            <group ref={playerRef} position={[0, -boundY + 2, 0]}>
                 <mesh rotation={[0, 0, 0]}>
                     <coneGeometry args={[0.6, 1.5, 4]} />
                     <meshStandardMaterial color="#0ea5e9" emissive="#0ea5e9" emissiveIntensity={0.6} />
