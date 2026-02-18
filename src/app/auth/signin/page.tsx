@@ -53,7 +53,7 @@ function SignInContent() {
 
                 <div style={{ textAlign: 'center' as const, marginBottom: 32 }}>
                     <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1a1a2e', marginBottom: 6 }}>Mulai Perjalanan</h2>
-                    <p style={{ fontSize: 13, color: '#94a3b8', fontWeight: 500 }}>Gunakan akun sekolah untuk masuk ke simulasi budaya MOKLET.</p>
+                    <p style={{ fontSize: 13, color: '#94a3b8', fontWeight: 500 }}>Masuk untuk memulai simulasi budaya MOKLET.</p>
                 </div>
 
                 <button
@@ -71,8 +71,9 @@ function SignInContent() {
                 </button>
 
                 <div style={{ marginTop: 28, paddingTop: 24, borderTop: '1px solid #f3f4f6', textAlign: 'center' as const }}>
-                    <p style={{ fontSize: 12, color: '#94a3b8', fontWeight: 500 }}>
-                        Khusus untuk akun <strong style={{ color: '#e11d48' }}>@smktelkom-mlg.sch.id</strong>
+                    <p style={{ fontSize: 12, color: '#94a3b8', fontWeight: 500, lineHeight: 1.5 }}>
+                        Terbuka untuk akun <strong style={{ color: '#e11d48' }}>@smktelkom-mlg.sch.id</strong><br />
+                        & akun Google lainnya untuk mengenal lebih dalam Moklet.
                     </p>
                 </div>
             </div>
