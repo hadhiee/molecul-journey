@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import SignOutButton from "@/components/SignOutButton";
+import HomeActivityPanel from "@/components/HomeActivityPanel";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -124,38 +125,7 @@ export default async function Home() {
       </div>
 
       {/* 2. Panel Hari Ini (Check-in/Bukti/Refleksi) */}
-      <div style={{
-        background: 'white', borderRadius: 24, padding: 24, marginBottom: 32,
-        border: '1px solid #e5e7eb', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
-        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12
-      }}>
-        <div style={{ gridColumn: 'span 3', marginBottom: 4 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 800, color: '#1a1a2e', textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>
-            Aktivitas Hari Ini
-          </h3>
-        </div>
-        <button style={{
-          background: '#f1f5f9', border: 'none', padding: '16px 12px', borderRadius: 16,
-          display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 8, cursor: 'pointer'
-        }}>
-          <span style={{ fontSize: 24 }}>🗓️</span>
-          <span style={{ fontSize: 11, fontWeight: 800, color: '#475569' }}>Check-in</span>
-        </button>
-        <button style={{
-          background: '#f1f5f9', border: 'none', padding: '16px 12px', borderRadius: 16,
-          display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 8, cursor: 'pointer'
-        }}>
-          <span style={{ fontSize: 24 }}>📤</span>
-          <span style={{ fontSize: 11, fontWeight: 800, color: '#475569' }}>Tambah Bukti</span>
-        </button>
-        <Link href="/culture" style={{
-          background: '#fff1f2', border: '1px solid #ffe4e6', padding: '16px 12px', borderRadius: 16,
-          display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 8, textDecoration: 'none'
-        }}>
-          <span style={{ fontSize: 24 }}>📝</span>
-          <span style={{ fontSize: 11, fontWeight: 800, color: '#e11d48' }}>Refleksi</span>
-        </Link>
-      </div>
+      <HomeActivityPanel />
 
       {/* 3. Culture Hub Card */}
       <Link href="/culture" style={{ textDecoration: 'none', display: 'block', marginBottom: 40 }}>
