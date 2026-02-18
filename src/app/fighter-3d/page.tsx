@@ -63,7 +63,7 @@ export default function Fighter3DGame() {
         controls.target.set(0, 2, 0);
 
         // Lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); // Brighter ambient
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
         scene.add(ambientLight);
 
         const spotLight = new THREE.SpotLight(0xffffff, 2);
@@ -72,7 +72,6 @@ export default function Fighter3DGame() {
         spotLight.castShadow = true;
         scene.add(spotLight);
 
-        // Add specific light for the enemy area
         const enemyLight = new THREE.PointLight(0xffffff, 1, 15);
         enemyLight.position.set(0, 5, -5);
         scene.add(enemyLight);
@@ -88,26 +87,22 @@ export default function Fighter3DGame() {
         // Character Creation Utility
         const createFighter = (color: number, isEnemy = false) => {
             const group = new THREE.Group();
-
-            // Body - Higher emissive for enemy to make them "glow" and be visible
             const bodyGeo = new THREE.CapsuleGeometry(0.6, 1, 4, 8);
             const bodyMat = new THREE.MeshStandardMaterial({
                 color,
                 emissive: color,
-                emissiveIntensity: isEnemy ? 0.5 : 0.2 // Higher glow for enemy
+                emissiveIntensity: isEnemy ? 0.5 : 0.2
             });
             const body = new THREE.Mesh(bodyGeo, bodyMat);
             body.position.y = 1.2;
             body.castShadow = true;
             group.add(body);
 
-            // Head
             const headGeo = new THREE.SphereGeometry(0.4, 16, 16);
             const head = new THREE.Mesh(headGeo, bodyMat);
             head.position.y = 2.4;
             group.add(head);
 
-            // Arms
             const armGeo = new THREE.BoxGeometry(0.3, 0.3, 1.2);
             const leftArm = new THREE.Mesh(armGeo, bodyMat);
             leftArm.position.set(-0.8, 1.8, 0.5);
@@ -126,7 +121,7 @@ export default function Fighter3DGame() {
 
         const enemyData = ANTI_HEROES[Math.floor(Math.random() * ANTI_HEROES.length)];
         const enemy = createFighter(enemyData.color, true);
-        enemy.group.position.set(0, 0, -3.5); // Slightly further back
+        enemy.group.position.set(0, 0, -3.5);
         enemy.group.rotation.y = Math.PI;
         scene.add(enemy.group);
 
@@ -137,12 +132,9 @@ export default function Fighter3DGame() {
         const spawnHitPopup = () => {
             const text = ATTITUDE_VALUES[Math.floor(Math.random() * ATTITUDE_VALUES.length)];
             const id = popupIdCounter.current++;
-            // Random position around the center-top of the screen
             const x = 50 + (Math.random() * 20 - 10);
             const y = 40 + (Math.random() * 20 - 10);
-
             setHitPopups(prev => [...prev, { id, text, x, y }]);
-
             setTimeout(() => {
                 setHitPopups(prev => prev.filter(p => p.id !== id));
             }, 1000);
@@ -155,9 +147,8 @@ export default function Fighter3DGame() {
             const arm = Math.random() > 0.5 ? fighterArms.leftArm : fighterArms.rightArm;
             arm.userData.punching = true;
 
-            // Damage logic
             if (isPlayer) {
-                spawnHitPopup(); // Show attitude value on hit
+                spawnHitPopup();
                 setEnemyHp(hp => {
                     const newHp = Math.max(0, hp - (selectedAvatar.power / 10));
                     if (newHp === 0 && gameState === "PLAYING") {
@@ -184,18 +175,29 @@ export default function Fighter3DGame() {
             }, 200);
         };
 
-        const handleInteraction = (e: MouseEvent) => {
+        const handleInteraction = () => {
             if (gameState === "PLAYING") punch(player, true);
         };
 
         window.addEventListener('mousedown', handleInteraction);
+        window.addEventListener('touchstart', (e) => {
+            if (gameState === "PLAYING") {
+                e.preventDefault();
+                punch(player, true);
+            }
+        });
 
-        // Loop
+        const handleResize = () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        };
+        window.addEventListener('resize', handleResize);
+
         let animationId: number;
         const animate = () => {
             animationId = requestAnimationFrame(animate);
 
-            // Punch Animation
             [player, enemy].forEach(f => {
                 [f.leftArm, f.rightArm].forEach(arm => {
                     if (arm.userData.punching) {
@@ -206,10 +208,9 @@ export default function Fighter3DGame() {
                 });
             });
 
-            // Enemy AI
             if (gameState === "PLAYING") {
                 enemyAttackCooldown++;
-                if (enemyAttackCooldown > 50) { // Faster enemy
+                if (enemyAttackCooldown > 50) {
                     punch(enemy, false);
                     enemyAttackCooldown = 0;
                 }
@@ -222,6 +223,7 @@ export default function Fighter3DGame() {
 
         return () => {
             window.removeEventListener('mousedown', handleInteraction);
+            window.removeEventListener('resize', handleResize);
             cancelAnimationFrame(animationId);
             renderer.dispose();
             if (containerRef.current) containerRef.current.innerHTML = "";
@@ -229,137 +231,109 @@ export default function Fighter3DGame() {
     }, [gameState]);
 
     return (
-        <div style={{ position: "relative", width: "100vw", height: "100vh", overflow: "hidden", background: "#0a0a0f", fontFamily: "Inter, sans-serif" }}>
+        <div style={{ position: "relative", width: "100svw", height: "100svh", overflow: "hidden", background: "#0a0a0f", fontFamily: "Inter, sans-serif" }}>
 
             {gameState === "AVATAR" && (
-                <div style={{ position: "absolute", inset: 0, zIndex: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "rgba(10,10,15,0.95)" }}>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: "#e11d48", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 12 }}>3D Combat Training</div>
-                    <h2 style={{ fontSize: 48, fontWeight: 900, color: "white", marginBottom: 8, textAlign: "center" }}>ATTITUDE FIGHTER</h2>
-                    <p style={{ color: "#94a3b8", marginBottom: 48, textAlign: "center", maxWidth: 400 }}>Kalahkan manifestasi buruk dan raih nilai ATTITUDE dalam setiap pukulan!</p>
+                <div style={{ position: "absolute", inset: 0, zIndex: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "rgba(10,10,15,0.95)", padding: 16 }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: "#e11d48", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 8 }}>3D Combat Training</div>
+                    <h2 style={{ fontSize: "clamp(24px, 8vw, 48px)", fontWeight: 900, color: "white", marginBottom: 8, textAlign: "center" }}>ATTITUDE FIGHTER</h2>
+                    <p style={{ color: "#94a3b8", marginBottom: 32, textAlign: "center", maxWidth: 400, fontSize: 13 }}>Kalahkan manifestasi buruk dan raih nilai ATTITUDE dalam setiap pukulan!</p>
 
-                    <div style={{ display: "flex", gap: 24, marginBottom: 64 }}>
+                    <div className="avatar-grid">
                         {AVATARS.map(avatar => (
                             <div
                                 key={avatar.id}
                                 onClick={() => setSelectedAvatar(avatar)}
-                                style={{
-                                    background: selectedAvatar.id === avatar.id ? "white" : "rgba(255,255,255,0.05)",
-                                    padding: "32px", borderRadius: 32, border: `2px solid ${selectedAvatar.id === avatar.id ? "white" : "transparent"}`,
-                                    cursor: "pointer", transition: "all 0.3s", textAlign: "center", width: 220, position: "relative",
-                                    boxShadow: selectedAvatar.id === avatar.id ? "0 20px 40px rgba(255,255,255,0.1)" : "none"
-                                }}
+                                className={`avatar-card ${selectedAvatar.id === avatar.id ? 'active' : ''}`}
                             >
-                                <div style={{ fontSize: 72, marginBottom: 16 }}>{avatar.icon}</div>
-                                <div style={{ fontSize: 22, fontWeight: 900, color: selectedAvatar.id === avatar.id ? "#0a0a10" : "white" }}>{avatar.name}</div>
-                                <div style={{ fontSize: 13, color: selectedAvatar.id === avatar.id ? "#64748b" : "#94a3b8", marginTop: 8 }}>Power: {avatar.power}</div>
-                                {selectedAvatar.id === avatar.id && (
-                                    <div style={{ position: "absolute", top: -12, right: -12, background: "#10b981", color: "white", padding: "4px 12px", borderRadius: 99, fontSize: 10, fontWeight: 800 }}>SELECTED</div>
-                                )}
+                                <div style={{ fontSize: "clamp(40px, 10vw, 72px)", marginBottom: 12 }}>{avatar.icon}</div>
+                                <div style={{ fontSize: 18, fontWeight: 900, color: selectedAvatar.id === avatar.id ? "#0a0a10" : "white" }}>{avatar.name}</div>
+                                <div style={{ fontSize: 11, color: selectedAvatar.id === avatar.id ? "#64748b" : "#94a3b8", marginTop: 4 }}>Power: {avatar.power}</div>
                             </div>
                         ))}
                     </div>
 
                     <button
                         onClick={() => setGameState("PLAYING")}
-                        style={{ background: "#e11d48", color: "white", border: "none", padding: "22px 72px", borderRadius: 24, fontSize: 20, fontWeight: 900, cursor: "pointer", boxShadow: "0 12px 32px rgba(225,29,72,0.4)" }}
+                        style={{ background: "#e11d48", color: "white", border: "none", padding: "18px 56px", borderRadius: 24, fontSize: 18, fontWeight: 900, cursor: "pointer", boxShadow: "0 12px 32px rgba(225,29,72,0.4)", marginTop: 40 }}
                     >
                         MULAI BERTARUNG 🥊
                     </button>
 
-                    <Link href="/" style={{ marginTop: 32, color: "#94a3b8", fontWeight: 700, textDecoration: "none", fontSize: 14 }}>← KEMBALI KE BERANDA</Link>
+                    <Link href="/" style={{ marginTop: 24, color: "#94a3b8", fontWeight: 700, textDecoration: "none", fontSize: 14 }}>← BERANDA</Link>
                 </div>
             )}
 
             {gameState === "PLAYING" && (
                 <>
-                    {/* HUD */}
-                    <div style={{ position: "absolute", top: 40, left: 40, width: 320 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, alignItems: "flex-end" }}>
-                            <div style={{ color: "white" }}>
-                                <div style={{ fontSize: 10, fontWeight: 800, color: "#3b82f6", textTransform: "uppercase" }}>Player</div>
-                                <div style={{ fontSize: 18, fontWeight: 900 }}>{selectedAvatar.name}</div>
+                    {/* Top HUD */}
+                    <div className="hud-container top">
+                        <div className="hp-block player">
+                            <div className="hp-info">
+                                <span className="entity-name">{selectedAvatar.name}</span>
+                                <span className="hp-value">{Math.ceil(playerHp)}</span>
                             </div>
-                            <span style={{ color: "white", fontSize: 24, fontWeight: 900 }}>{Math.ceil(playerHp)}</span>
-                        </div>
-                        <div style={{ height: 14, background: "rgba(255,255,255,0.1)", borderRadius: 7, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
-                            <div style={{ width: `${playerHp}%`, height: "100%", background: "linear-gradient(90deg, #3b82f6, #10b981)", transition: "width 0.2s" }} />
-                        </div>
-                    </div>
-
-                    <div style={{ position: "absolute", top: 40, right: 40, width: 320, textAlign: "right" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, alignItems: "flex-end" }}>
-                            <span style={{ color: "#e11d48", fontSize: 24, fontWeight: 900 }}>{Math.ceil(enemyHp)}</span>
-                            <div>
-                                <div style={{ fontSize: 10, fontWeight: 800, color: "#e11d48", textTransform: "uppercase" }}>Target</div>
-                                <div style={{ fontSize: 18, fontWeight: 900 }}>ANTI-ATTITUDE</div>
+                            <div className="hp-bar-bg">
+                                <div style={{ width: `${playerHp}%`, height: "100%", background: "linear-gradient(90deg, #3b82f6, #10b981)" }} />
                             </div>
                         </div>
-                        <div style={{ height: 14, background: "rgba(255,255,255,0.1)", borderRadius: 7, overflow: "hidden", direction: "rtl", border: "1px solid rgba(225,29,72,0.2)" }}>
-                            <div style={{ width: `${enemyHp}%`, height: "100%", background: "linear-gradient(90deg, #e11d48, #9f1239)", transition: "width 0.2s" }} />
-                        </div>
-                    </div>
 
-                    <div style={{ position: "absolute", top: 40, left: "50%", transform: "translateX(-50%)", textAlign: "center" }}>
-                        <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.2em" }}>Combat Score</div>
-                        <div style={{ color: "white", fontSize: 40, fontWeight: 900 }}>{playerScore}</div>
+                        <div className="score-block">
+                            <div className="score-label">SCORE</div>
+                            <div className="score-value">{playerScore}</div>
+                        </div>
+
+                        <div className="hp-block enemy">
+                            <div className="hp-info">
+                                <span className="hp-value">{Math.ceil(enemyHp)}</span>
+                                <span className="entity-name">TARGET</span>
+                            </div>
+                            <div className="hp-bar-bg rtl">
+                                <div style={{ width: `${enemyHp}%`, height: "100%", background: "linear-gradient(90deg, #e11d48, #9f1239)" }} />
+                            </div>
+                        </div>
                     </div>
 
                     {/* Hit Popups */}
                     {hitPopups.map(popup => (
-                        <div
-                            key={popup.id}
-                            style={{
-                                position: "absolute",
-                                left: `${popup.x}%`,
-                                top: `${popup.y}%`,
-                                color: "#10b981",
-                                fontWeight: 900,
-                                fontSize: 24,
-                                textShadow: "0 0 20px rgba(16,185,129,0.8)",
-                                pointerEvents: "none",
-                                animation: "popupFade 1s forwards",
-                                zIndex: 50,
-                                textAlign: "center",
-                                transform: "translate(-50%, -50%)"
-                            }}
-                        >
+                        <div key={popup.id} className="hit-popup" style={{ left: `${popup.x}%`, top: `${popup.y}%` }}>
                             +ATTITUDE<br />
-                            <span style={{ fontSize: 14, color: "white" }}>{popup.text}</span>
+                            <span style={{ fontSize: "0.6em", color: "white" }}>{popup.text}</span>
                         </div>
                     ))}
 
-                    <div style={{ position: "absolute", bottom: 40, width: "100%", textAlign: "center", color: "white", pointerEvents: "none" }}>
-                        <div style={{ background: "rgba(10,10,15,0.8)", display: "inline-block", padding: "14px 32px", borderRadius: 99, fontSize: 14, fontWeight: 700, backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                            Klik untuk Menghancurkan Kebiasaan Buruk! 🥊🔥
+                    <div className="combat-instruction">
+                        <div className="instruction-badge">
+                            Tap Layar untuk Memukul! 🥊
                         </div>
                     </div>
                 </>
             )}
 
             {gameState === "RESULT" && (
-                <div style={{ position: "absolute", inset: 0, zIndex: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.95)", color: "white" }}>
-                    <div style={{ fontSize: 120, marginBottom: 24, animation: "bounce 2s infinite" }}>{winner === "PLAYER" ? "🥇" : "🚫"}</div>
-                    <h2 style={{ fontSize: 56, fontWeight: 900, marginBottom: 12, textAlign: "center" }}>{winner === "PLAYER" ? "MISI SELESAI!" : "COBA LAGI!"}</h2>
-                    <p style={{ color: "#94a3b8", marginBottom: 48, maxWidth: 540, textAlign: "center", fontSize: 18, lineHeight: 1.6 }}>
+                <div style={{ position: "absolute", inset: 0, zIndex: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.95)", color: "white", padding: 24 }}>
+                    <div style={{ fontSize: "clamp(64px, 20vw, 120px)", marginBottom: 16, animation: "bounce 2s infinite" }}>{winner === "PLAYER" ? "🥇" : "🚫"}</div>
+                    <h2 style={{ fontSize: "clamp(24px, 8vw, 56px)", fontWeight: 900, marginBottom: 8, textAlign: "center" }}>{winner === "PLAYER" ? "MISI SELESAI!" : "COBA LAGI!"}</h2>
+                    <p style={{ color: "#94a3b8", marginBottom: 32, maxWidth: 540, textAlign: "center", fontSize: "clamp(13px, 4vw, 18px)", lineHeight: 1.6 }}>
                         {winner === "PLAYER"
-                            ? `Luar biasa! Kamu telah melumpuhkan Anti-hero dan mempraktikkan nilai ATTITUDE dengan sempurna.`
-                            : `Jangan biarkan pengaruh negatif menang. Fokuskan kembali nilai-nilai karaktermu dan kembali bertanding!`}
+                            ? `Luar biasa! Kamu telah melumpuhkan Anti-hero dengan nilai ATTITUDE!`
+                            : `Jangan biarkan pengaruh negatif menang. Fokuskan nilai karaktermu!`}
                     </p>
 
-                    <div style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))", padding: "40px 80px", borderRadius: 40, marginBottom: 64, textAlign: "center", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 32px 64px -12px rgba(0,0,0,0.5)" }}>
-                        <div style={{ fontSize: 14, fontWeight: 800, textTransform: "uppercase", opacity: 0.6, letterSpacing: "0.1em", marginBottom: 12 }}>Combat Experience Gained</div>
-                        <div style={{ fontSize: 72, fontWeight: 900, color: winner === "PLAYER" ? "#10b981" : "#e11d48", textShadow: "0 0 30px rgba(0,0,0,0.5)" }}>{playerScore} XP</div>
+                    <div className="result-card">
+                        <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", opacity: 0.6, marginBottom: 8 }}>Combat XP Gained</div>
+                        <div style={{ fontSize: "clamp(48px, 12vw, 72px)", fontWeight: 900, color: winner === "PLAYER" ? "#10b981" : "#e11d48" }}>{playerScore} XP</div>
                     </div>
 
-                    <div style={{ display: "flex", gap: 20 }}>
+                    <div className="result-buttons">
                         <button
                             onClick={() => { setGameState("AVATAR"); setPlayerHp(100); setEnemyHp(100); setPlayerScore(0); }}
-                            style={{ background: "white", color: "#0a0a0f", border: "none", padding: "22px 56px", borderRadius: 24, fontSize: 18, fontWeight: 900, cursor: "pointer", transition: "transform 0.2s" }}
+                            className="btn-replay"
                         >
                             MAIN LAGI
                         </button>
-                        <Link href="/" style={{ background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)", padding: "22px 56px", borderRadius: 24, fontSize: 18, fontWeight: 900, textDecoration: "none", backdropFilter: "blur(10px)" }}>
-                            KE BERANDA
+                        <Link href="/" className="btn-home">
+                            BERANDA
                         </Link>
                     </div>
                 </div>
@@ -368,6 +342,126 @@ export default function Fighter3DGame() {
             <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
 
             <style>{`
+                .avatar-grid {
+                    display: flex;
+                    gap: 16px;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    width: 100%;
+                    max-width: 800px;
+                }
+                .avatar-card {
+                    background: rgba(255,255,255,0.05);
+                    padding: 24px;
+                    border-radius: 24px;
+                    border: 2px solid transparent;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    text-align: center;
+                    width: 160px;
+                    flex: 1 1 160px;
+                }
+                .avatar-card.active {
+                    background: white;
+                    border-color: white;
+                    box-shadow: 0 10px 20px rgba(255,255,255,0.1);
+                }
+                .hud-container {
+                    position: absolute;
+                    width: 100%;
+                    padding: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    z-index: 10;
+                }
+                .hp-block {
+                    flex: 1;
+                    max-width: 200px;
+                }
+                .score-block {
+                    text-align: center;
+                    margin: 0 10px;
+                }
+                .hp-info {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 4px;
+                    font-size: 11px;
+                    font-weight: 900;
+                    color: white;
+                }
+                .hp-bar-bg {
+                    height: 10px;
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 5px;
+                    overflow: hidden;
+                }
+                .hp-bar-bg.rtl { direction: rtl; }
+                .score-label { color: #94a3b8; font-size: 9px; font-weight: 800; }
+                .score-value { color: white; font-size: 24px; font-weight: 900; }
+                .hit-popup {
+                    position: absolute;
+                    color: #10b981;
+                    font-weight: 900;
+                    font-size: clamp(16px, 5vw, 24px);
+                    text-shadow: 0 0 10px rgba(16,185,129,0.8);
+                    pointer-events: none;
+                    animation: popupFade 1s forwards;
+                    z-index: 50;
+                    textAlign: center;
+                    transform: translate(-50%, -50%);
+                }
+                .combat-instruction {
+                    position: absolute;
+                    bottom: 32px;
+                    width: 100%;
+                    text-align: center;
+                    pointer-events: none;
+                }
+                .instruction-badge {
+                    background: rgba(10,10,15,0.8);
+                    display: inline-block;
+                    padding: 10px 24px;
+                    border-radius: 99px;
+                    font-size: 12px;
+                    font-weight: 700;
+                    color: white;
+                    border: 1px solid rgba(255,255,255,0.1);
+                }
+                .result-card {
+                    background: rgba(255,255,255,0.05);
+                    padding: 24px 40px;
+                    border-radius: 24px;
+                    margin-bottom: 32px;
+                    text-align: center;
+                }
+                .result-buttons {
+                    display: flex;
+                    gap: 12px;
+                    width: 100%;
+                    max-width: 400px;
+                }
+                .result-buttons > * {
+                    flex: 1;
+                    padding: 16px;
+                    border-radius: 16px;
+                    font-weight: 900;
+                    text-align: center;
+                    font-size: 14px;
+                }
+                .btn-replay { background: white; color: #0a0a0f; border: none; cursor: pointer; }
+                .btn-home { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); text-decoration: none; }
+
+                @media (max-width: 600px) {
+                    .avatar-grid { gap: 10px; }
+                    .avatar-card { padding: 16px; width: 140px; flex: 1 1 140px; }
+                    .hud-container { padding: 10px; }
+                    .hp-block { max-width: 120px; }
+                    .score-value { font-size: 18px; }
+                    .entity-name { display: none; }
+                }
+
                 @keyframes popupFade {
                     0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
                     20% { transform: translate(-50%, -80%) scale(1.1); opacity: 1; }
@@ -375,7 +469,7 @@ export default function Fighter3DGame() {
                 }
                 @keyframes bounce {
                     0%, 100% { transform: translateY(0); }
-                    50% { transform: translateY(-20px); }
+                    50% { transform: translateY(-10px); }
                 }
             `}</style>
         </div>
