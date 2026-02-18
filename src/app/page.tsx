@@ -131,6 +131,39 @@ export default async function Home() {
         </div>
       </div>
 
+      {/* Culture Introduction CTA */}
+      <Link href="/culture" style={{ textDecoration: 'none', display: 'block', marginBottom: 32 }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #fff1f2, #ffe4e6, #fecdd3)',
+          borderRadius: 20, padding: 24, color: '#9f1239',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          border: '1px solid rgba(225,29,72,0.2)',
+          boxShadow: '0 8px 32px -4px rgba(225,29,72,0.1)',
+          gap: 16,
+        }}>
+          <div>
+            <div style={{ fontSize: 10, fontWeight: 800, color: '#e11d48', textTransform: 'uppercase' as const, letterSpacing: '0.15em', marginBottom: 6 }}>
+              📚 Pengenalan
+            </div>
+            <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, letterSpacing: '-0.02em' }}>
+              Moklet Learning Culture
+            </div>
+            <div style={{ fontSize: 12, color: '#be123c', fontWeight: 500 }}>
+              Pahami cara kita belajar & bekerja agar siap industri!
+            </div>
+          </div>
+          <div style={{
+            width: 52, height: 52, borderRadius: 16,
+            background: 'linear-gradient(135deg, #e11d48, #be123c)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 24, flexShrink: 0,
+            boxShadow: '0 4px 16px rgba(225,29,72,0.4)',
+          }}>
+            <span className="animate-float">📖</span>
+          </div>
+        </div>
+      </Link>
+
       {/* Lightning Challenge CTA */}
       <Link href="/challenge" style={{ textDecoration: 'none', display: 'block', marginBottom: 32 }}>
         <div style={{
