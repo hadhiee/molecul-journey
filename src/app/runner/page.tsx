@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const VALUES = ["A", "T", "T", "I", "T", "U", "D", "E"];
 const VALUE_COLORS = ["#e11d48", "#f59e0b", "#8b5cf6", "#3b82f6", "#22c55e", "#ec4899", "#06b6d4", "#f97316"];
-const GROUND_Y = 0.75;
+const GROUND_Y_RATIO = 0.8; // Lower ground to give more sky space
 
 const AVATARS = [
     { id: "moklet", name: "Siswa Moklet", body: "#1e1b4b", head: "#ffd4b5", glow: "#e11d48", trail: "#e11d48", emoji: "👦" },
@@ -55,6 +55,8 @@ export default function MokletRunner() {
         lastObstacle: 0,
         lastCoin: 0,
         avatarIndex: 0,
+        logicalWidth: 600, // Default fallback
+        logicalHeight: 400, // Default fallback
     });
 
     useEffect(() => {
@@ -141,7 +143,8 @@ export default function MokletRunner() {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        g.groundY = canvas.height * GROUND_Y;
+
+        // groundY is set by resizeCanvas, do not overwrite with wrong logic
         g.player = { x: 80, y: g.groundY - 40, vy: 0, jumping: false, doubleJump: false, width: 32, height: 40, rotation: 0 };
         g.obstacles = [];
         g.coins = [];
@@ -188,22 +191,31 @@ export default function MokletRunner() {
         if (!ctx) return;
 
         const resizeCanvas = () => {
-            const parent = canvas.parentElement;
-            if (parent) {
+            if (canvas) {
                 const dpr = window.devicePixelRatio || 1;
-                const { clientWidth, clientHeight } = parent;
+                // Force full window size for maximum visibility
+                const displayW = window.innerWidth;
+                const displayH = window.innerHeight;
 
-                // Set actual canvas size (resolution)
-                canvas.width = clientWidth * dpr;
-                canvas.height = clientHeight * dpr;
+                canvas.width = displayW * dpr;
+                canvas.height = displayH * dpr;
 
-                // Set visible size
-                canvas.style.width = `${clientWidth}px`;
-                canvas.style.height = `${clientHeight}px`;
+                canvas.style.width = `${displayW}px`;
+                canvas.style.height = `${displayH}px`;
 
-                // Normalize scale
-                ctx.scale(dpr, dpr);
-                gameRef.current.groundY = clientHeight * GROUND_Y;
+                // Scale logic: Keep game logic 1:1 but zoom out slightly on small screens
+                // We'll use a base scale derived from width
+                const baseScale = Math.min(1, displayW / 600); // Scale down if width < 600
+
+                ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset
+                ctx.scale(dpr * baseScale, dpr * baseScale);
+
+                // Adjust ground Y based on logical height (displayH / baseScale)
+                const logicalH = displayH / baseScale;
+                const logicalW = displayW / baseScale;
+                gameRef.current.groundY = logicalH * GROUND_Y_RATIO;
+                gameRef.current.logicalWidth = logicalW;
+                gameRef.current.logicalHeight = logicalH;
             }
         };
         resizeCanvas();
@@ -213,8 +225,9 @@ export default function MokletRunner() {
 
         const gameLoop = () => {
             const g = gameRef.current;
-            const W = canvas.width;
-            const H = canvas.height;
+            // Logical Dimensions (Scaled)
+            const W = g.logicalWidth;
+            const H = g.logicalHeight;
             const avatar = AVATARS[g.avatarIndex] || AVATARS[0];
 
             // === BACKGROUND: Night Sky ===
@@ -672,77 +685,71 @@ export default function MokletRunner() {
     const currentAvatar = AVATARS[selectedAvatar];
 
     return (
-        <div style={{ height: '100svh', background: '#0f0f1e', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            {/* Top Bar */}
-            <div style={{ padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1e1b4b', borderBottom: '1px solid rgba(255,255,255,0.1)', zIndex: 20 }}>
-                <Link href="/" style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ fontSize: 16 }}>←</span> Keluar
+        <div style={{ height: '100svh', width: '100vw', background: '#0f0f1e', position: 'relative', overflow: 'hidden' }}>
+
+            {/* Canvas (Full Screen Background) */}
+            <canvas
+                ref={canvasRef}
+                onClick={handleCanvasClick}
+                onTouchStart={(e) => { e.preventDefault(); handleCanvasClick(); }}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block', touchAction: 'none', zIndex: 0 }}
+            />
+
+            {/* Top Bar (Overlay) */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(to bottom, rgba(15,15,30,0.9), transparent)', zIndex: 20 }}>
+                <Link href="/" style={{ fontSize: 12, fontWeight: 700, color: 'white', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
+                    <span style={{ fontSize: 14 }}>←</span> Keluar
                 </Link>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: 'white', letterSpacing: '0.5px' }}>MOKLET RUNNER</div>
-                    <div style={{ fontSize: 10, color: '#64748b' }}>Kejar Huruf Attitude!</div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(245, 158, 11, 0.1)', padding: '4px 10px', borderRadius: 20, border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(0,0,0,0.3)', padding: '4px 12px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(4px)' }}>
                     <span style={{ fontSize: 14 }}>🏆</span>
-                    <span style={{ fontSize: 12, fontWeight: 800, color: '#f59e0b' }}>{highScore}</span>
+                    <span style={{ fontSize: 14, fontWeight: 800, color: '#f59e0b' }}>{highScore}</span>
                 </div>
             </div>
 
-            {/* Canvas Container (Flexible) */}
-            <div style={{ flex: 1, width: '100%', position: 'relative', overflow: 'hidden', background: '#050510' }}>
-                <canvas
-                    ref={canvasRef}
-                    onClick={handleCanvasClick}
-                    onTouchStart={(e) => { e.preventDefault(); handleCanvasClick(); }}
-                    style={{ display: 'block', width: '100%', height: '100%', cursor: 'pointer', touchAction: 'none' }}
-                />
-
-                {/* Menu Overlay */}
-                {gameState === "menu" && (
-                    <div style={{
-                        position: 'absolute', inset: 0,
-                        background: 'rgba(5,5,16,0.85)',
-                        display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', justifyContent: 'center',
-                        backdropFilter: 'blur(8px)',
-                        padding: 24,
-                        zIndex: 30
-                    }}>
+            {/* Menu Overlay */}
+            {gameState === "menu" && (
+                <div style={{
+                    position: 'absolute', inset: 0, zIndex: 30,
+                    background: 'rgba(5,5,16,0.85)',
+                    display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', justifyContent: 'center',
+                    backdropFilter: 'blur(8px)',
+                    padding: 24,
+                }}>
+                    <div style={{ transform: 'scale(1.2)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <div style={{ width: 80, height: 80, background: `linear-gradient(135deg, ${currentAvatar.body}, ${currentAvatar.trail})`, borderRadius: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40, boxShadow: `0 0 40px ${currentAvatar.glow}66`, marginBottom: 24 }}>
                             {currentAvatar.emoji}
                         </div>
 
-                        <h2 style={{ fontSize: 32, fontWeight: 900, color: 'white', marginBottom: 8, textAlign: 'center' }}>SIAP BERLARI?</h2>
-                        <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 32, textAlign: 'center', maxWidth: 300, lineHeight: 1.6 }}>
-                            Tap layar atau Space untuk melompat. Hindari rintangan dan kumpulkan huruf attitude!
-                        </p>
+                        <h2 style={{ fontSize: 32, fontWeight: 900, color: 'white', marginBottom: 8, textAlign: 'center' }}>MOKLET RUNNER</h2>
 
                         {/* Avatar Selector */}
-                        <div style={{ width: '100%', maxWidth: 400, marginBottom: 40 }}>
-                            <div style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 12, textAlign: 'center' }}>PILIH KARAKTER</div>
-                            <div style={{ display: 'flex', gap: 12, overflowX: 'auto', padding: '4px 20px 20px', justifyContent: 'center', scrollbarWidth: 'none' }}>
+                        <div style={{ width: '100vw', maxWidth: 400, margin: '24px 0' }}>
+                            <div style={{ display: 'flex', gap: 12, overflowX: 'auto', padding: '10px 20px', justifyContent: 'flex-start', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+                                <div style={{ width: 10 }} /> {/* Spacer */}
                                 {AVATARS.map((av, i) => (
                                     <div
                                         key={av.id}
                                         onClick={(e) => { e.stopPropagation(); setSelectedAvatar(i); }}
                                         style={{
                                             flexShrink: 0,
-                                            width: 64, height: 74,
+                                            width: 60, height: 70,
                                             borderRadius: 16,
                                             background: selectedAvatar === i ? `${av.body}44` : 'rgba(255,255,255,0.05)',
                                             border: selectedAvatar === i ? `2px solid ${av.body}` : '1px solid rgba(255,255,255,0.1)',
                                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                                             cursor: 'pointer',
                                             transition: 'all 0.2s',
-                                            transform: selectedAvatar === i ? 'translateY(-5px)' : 'none',
+                                            transform: selectedAvatar === i ? 'scale(1.1)' : 'scale(1)',
                                             boxShadow: selectedAvatar === i ? `0 10px 25px -5px ${av.glow}66` : 'none',
                                         }}
                                     >
-                                        <span style={{ fontSize: 24, marginBottom: 4 }}>{av.emoji}</span>
-                                        <span style={{ fontSize: 9, fontWeight: 700, color: selectedAvatar === i ? 'white' : '#64748b' }}>{av.name}</span>
+                                        <span style={{ fontSize: 24, marginBottom: 2 }}>{av.emoji}</span>
                                     </div>
                                 ))}
+                                <div style={{ width: 10 }} />
                             </div>
+                            <div style={{ textAlign: 'center', color: 'white', fontWeight: 700, fontSize: 14, marginTop: 8 }}>{currentAvatar.name}</div>
                         </div>
 
                         <div
@@ -750,83 +757,79 @@ export default function MokletRunner() {
                             style={{
                                 background: 'white',
                                 color: '#0f0f1e',
-                                padding: '16px 48px', borderRadius: 99,
-                                fontSize: 16, fontWeight: 900,
+                                padding: '16px 56px', borderRadius: 99,
+                                fontSize: 18, fontWeight: 900,
                                 letterSpacing: '1px', cursor: 'pointer',
                                 boxShadow: '0 0 30px rgba(255,255,255,0.3)',
-                                transform: 'scale(1)',
-                                transition: 'transform 0.1s',
                                 display: 'flex', alignItems: 'center', gap: 8
                             }}
                         >
-                            <span style={{ fontSize: 20 }}>🚀</span> MULAI MAIN
+                            MAIN SEKARANG
                         </div>
                     </div>
-                )}
+                </div>
+            )}
 
-                {/* Game Over Overlay */}
-                {gameState === "over" && (
-                    <div style={{
-                        position: 'absolute', inset: 0,
-                        background: 'rgba(15,15,30,0.95)',
-                        display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', justifyContent: 'center',
-                        zIndex: 30
-                    }}>
-                        <div style={{ fontSize: 64, marginBottom: 16, animation: 'bounce 1s infinite' }}>💥</div>
-                        <h2 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 8 }}>Game Over!</h2>
+            {/* Game Over Overlay */}
+            {gameState === "over" && (
+                <div style={{
+                    position: 'absolute', inset: 0, zIndex: 30,
+                    background: 'rgba(15,15,30,0.95)',
+                    display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', justifyContent: 'center',
+                    backdropFilter: 'blur(5px)',
+                    padding: 24
+                }}>
+                    <div style={{ fontSize: 64, marginBottom: 16, animation: 'bounce 1s infinite' }}>💥</div>
+                    <h2 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 8 }}>Game Over!</h2>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, margin: '32px 0' }}>
-                            <div style={{ textAlign: 'center' }}>
-                                <div style={{ fontSize: 12, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>Skor Kamu</div>
-                                <div style={{ fontSize: 32, fontWeight: 900, color: '#f59e0b' }}>{score}</div>
-                            </div>
-                            <div style={{ textAlign: 'center' }}>
-                                <div style={{ fontSize: 12, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>Item</div>
-                                <div style={{ fontSize: 32, fontWeight: 900, color: '#3b82f6' }}>{collected}</div>
-                            </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, margin: '32px 0' }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>SKOR</div>
+                            <div style={{ fontSize: 40, fontWeight: 900, color: '#f59e0b', lineHeight: 1 }}>{score}</div>
                         </div>
-
-                        <div
-                            onClick={(e) => { e.stopPropagation(); startGame(); }}
-                            style={{
-                                background: '#e11d48',
-                                color: 'white',
-                                padding: '16px 48px', borderRadius: 99,
-                                fontSize: 16, fontWeight: 900,
-                                cursor: 'pointer',
-                                boxShadow: '0 10px 30px rgba(225,29,72,0.4)',
-                            }}
-                        >
-                            🔄 COBA LAGI
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>HURUF</div>
+                            <div style={{ fontSize: 40, fontWeight: 900, color: '#3b82f6', lineHeight: 1 }}>{collected}</div>
                         </div>
                     </div>
-                )}
-            </div>
 
-            {/* Bottom Info Bar */}
+                    <div
+                        onClick={(e) => { e.stopPropagation(); startGame(); }}
+                        style={{
+                            background: '#e11d48',
+                            color: 'white',
+                            padding: '16px 48px', borderRadius: 99,
+                            fontSize: 16, fontWeight: 900,
+                            cursor: 'pointer',
+                            boxShadow: '0 10px 30px rgba(225,29,72,0.4)',
+                        }}
+                    >
+                        COBA LAGI
+                    </div>
+                </div>
+            )}
+
+            {/* Bottom Controls (Overlay) */}
             <div style={{
-                padding: '16px',
-                background: '#0f0f1e',
-                borderTop: '1px solid rgba(255,255,255,0.1)',
+                position: 'absolute', bottom: 0, left: 0, right: 0,
+                padding: '24px',
+                background: 'linear-gradient(to top, rgba(15,15,30,0.8), transparent)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 20,
-                flexWrap: 'wrap',
-                zIndex: 20
+                zIndex: 20,
+                pointerEvents: 'none'
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 16, height: 16, borderRadius: 4, border: '2px solid rgba(255,255,255,0.2)' }}></div>
-                    <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600 }}>Space / Tap = Lompat</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 16, height: 16, borderRadius: 4, border: '2px solid rgba(255,255,255,0.2)', position: 'relative' }}>
-                        <div style={{ position: 'absolute', inset: -2, border: '2px solid rgba(255,255,255,0.4)', borderRadius: 6 }}></div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: 0.7 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 20, border: '2px solid rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 32, height: 32, borderRadius: 16, background: 'rgba(255,255,255,0.2)' }} />
                     </div>
-                    <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600 }}>2x Tap = Double Jump</span>
+                    <span style={{ fontSize: 12, color: 'white', fontWeight: 600, textShadow: '0 1px 2px black' }}>Tap Lompat</span>
                 </div>
             </div>
         </div>
     );
+
 }
