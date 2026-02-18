@@ -26,21 +26,19 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async signIn({ account, profile }: any) {
             if (account?.provider === "google") {
-                // Allow temporarily all emails for testing, or check restricted domain
-                // const domain = process.env.SCHOOL_GOOGLE_DOMAIN || "smktelkom-mlg.sch.id";
-                // return profile.email_verified && profile.email.endsWith(`@${domain}`);
-                // Log Login Activity
                 try {
-                    const { supabase } = await import("@/lib/supabase");
-                    await supabase.from("user_progress").insert({
-                        user_email: profile.email,
-                        mission_id: "SYSTEM_LOGIN",
-                        score: 0,
-                        choice_label: "LOGIN_ON_" + new Date().toISOString().split('T')[0]
-                    });
-                } catch (e) { console.error("Login log failed", e); }
-
-                return !!profile.email_verified;
+                    const email = profile?.email;
+                    if (email) {
+                        const { supabase: s } = await import("@/lib/supabase");
+                        await s.from("user_progress").insert({
+                            user_email: email,
+                            mission_id: "SYSTEM_LOGIN",
+                            score: 0,
+                            choice_label: `LOGIN_${new Date().toISOString()}`
+                        });
+                    }
+                } catch (e) { console.error("Login log err:", e); }
+                return !!profile?.email_verified;
             }
             return true;
         },

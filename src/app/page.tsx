@@ -28,8 +28,9 @@ export default async function Home() {
       .eq("user_email", userEmail);
 
     if (progress && progress.length > 0) {
-      totalXP = progress.reduce((sum: number, p: any) => sum + (p.score || 0), 0);
-      missionCount = progress.length;
+      const actualMissions = progress.filter((p: any) => p.mission_id !== "SYSTEM_LOGIN");
+      totalXP = actualMissions.reduce((sum: number, p: any) => sum + (p.score || 0), 0);
+      missionCount = actualMissions.length;
     }
   } catch (e) { }
 
