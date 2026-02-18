@@ -286,11 +286,15 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
     const lastSpawn = useRef(0);
     const lastShot = useRef(0);
 
+    // --- Responsive Bounds ---
+    const boundX = viewport.width / 2;
+    const boundY = viewport.height / 2;
+
     // Controls
     useEffect(() => {
         const onMove = (e: PointerEvent) => {
             pointerPos.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-            pointerPos.current.x *= (viewport.width / 2);
+            pointerPos.current.x *= boundX;
         };
         const onDown = () => {
             if (!isPlaying) return;
@@ -299,21 +303,32 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
                 setBullets(prev => [...prev, {
                     id,
                     x: playerRef.current?.position.x || 0,
-                    y: -BOUNDS.y + 2.5
+                    y: -boundY + 2.5
                 }]);
                 lastShot.current = Date.now();
             }
         };
+        const onTouch = (e: TouchEvent) => {
+            if (!isPlaying) return;
+            // Prevent default zooming/scrolling
+            // e.preventDefault(); // Can't prevent default in passive listener easily in React without ref
+            const touch = e.touches[0];
+            pointerPos.current.x = (touch.clientX / window.innerWidth) * 2 - 1;
+            pointerPos.current.x *= boundX;
+        };
+
         window.addEventListener("pointermove", onMove);
         window.addEventListener("pointerdown", onDown);
+        window.addEventListener("touchmove", onTouch);
         window.addEventListener("keydown", (e) => {
             if (e.code === "Space") onDown();
         });
         return () => {
             window.removeEventListener("pointermove", onMove);
             window.removeEventListener("pointerdown", onDown);
+            window.removeEventListener("touchmove", onTouch);
         };
-    }, [isPlaying, viewport.width]);
+    }, [isPlaying, viewport.width, boundX, boundY]);
 
     useFrame((state, delta) => {
         if (!isPlaying) return;
@@ -322,6 +337,8 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
         if (playerRef.current) {
             playerRef.current.position.x = THREE.MathUtils.lerp(playerRef.current.position.x, pointerPos.current.x, 0.2);
             playerRef.current.rotation.z = (pointerPos.current.x - playerRef.current.position.x) * -0.5;
+            // Update player Y if viewport changed
+            playerRef.current.position.y = -boundY + 2;
         }
 
         // 2. Spawn Enemies
@@ -330,7 +347,7 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
             setEnemies(prev => [...prev, {
                 id,
                 x: THREE.MathUtils.randFloatSpread(viewport.width - 2),
-                y: BOUNDS.y + 2,
+                y: boundY + 2,
                 label: CULTURE_VALUES[Math.floor(Math.random() * CULTURE_VALUES.length)]
             }]);
             lastSpawn.current = state.clock.elapsedTime;
@@ -364,7 +381,7 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
             });
 
             // Cleanup Out of Bounds
-            if (mesh.position.y > BOUNDS.y) {
+            if (mesh.position.y > boundY) {
                 setBullets(prev => prev.filter(b => b.id !== id));
                 bulletRefs.current.delete(id);
             }
@@ -381,7 +398,7 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
                 setGameOver(true);
             }
 
-            if (mesh.position.y < -BOUNDS.y) {
+            if (mesh.position.y < -boundY) {
                 setEnemies(prev => prev.filter(e => e.id !== id));
                 enemyRefs.current.delete(id);
             }
