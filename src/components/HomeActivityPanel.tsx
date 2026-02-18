@@ -47,7 +47,7 @@ const Modal = ({ title, children, onClose }: { title: string, children: React.Re
 );
 
 export default function HomeActivityPanel({ userEmail }: { userEmail: string }) {
-    const [activeModal, setActiveModal] = useState<"CHECKIN" | "EVIDENCE" | "REFLECTION" | null>(null);
+    const [activeModal, setActiveModal] = useState<"CHECKIN" | "EVIDENCE" | "REFLECTION" | "FULL_HISTORY" | null>(null);
     const [reflection, setReflection] = useState("");
     const [isSaving, setIsSaving] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
@@ -211,7 +211,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
 
                 <div style={{ gridColumn: 'span 3', marginTop: 8 }}>
                     <button
-                        onClick={() => setActiveModal("FULL_HISTORY" as any)}
+                        onClick={() => setActiveModal("FULL_HISTORY")}
                         style={{
                             width: '100%',
                             background: '#f1f5f9',
@@ -323,7 +323,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                 </Modal>
             )}
 
-            {(activeModal as any) === "FULL_HISTORY" && (
+            {activeModal === "FULL_HISTORY" && (
                 <Modal title="Riwayat Aktivitas" onClose={() => setActiveModal(null)}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                         <div>
