@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import GlobalActivityTracker from "@/components/GlobalActivityTracker";
 
 export const metadata: Metadata = {
   title: "MoLeCul - Moklet Learning Culture Journey",
@@ -27,7 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <GlobalActivityTracker />
+          {children}
+        </Providers>
       </body>
     </html>
   );
