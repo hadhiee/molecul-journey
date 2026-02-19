@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 // --- Assets ---
-const BG_URL = "https://images.unsplash.com/photo-1599058945522-28d584b6f0ff";
+const BG_URL = "https://images.unsplash.com/photo-1552072092-7f9b854618e7?q=80&w=2600&auto=format&fit=crop"; // Empty Gym Room
 const GLOVE_URL = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Oncoming%20Fist%20Medium-Light%20Skin%20Tone.png";
 const ENEMY_URL = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Angry%20Face%20with%20Horns.png";
 
