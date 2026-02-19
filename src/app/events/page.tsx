@@ -1,84 +1,118 @@
 import Link from 'next/link';
-import { EVENTS } from '@/data/events';
+import { EVENTS, PuspresnasEvent } from '@/data/events';
 import EventCard from '@/components/EventCard';
+
+// Helper to group events
+const EVENT_GROUPS = [
+    {
+        title: "Vokasi & Kewirausahaan",
+        description: "Kembangkan skill teknis dan jiwa bisnis profesional.",
+        ids: ['lks', 'fiksi'],
+        color: 'from-rose-500 to-orange-500'
+    },
+    {
+        title: "Sains & Riset",
+        description: "Eksplorasi ilmu pengetahuan dan inovasi penemuan baru.",
+        ids: ['osn', 'opsi'],
+        color: 'from-blue-500 to-cyan-500'
+    },
+    {
+        title: "Seni, Bahasa & Olahraga",
+        description: "Ekspresikan bakat seni, kemampuan komunikasi, dan ketangkasan fisik.",
+        ids: ['fls2n', 'ldi', 'o2sn'],
+        color: 'from-violet-500 to-purple-500'
+    }
+];
 
 export default function EventsIndexPage() {
     return (
-        <div className="min-h-screen bg-slate-50 relative overflow-hidden font-sans pb-20">
+        <div className="min-h-screen bg-[#f8fafc] font-sans pb-24">
 
-            {/* Background decoration */}
-            <div className="absolute top-0 left-0 w-full h-[350px] bg-gradient-to-b from-blue-50 to-transparent opacity-80 z-0" />
-
-            <div className="relative z-10 max-w-6xl mx-auto px-6 py-12">
-                {/* Header & Back */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
-                    <div>
-                        <Link
-                            href="/"
-                            className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 mb-6 uppercase tracking-widest transition-colors"
-                        >
-                            <span>← Kembali ke Dashboard</span>
-                        </Link>
-
-                        <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-none mb-3">
-                            Puspresnas Arena 🏆
-                        </h1>
-                        <p className="text-lg text-slate-600 font-medium max-w-2xl leading-relaxed">
-                            Pusat informasi dan pelatihan untuk 7 ajang talenta nasional paling bergengsi dari Kemendikbudristek.
-                        </p>
-                    </div>
-
-                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
-                        <span className="text-sm font-bold text-slate-600">Total Event:</span>
-                        <span className="bg-slate-900 text-white text-xs font-bold px-2 py-1 rounded-md">{EVENTS.length}</span>
-                    </div>
+            {/* 1. Hero Section with Pattern */}
+            <div className="relative bg-slate-900 text-white overflow-hidden rounded-b-[40px] md:rounded-b-[60px] shadow-2xl">
+                <div className="absolute inset-0 opacity-20"
+                    style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
                 </div>
 
-                {/* Intro Banner */}
-                <div className="bg-white rounded-[32px] p-8 mb-12 shadow-xl border border-blue-100 relative overflow-hidden grid md:grid-cols-2 gap-8 items-center">
-                    <div className="order-2 md:order-1 relative z-10">
-                        <span className="text-blue-600 font-black text-xs uppercase tracking-widest mb-2 block">Why Participate?</span>
-                        <h2 className="text-2xl font-bold text-slate-900 mb-4">Wujudkan Prestasi, Bangun Karakter Bangsa.</h2>
-                        <div className="space-y-3">
-                            {[
-                                "Pengakuan tingkat nasional untuk portofolio masa depan.",
-                                "Mengasah nilai-nilai karakter utama (Jujur, Tangguh, Kolaboratif).",
-                                "Jejaring dengan talenta terbaik dari seluruh Indonesia.",
-                            ].map((item, i) => (
-                                <div key={i} className="flex gap-3 items-start">
-                                    <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold mt-0.5">✓</div>
-                                    <p className="text-sm text-slate-600 font-medium leading-tight">{item}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="order-1 md:order-2 flex justify-center relative">
-                        <div className="absolute inset-0 bg-blue-500 rounded-full blur-3xl opacity-10 scale-150 animate-pulse"></div>
-                        <div className="text-[120px] leading-none select-none drop-shadow-2xl animate-float">🏅</div>
-                    </div>
-                </div>
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600 rounded-full blur-[120px] opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-rose-600 rounded-full blur-[100px] opacity-20 translate-y-1/2 -translate-x-1/4"></div>
 
-                {/* Event List Grid */}
-                <div>
-                    <div className="flex items-center gap-4 mb-8">
-                        <h2 className="text-2xl font-bold text-slate-800">Daftar Lengkap Event</h2>
-                        <div className="h-px bg-slate-200 flex-1"></div>
-                    </div>
+                <div className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-32 text-center">
+                    <Link
+                        href="/"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-sm font-bold transition-all mb-8 border border-white/10"
+                    >
+                        <span>← Kembali ke Dashboard</span>
+                    </Link>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {EVENTS.map((event) => (
-                            <div key={event.id} className="h-full">
-                                <EventCard event={event} />
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-slate-300 drop-shadow-sm">
+                        Puspresnas Arena
+                    </h1>
+                    <p className="text-lg md:text-2xl text-slate-300 font-medium max-w-3xl mx-auto leading-relaxed">
+                        Pusat inkubasi talenta nasional. Asah karakter, raih prestasi, dan jadilah kebanggaan bangsa.
+                    </p>
+
+                    {/* Stats Pills */}
+                    <div className="flex flex-wrap justify-center gap-4 mt-10">
+                        {[
+                            { label: "7 Ajang Bergengsi", icon: "🏆" },
+                            { label: "100+ Bidang Lomba", icon: "🎯" },
+                            { label: "Pendidikan Karakter", icon: "🛡️" },
+                        ].map((stat, i) => (
+                            <div key={i} className="flex items-center gap-2 px-5 py-2.5 bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-full text-sm font-bold text-slate-200 shadow-sm">
+                                <span>{stat.icon}</span>
+                                <span>{stat.label}</span>
                             </div>
                         ))}
                     </div>
                 </div>
+            </div>
 
-                {/* Footer CTA */}
-                <div className="mt-20 text-center">
-                    <p className="text-slate-400 text-sm font-medium">
-                        Siap untuk mencetak prestasi? Pilih event dan mulai latihan hari ini! 🚀
-                    </p>
+            {/* 2. Main Content - Grouped Layout */}
+            <div className="max-w-6xl mx-auto px-6 -mt-16 md:-mt-20 relative z-20 space-y-16">
+
+                {EVENT_GROUPS.map((group, idx) => {
+                    const groupEvents = group.ids.map(id => EVENTS.find(e => e.id === id)).filter(Boolean) as PuspresnasEvent[];
+
+                    return (
+                        <div key={idx} className="animate-fade-in-up" style={{ animationDelay: `${idx * 100}ms` }}>
+                            <div className="flex items-end gap-4 mb-6 px-2">
+                                <div className={`w-1.5 h-12 rounded-full bg-gradient-to-b ${group.color}`}></div>
+                                <div>
+                                    <h2 className="text-2xl md:text-3xl font-black text-slate-800">{group.title}</h2>
+                                    <p className="text-slate-500 font-medium">{group.description}</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {groupEvents.map(event => (
+                                    <div key={event.id} className="h-full">
+                                        <EventCard event={event} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                })}
+
+                {/* 3. Bottom CTA - Encouragement */}
+                <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-[32px] p-8 md:p-12 text-center text-white shadow-2xl overflow-hidden relative">
+                    <div className="absolute top-0 right-0 text-[15rem] leading-none opacity-5 -translate-y-1/2 translate-x-1/4 font-black">
+                        GO
+                    </div>
+
+                    <div className="relative z-10 max-w-2xl mx-auto">
+                        <h2 className="text-3xl font-bold mb-4">Belum yakin harus mulai dari mana?</h2>
+                        <p className="text-indigo-100 text-lg mb-8">
+                            Coba eksplorasi "Journey Map" untuk menemukan minat bakatmu melalui game simulasi.
+                        </p>
+                        <Link
+                            href="/journey"
+                            className="inline-block px-8 py-4 bg-white text-indigo-700 font-black rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all text-lg"
+                        >
+                            Mulai Petualangan 🗺️
+                        </Link>
+                    </div>
                 </div>
 
             </div>
