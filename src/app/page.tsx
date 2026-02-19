@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import SignOutButton from "@/components/SignOutButton";
 import HomeActivityPanel from "@/components/HomeActivityPanel";
+import TechNewsPanel from "@/components/TechNewsPanel";
+import { Suspense } from "react";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -208,6 +210,11 @@ export default async function Home() {
           </div>
         </div>
       </Link>
+
+      {/* 3.b Tech News Tracker */}
+      <Suspense fallback={<div style={{ height: 200, background: '#f8fafc', borderRadius: 24, marginBottom: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#cbd5e1', fontSize: 12, fontWeight: 700 }}>Memuat Berita...</div>}>
+        <TechNewsPanel />
+      </Suspense>
 
       {/* --- CATEGORY: ACTION ARENA --- */}
       <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
