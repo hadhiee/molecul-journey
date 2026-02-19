@@ -237,7 +237,7 @@ export default async function CulturePage() {
                             {[
                                 { label: "Anak RPL", desc: "Bukan cuma coding jalan, tapi ada dokumentasi & kolaborasi Git." },
                                 { label: "Anak TKJ", desc: "Bukan cuma jaringan nyala, tapi ada SOP & troubleshooting terstruktur." },
-                                { label: "Anak DKV", desc: "Bukan cuma desain bagus, tapi ada riset user & revisi berbasis feedback." }
+                                { label: "Anak PG", desc: "Bukan cuma visual bagus, tapi ada logika coding, mekanik gameplay, & user experience." }
                             ].map((ex, i) => (
                                 <div key={i} style={{ borderLeft: '2px solid rgba(255,255,255,0.1)', paddingLeft: 12 }}>
                                     <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 2 }}>{ex.label}</div>
