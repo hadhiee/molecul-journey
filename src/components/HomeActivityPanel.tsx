@@ -20,18 +20,19 @@ interface HistoryItem {
     content: string;
     timestamp: string;
     type: "reflection" | "evidence" | "checkin";
+    metadata?: { url?: string; fileType?: string; fileName?: string };
 }
 
 const Modal = ({ title, children, onClose }: { title: string, children: React.ReactNode, onClose: () => void }) => (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
         <div
             onClick={onClose}
-            style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(8px)' }}
+            style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.8)', backdropFilter: 'blur(8px)' }}
         />
         <div style={{
-            position: 'relative', background: 'white', borderRadius: 28, width: '100%', maxWidth: 500,
+            position: 'relative', background: 'white', borderRadius: 28, width: '100%', maxWidth: 600,
             padding: '32px 24px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', animation: 'modalIn 0.3s ease-out',
-            maxHeight: '85vh', overflowY: 'auto'
+            maxHeight: '90vh', overflowY: 'auto'
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, position: 'sticky', top: 0, background: 'white', zIndex: 1, paddingBottom: 10 }}>
                 <div>
@@ -47,6 +48,46 @@ const Modal = ({ title, children, onClose }: { title: string, children: React.Re
     </div>
 );
 
+const PreviewModal = ({ url, type, name, onClose }: { url: string; type: string; name: string; onClose: () => void }) => {
+    const isImage = type.startsWith("image/");
+    const isVideo = type.startsWith("video/");
+    const isPDF = type === "application/pdf";
+
+    return (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+            <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0, 0, 0, 0.9)' }} />
+            <div style={{ position: 'relative', background: 'black', borderRadius: 12, width: '100%', maxWidth: 900, maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ padding: 12, display: 'flex', justifyContent: 'space-between', color: 'white' }}>
+                    <span style={{ fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</span>
+                    <button onClick={onClose} style={{ background: 'white', color: 'black', border: 'none', borderRadius: 4, padding: '4px 12px', fontWeight: 800, cursor: 'pointer' }}>Tutup</button>
+                </div>
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a1a', minHeight: 300 }}>
+                    {isImage && <img src={url} alt={name} style={{ maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain' }} />}
+                    {isVideo && <video src={url} controls style={{ maxWidth: '100%', maxHeight: '80vh' }} />}
+                    {isPDF && <iframe src={url} style={{ width: '100%', height: '80vh', border: 'none' }} title={name} />}
+                    {!isImage && !isVideo && !isPDF && (
+                        <div style={{ textAlign: 'center', color: 'white', padding: 20 }}>
+                            <p style={{ marginBottom: 12 }}>File ini tidak dapat dipratinjau langsung.</p>
+                            <a href={url} target="_blank" rel="noreferrer" style={{ background: '#3b82f6', color: 'white', padding: '10px 20px', borderRadius: 8, textDecoration: 'none', fontWeight: 700 }}>
+                                Download / Buka External
+                            </a>
+                            {/* Fallback for docs using Google Viewer */}
+                            {(type.includes("word") || type.includes("document")) && (
+                                <div style={{ marginTop: 20 }}>
+                                    <iframe
+                                        src={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`}
+                                        style={{ width: '100%', height: '60vh', border: 'none', background: 'white' }}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 export default function HomeActivityPanel({ userEmail }: { userEmail: string }) {
     const [activeModal, setActiveModal] = useState<"CHECKIN" | "EVIDENCE" | "REFLECTION" | "FULL_HISTORY" | null>(null);
     const [reflection, setReflection] = useState("");
@@ -55,12 +96,24 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
     const [uploadStatus, setUploadStatus] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
 
+    // Preview State
+    const [previewData, setPreviewData] = useState<{ url: string; type: string; name: string } | null>(null);
+
     // History states
     const [reflectionsHistory, setReflectionsHistory] = useState<HistoryItem[]>([]);
     const [evidenceHistory, setEvidenceHistory] = useState<HistoryItem[]>([]);
     const [checkinHistory, setCheckinHistory] = useState<HistoryItem[]>([]);
 
     const [dayValue, setDayValue] = useState(ATTITUDE_VALUES[0]);
+
+    const parseEvidence = (content: string): { name: string, url?: string, type?: string } => {
+        if (content.includes("|")) {
+            const parts = content.split("|");
+            // format: NAME|URL|TYPE
+            return { name: parts[0], url: parts[1], type: parts[2] || "application/octet-stream" };
+        }
+        return { name: content };
+    };
 
     const fetchUserHistory = useCallback(async () => {
         if (!userEmail) return;
@@ -80,9 +133,20 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
             }
 
             if (data) {
-                console.log("Supabase [History] Loaded:", data.length, "items");
                 setReflectionsHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.REFLECTION.toLowerCase()).map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'reflection' })));
-                setEvidenceHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.EVIDENCE.toLowerCase()).map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'evidence' })));
+
+                // Parse Evidence
+                setEvidenceHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.EVIDENCE.toLowerCase()).map(i => {
+                    const parsed = parseEvidence(i.choice_label);
+                    return {
+                        id: i.id,
+                        content: parsed.name,
+                        timestamp: i.created_at,
+                        type: 'evidence',
+                        metadata: { url: parsed.url, fileType: parsed.type, fileName: parsed.name }
+                    };
+                }));
+
                 setCheckinHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.CHECKIN.toLowerCase()).map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'checkin' })));
             }
         } catch (e) {
@@ -112,7 +176,6 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
         if (isSaving) return;
         const normalizedEmail = userEmail.toLowerCase();
         setIsSaving(true);
-        console.log("Attempting Checkin for:", normalizedEmail);
         try {
             const payload = {
                 user_email: normalizedEmail,
@@ -120,36 +183,24 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                 score: 0,
                 choice_label: `LOK: ${dayValue.title}`
             };
-            console.log("Payload:", payload);
-
             const { error } = await supabase.from("user_progress").insert(payload);
-
-            if (error) {
-                console.error("Supabase Error [Checkin]:", error);
-                throw error;
-            }
+            if (error) throw error;
             await fetchUserHistory();
             alert(`Komitmen diterima! Mari kita bersama-sama: ${dayValue.title} 💪`);
             setActiveModal(null);
         } catch (e: any) {
-            console.error("Checkin catch:", e);
-            alert(`Gagal mencatat check-in: ${e.message || JSON.stringify(e)}`);
+            alert(`Gagal mencatat check-in: ${e.message}`);
         }
         finally { setIsSaving(false); }
     };
 
     const handleSaveReflection = async () => {
-        if (!userEmail) {
-            alert("Sesi tidak valid/email tidak ditemukan.");
-            return;
-        }
+        if (!userEmail) return;
         if (!reflection.trim()) return;
         if (isSaving) return;
 
         const normalizedEmail = userEmail.toLowerCase();
         setIsSaving(true);
-        console.log("Attempting Reflection Save for:", normalizedEmail);
-
         try {
             const payload = {
                 user_email: normalizedEmail,
@@ -157,14 +208,8 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                 score: 0,
                 choice_label: reflection
             };
-            console.log("Payload:", payload);
-
             const { error } = await supabase.from("user_progress").insert(payload);
-
-            if (error) {
-                console.error("Supabase Error [Reflection]:", error);
-                throw error;
-            }
+            if (error) throw error;
 
             const draftKey = `user_reflection_draft_${normalizedEmail.split('@')[0]}`;
             localStorage.removeItem(draftKey);
@@ -172,8 +217,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
             await fetchUserHistory();
             alert("Refleksi berhasil disimpan ke riwayat pribadi Anda! ✨");
         } catch (e: any) {
-            console.error("Save reflection error catch:", e);
-            alert(`Gagal menyimpan refleksi: ${e.message || JSON.stringify(e)}`);
+            alert(`Gagal menyimpan refleksi: ${e.message}`);
         }
         finally { setIsSaving(false); }
     };
@@ -181,24 +225,66 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file || !userEmail) return;
-        if (file.type !== "application/pdf") { alert("Mohon unggah file format PDF."); return; }
+
+        // Allowed types: PDF, Doc, Docx, Image, Video
+        const allowedTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg', 'image/png', 'image/jpg',
+            'video/mp4'
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            // Fallback for types not strictly checked or if mimetype varies
+            if (!file.name.match(/\.(pdf|doc|docx|jpg|jpeg|png|mp4)$/i)) {
+                alert("Format file tidak didukung. Gunakan PDF, Word, JPG, PNG, atau MP4.");
+                return;
+            }
+        }
 
         const normalizedEmail = userEmail.toLowerCase();
-        setUploadStatus("Menyimpan...");
+        setUploadStatus("Mengupload ke Cloud...");
+
         try {
-            const { error } = await supabase.from("user_progress").insert({
-                user_email: normalizedEmail, mission_id: SYSTEM_IDS.EVIDENCE, score: 0, choice_label: `File: ${file.name}`
-            });
-            if (error) {
-                console.error("Supabase Error [Evidence]:", error);
-                throw error;
+            // 1. Upload to Supabase Storage
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+            const filePath = `${normalizedEmail}/${fileName}`;
+
+            // Try uploading to 'evidence' bucket
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('evidence')
+                .upload(filePath, file);
+
+            if (uploadError) {
+                console.error("Storage Upload Error:", uploadError);
+                throw new Error("Gagal upload file. Pastikan Bucket 'evidence' sudah dibuat di Supabase.");
             }
+
+            // 2. Get Public URL
+            const { data: { publicUrl } } = supabase.storage.from('evidence').getPublicUrl(filePath);
+
+            // 3. Save Record with Metadata in choice_label
+            // Format: FILENAME|URL|MIMETYPE
+            const choiceLabel = `${file.name}|${publicUrl}|${file.type}`;
+
+            const { error: dbError } = await supabase.from("user_progress").insert({
+                user_email: normalizedEmail,
+                mission_id: SYSTEM_IDS.EVIDENCE,
+                score: 0,
+                choice_label: choiceLabel
+            });
+
+            if (dbError) throw dbError;
+
             await fetchUserHistory();
             setUploadStatus(`Berhasil: ${file.name} ✅`);
             setTimeout(() => setUploadStatus(null), 2000);
         } catch (e: any) {
             console.error("Evidence catch:", e);
             setUploadStatus(`Gagal: ${e.message}`);
+            alert(`Upload Gagal: ${e.message}`);
         }
     };
 
@@ -215,6 +301,15 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
 
     return (
         <>
+            {previewData && (
+                <PreviewModal
+                    url={previewData.url}
+                    type={previewData.type}
+                    name={previewData.name}
+                    onClose={() => setPreviewData(null)}
+                />
+            )}
+
             <div style={{
                 background: 'white', borderRadius: 24, padding: '24px', marginBottom: 32,
                 border: '1px solid #e5e7eb', boxShadow: '0 4px 12px -2px rgba(0,0,0,0.05)',
@@ -300,11 +395,11 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
             {activeModal === "EVIDENCE" && (
                 <Modal title="Portofolio Digital" onClose={() => setActiveModal(null)}>
                     <div style={{ padding: '20px', background: '#f8fafc', borderRadius: 24, border: '1px solid #e2e8f0', marginBottom: 24 }}>
-                        <p style={{ color: '#64748b', fontSize: 13, marginBottom: 16, fontWeight: 500 }}>Cantumkan bukti prestasi/karya (PDF):</p>
+                        <p style={{ color: '#64748b', fontSize: 13, marginBottom: 16, fontWeight: 500 }}>Cantumkan bukti prestasi/karya (PDF/Doc/Img/Video):</p>
                         <div style={{ border: '2px dashed #cbd5e1', borderRadius: 16, padding: '24px', textAlign: 'center', position: 'relative', background: 'white' }}>
                             <span style={{ fontSize: 32 }}>📁</span>
                             <div style={{ fontSize: 13, fontWeight: 800, color: '#1e293b', marginTop: 12 }}>{uploadStatus || "Pilih File Portofolio"}</div>
-                            <input type="file" accept=".pdf" onChange={handleFileUpload} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                            <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4" onChange={handleFileUpload} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
                         </div>
                     </div>
                     <div>
@@ -312,10 +407,26 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                             {evidenceHistory.length > 0 ? evidenceHistory.map(item => (
                                 <div key={item.id} style={{ display: 'flex', padding: '14px', background: '#f8fafc', borderRadius: 16, border: '1px solid #f1f5f9', alignItems: 'center', gap: 12 }}>
-                                    <div style={{ fontSize: 20 }}>📄</div>
+                                    <div style={{ fontSize: 20 }}>
+                                        {item.metadata?.fileType?.startsWith('image') ? '🖼️' :
+                                            item.metadata?.fileType?.startsWith('video') ? '🎥' :
+                                                item.metadata?.fileType?.includes('pdf') ? '📄' : '📎'}
+                                    </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{ fontSize: 12, fontWeight: 800, color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.content}</div>
-                                        <div style={{ fontSize: 9, color: '#94a3b8' }}>{new Date(item.timestamp).toLocaleDateString()} • {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                                        <div style={{ fontSize: 12, fontWeight: 800, color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            {item.content.replace(/^File:\s*/, '')}
+                                        </div>
+                                        <div style={{ fontSize: 9, color: '#94a3b8' }}>
+                                            {new Date(item.timestamp).toLocaleDateString()}
+                                            {item.metadata?.url && (
+                                                <span
+                                                    onClick={() => setPreviewData({ url: item.metadata!.url!, type: item.metadata!.fileType!, name: item.content })}
+                                                    style={{ marginLeft: 8, color: '#2563eb', cursor: 'pointer', fontWeight: 800, textDecoration: 'underline' }}
+                                                >
+                                                    LIHAT BUKTI
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
                                     <button onClick={() => handleDeleteRecord(item.id)} style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: 11, cursor: 'pointer' }}>×</button>
                                 </div>
@@ -397,7 +508,13 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                 {evidenceHistory.map(item => (
                                     <div key={item.id} style={{ padding: 12, background: '#eff6ff', borderRadius: 12, fontSize: 12, border: '1px solid #dbeafe', display: 'flex', justifyContent: 'space-between' }}>
-                                        <div style={{ color: '#1e3a8a', fontWeight: 700 }}>{item.content}</div>
+                                        <div style={{ color: '#1e3a8a', fontWeight: 700 }}>
+                                            {item.metadata?.url ? (
+                                                <a href="#" onClick={(e) => { e.preventDefault(); setPreviewData({ url: item.metadata!.url!, type: item.metadata!.fileType!, name: item.content }); }} style={{ color: 'inherit', textDecoration: 'underline' }}>
+                                                    {item.content}
+                                                </a>
+                                            ) : item.content}
+                                        </div>
                                         <div style={{ fontSize: 10, color: '#60a5fa' }}>{new Date(item.timestamp).toLocaleDateString()}</div>
                                     </div>
                                 ))}
