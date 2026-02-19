@@ -400,14 +400,25 @@ export default async function Home() {
       </div>
 
       {/* --- CATEGORY: PUSPRESNAS ARENA --- */}
-      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ width: 4, height: 24, background: '#8b5cf6', borderRadius: 2 }} />
-        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Puspresnas Arena</h2>
-        <span style={{ fontSize: 10, fontWeight: 700, color: '#8b5cf6', background: '#f3e8ff', padding: '4px 10px', borderRadius: 20 }}>PRESTASI NASIONAL</span>
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 4, height: 24, background: '#8b5cf6', borderRadius: 2 }} />
+          <div>
+            <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b', lineHeight: 1.2 }}>Puspresnas Arena</h2>
+            <div style={{ fontSize: 10, color: '#64748b', fontWeight: 500 }}>Ajang Talenta Nasional</div>
+          </div>
+        </div>
+        <Link href="/events" style={{ fontSize: 11, fontWeight: 700, color: '#8b5cf6' }}>Lihat Semua →</Link>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 40 }}>
+
+      {/* Horizontal Scroll Container */}
+      <div className="hide-scrollbar" style={{
+        display: 'flex', gap: 16, overflowX: 'auto',
+        paddingBottom: 20, margin: '0 -24px', paddingLeft: 24, paddingRight: 24,
+        scrollSnapType: 'x mandatory'
+      }}>
         {EVENTS.map(event => (
-          <div key={event.id} style={{ height: 180 }}>
+          <div key={event.id} style={{ minWidth: 260, width: '75%', scrollSnapAlign: 'center', height: 180 }}>
             <EventCard event={event} />
           </div>
         ))}
