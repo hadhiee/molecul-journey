@@ -209,120 +209,128 @@ export default async function Home() {
         </div>
       </Link>
 
-      {/* 4. Game Cards */}
-      <div style={{ marginBottom: 16 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Game Kompetensi</h2>
+      {/* --- CATEGORY: ACTION ARENA --- */}
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Action Arena</h2>
+        <span style={{ fontSize: 10, fontWeight: 700, color: '#e11d48', background: '#ffe4e6', padding: '4px 8px', borderRadius: 6 }}>KETANGKASAN</span>
       </div>
-      <div style={{ display: 'grid', gap: 16, marginBottom: 48 }}>
-        {/* Lightning Challenge */}
-        <Link href="/challenge" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #0f0f1e, #1e1b4b)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(139,92,246,0.2)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>⚡</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#a78bfa', textTransform: 'uppercase' as const, marginBottom: 2 }}>Mode Kilat</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Tantangan Kilat</div>
-            </div>
-          </div>
-        </Link>
-
-        {/* Future Architect */}
-        <Link href="/future" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #0f172a, #0c4a6e)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(56,189,248,0.2)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#0ea5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🏗️</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase' as const, marginBottom: 2 }}>Strategy</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Arsitek Masa Depan</div>
-            </div>
-          </div>
-        </Link>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 32 }}>
 
         {/* Moklet Runner */}
         <Link href="/runner" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #1a0a2e, #4c1d95)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(139,92,246,0.2)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🏃</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase' as const, marginBottom: 2 }}>Action</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Moklet Runner</div>
-            </div>
+          <div style={{ background: 'linear-gradient(135deg, #1a0a2e, #4c1d95)', borderRadius: 20, padding: 16, color: 'white', height: '100%', border: '1px solid rgba(139,92,246,0.2)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ width: 42, height: 42, borderRadius: 12, background: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 8 }}>🏃</div>
+            <div style={{ fontSize: 13, fontWeight: 800 }}>Moklet Runner</div>
+            <div style={{ fontSize: 9, opacity: 0.7 }}>Endless Run</div>
           </div>
         </Link>
 
         {/* 3D Attitude Fighter */}
         <Link href="/fighter-3d" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #0f172a, #450a0a)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(225,29,72,0.3)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #ef4444, #991b1b)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🥊</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#f87171', textTransform: 'uppercase' as const, marginBottom: 2 }}>Combat 3D</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Attitude Fighter 3D</div>
-            </div>
-          </div>
-        </Link>
-
-        {/* Self Discovery 3D */}
-        <Link href="/discovery-3d" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(255,255,255,0.2)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>💎</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#60a5fa', textTransform: 'uppercase' as const, marginBottom: 2 }}>Exploration 3D</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>The Crystal of Self Discovery</div>
-            </div>
-          </div>
-        </Link>
-
-        {/* 3D Integrity Tower */}
-        <Link href="/integrity-3d" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(225,29,72,0.3)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#e11d48', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🧱</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#fb7185', textTransform: 'uppercase' as const, marginBottom: 2 }}>New 3D Mode</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Integrity Tower 3D</div>
-            </div>
-          </div>
-        </Link>
-
-        {/* Journey Map Sekolah */}
-        <Link href="/journey" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)', borderRadius: 20, padding: 20, color: '#1a2e05', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(101,163,13,0.2)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#65a30d', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🗺️</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#65a30d', textTransform: 'uppercase' as const, marginBottom: 2 }}>Adventure Map</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Journey Map Sekolah</div>
-            </div>
-          </div>
-        </Link>
-
-        {/* Culture Simulation */}
-        <Link href="/simulation" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #eff6ff, #dbeafe)', borderRadius: 20, padding: 20, color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(37,99,235,0.2)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🔮</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#2563eb', textTransform: 'uppercase' as const, marginBottom: 2 }}>Decision Game</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Moklet Culture Simulation</div>
-            </div>
-          </div>
-        </Link>
-
-        {/* Culture Tetris */}
-        <Link href="/tetris" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #0f172a, #334155)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(225,29,72,0.3)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #ec4899, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🧩</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#f472b6', textTransform: 'uppercase' as const, marginBottom: 2 }}>Culture Puzzle</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Moklet Tetris</div>
-            </div>
+          <div style={{ background: 'linear-gradient(135deg, #450a0a, #7f1d1d)', borderRadius: 20, padding: 16, color: 'white', height: '100%', border: '1px solid rgba(239,68,68,0.3)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ width: 42, height: 42, borderRadius: 12, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 8 }}>🥊</div>
+            <div style={{ fontSize: 13, fontWeight: 800 }}>Attitude Fighter</div>
+            <div style={{ fontSize: 9, opacity: 0.7 }}>Combat Arena</div>
           </div>
         </Link>
 
         {/* Space Shooter */}
         <Link href="/space-shooter" style={{ textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(99,102,241,0.3)' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #6366f1, #4338ca)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🚀</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#818cf8', textTransform: 'uppercase' as const, marginBottom: 2 }}>Galactic Mission</div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Space Culture</div>
-            </div>
+          <div style={{ background: 'linear-gradient(135deg, #172554, #1e3a8a)', borderRadius: 20, padding: 16, color: 'white', height: '100%', border: '1px solid rgba(59,130,246,0.3)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ width: 42, height: 42, borderRadius: 12, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 8 }}>🚀</div>
+            <div style={{ fontSize: 13, fontWeight: 800 }}>Space Culture</div>
+            <div style={{ fontSize: 9, opacity: 0.7 }}>Galactic Shooter</div>
           </div>
         </Link>
+
+        {/* Culture Tetris */}
+        <Link href="/tetris" style={{ textDecoration: 'none' }}>
+          <div style={{ background: 'linear-gradient(135deg, #312e81, #4338ca)', borderRadius: 20, padding: 16, color: 'white', height: '100%', border: '1px solid rgba(99,102,241,0.3)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ width: 42, height: 42, borderRadius: 12, background: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 8 }}>🧩</div>
+            <div style={{ fontSize: 13, fontWeight: 800 }}>Moklet Tetris</div>
+            <div style={{ fontSize: 9, opacity: 0.7 }}>Puzzle Logic</div>
+          </div>
+        </Link>
+      </div>
+
+
+      {/* --- CATEGORY: STRATEGY LAB --- */}
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Strategy Lab</h2>
+        <span style={{ fontSize: 10, fontWeight: 700, color: '#0ea5e9', background: '#e0f2fe', padding: '4px 8px', borderRadius: 6 }}>BERPIKIR KRITIS</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 12, marginBottom: 32 }}>
+
+        {/* Culture Simulation - Full Width */}
+        <Link href="/simulation" style={{ textDecoration: 'none' }}>
+          <div style={{ background: 'linear-gradient(135deg, #eff6ff, #dbeafe)', borderRadius: 20, padding: 16, color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(37,99,235,0.2)' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🔮</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: '#2563eb', textTransform: 'uppercase' as const, marginBottom: 2 }}>Decision Game</div>
+              <div style={{ fontSize: 16, fontWeight: 800 }}>Moklet Culture Simulation</div>
+            </div>
+            <div style={{ fontSize: 20, opacity: 0.5 }}>→</div>
+          </div>
+        </Link>
+
+        {/* 2 Column sub-grid for smaller strategy games */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+          {/* Future Architect */}
+          <Link href="/future" style={{ textDecoration: 'none' }}>
+            <div style={{ background: 'linear-gradient(135deg, #0f172a, #334155)', borderRadius: 20, padding: 16, color: 'white', height: '100%', border: '1px solid rgba(148,163,184,0.2)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: '#0ea5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 8 }}>🏗️</div>
+              <div style={{ fontSize: 13, fontWeight: 800 }}>Arsitek Masa Depan</div>
+            </div>
+          </Link>
+
+          {/* Lightning Challenge */}
+          <Link href="/challenge" style={{ textDecoration: 'none' }}>
+            <div style={{ background: 'linear-gradient(135deg, #2e1065, #581c87)', borderRadius: 20, padding: 16, color: 'white', height: '100%', border: '1px solid rgba(168,85,247,0.3)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: '#a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 8 }}>⚡</div>
+              <div style={{ fontSize: 13, fontWeight: 800 }}>Tantangan Kilat</div>
+            </div>
+          </Link>
+        </div>
+      </div>
+
+
+      {/* --- CATEGORY: EXPLORATION ZONE --- */}
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Exploration Zone</h2>
+        <span style={{ fontSize: 10, fontWeight: 700, color: '#16a34a', background: '#dcfce7', padding: '4px 8px', borderRadius: 6 }}>PETUALANGAN</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 12, marginBottom: 48 }}>
+
+        {/* Journey Map - Full Width */}
+        <Link href="/journey" style={{ textDecoration: 'none' }}>
+          <div style={{ background: 'linear-gradient(135deg, #14532d, #166534)', borderRadius: 20, padding: 16, color: 'white', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(34,197,94,0.3)' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#22c55e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🗺️</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: '#86efac', textTransform: 'uppercase' as const, marginBottom: 2 }}>Adventure Map</div>
+              <div style={{ fontSize: 16, fontWeight: 800 }}>Journey Map Sekolah</div>
+            </div>
+            <div style={{ fontSize: 20, opacity: 0.5 }}>→</div>
+          </div>
+        </Link>
+
+        {/* 3D Explorations */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+          {/* Self Discovery 3D */}
+          <Link href="/discovery-3d" style={{ textDecoration: 'none' }}>
+            <div style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', borderRadius: 20, padding: 16, color: 'white', height: '100%', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 8 }}>💎</div>
+              <div style={{ fontSize: 13, fontWeight: 800 }}>Crystal Discovery</div>
+            </div>
+          </Link>
+
+          {/* Integrity Tower */}
+          <Link href="/integrity-3d" style={{ textDecoration: 'none' }}>
+            <div style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)', borderRadius: 20, padding: 16, color: 'white', height: '100%', border: '1px solid rgba(99,102,241,0.3)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 8 }}>🧱</div>
+              <div style={{ fontSize: 13, fontWeight: 800 }}>Integrity Tower</div>
+            </div>
+          </Link>
+        </div>
       </div>
 
       {/* 5. Pilih Chapter (Skill Tree) */}
