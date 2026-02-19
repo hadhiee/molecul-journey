@@ -19,12 +19,15 @@ export default function EventCard({ event }: { event: PuspresnasEvent }) {
     return (
         <Link href={`/events/${event.id}`} className="block h-full no-underline">
             <div
-                className="group relative h-full rounded-[24px] p-5 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden flex flex-col items-center text-center"
                 style={{
                     background: bgGradient,
                     color: 'white',
                     boxShadow: `0 10px 20px -5px ${event.color}66`,
                     borderRadius: 24,
+                    padding: '20px 16px',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+                    height: '100%',
+                    position: 'relative', overflow: 'hidden'
                 }}
             >
                 {/* Background Decor */}
@@ -33,23 +36,27 @@ export default function EventCard({ event }: { event: PuspresnasEvent }) {
                 />
 
                 <div
-                    className="relative z-10 w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl mb-4 border border-white/20 shadow-inner group-hover:scale-110 transition-transform duration-300"
+                    style={{
+                        width: 50, height: 50, borderRadius: 18,
+                        background: 'rgba(255,255,255,0.2)',
+                        backdropFilter: 'blur(4px)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 24, marginBottom: 12,
+                        boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.3)',
+                        border: '1px solid rgba(255,255,255,0.1)'
+                    }}
+                    className="group-hover:scale-110 transition-transform duration-300"
                 >
                     {event.icon}
                 </div>
 
-                <h3 className="relative z-10 text-lg font-black leading-tight mb-2 drop-shadow-sm group-hover:text-white/90">
+                <h3 style={{ fontSize: 13, fontWeight: 800, marginBottom: 4, lineHeight: 1.2, position: 'relative', zIndex: 10 }}>
                     {event.shortName}
                 </h3>
 
-                <p className="relative z-10 text-[11px] font-medium opacity-80 line-clamp-2 mb-4 leading-relaxed">
-                    {event.description}
+                <p style={{ fontSize: 10, fontWeight: 600, opacity: 0.9, position: 'relative', zIndex: 10 }}>
+                    {event.branches.length} Bidang Lomba
                 </p>
-
-                <div className="mt-auto relative z-10 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider bg-black/20 px-3 py-1.5 rounded-full">
-                    <span>{event.branches.length} Cabang</span>
-                    <span>→</span>
-                </div>
             </div>
         </Link>
     );
