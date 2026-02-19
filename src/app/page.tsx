@@ -209,6 +209,13 @@ export default async function Home() {
         <TechNewsPanel />
       </Suspense>
 
+      {/* --- SECTION DIVIDER: GAMES --- */}
+      <div style={{ marginTop: 40, marginBottom: 24, textAlign: 'center' }}>
+        <h2 style={{ fontSize: 24, fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>Training Grounds</h2>
+        <div style={{ width: 40, height: 4, background: '#e11d48', borderRadius: 99, margin: '8px auto 0' }} />
+        <p style={{ fontSize: 13, color: '#64748b', marginTop: 8, fontWeight: 500 }}>Asah karaktermu melalui berbagai mini-games seru</p>
+      </div>
+
       {/* --- CATEGORY: ACTION ARENA --- */}
       <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{ width: 4, height: 24, background: '#e11d48', borderRadius: 2 }} />
@@ -400,28 +407,32 @@ export default async function Home() {
       </div>
 
       {/* --- CATEGORY: PUSPRESNAS ARENA --- */}
-      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 4, height: 24, background: '#8b5cf6', borderRadius: 2 }} />
-          <div>
-            <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b', lineHeight: 1.2 }}>Puspresnas Arena</h2>
-            <div style={{ fontSize: 10, color: '#64748b', fontWeight: 500 }}>Ajang Talenta Nasional</div>
+      <div style={{ marginBottom: 48, background: 'white', borderRadius: 32, padding: '24px 0 24px 24px', boxShadow: '0 20px 40px -10px rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.1)' }}>
+        <div style={{ paddingRight: 24, marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: '#f3e8ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, color: '#8b5cf6' }}>🏆</div>
+            <div>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b', lineHeight: 1.2 }}>Puspresnas Arena</h2>
+              <div style={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>Jalur Prestasi Nasional</div>
+            </div>
           </div>
+          <Link href="/events" style={{ background: '#8b5cf6', color: 'white', fontSize: 11, fontWeight: 700, padding: '8px 16px', borderRadius: 99, boxShadow: '0 4px 12px rgba(139,92,246,0.3)' }}>
+            Lihat Semua
+          </Link>
         </div>
-        <Link href="/events" style={{ fontSize: 11, fontWeight: 700, color: '#8b5cf6' }}>Lihat Semua →</Link>
-      </div>
 
-      {/* Horizontal Scroll Container */}
-      <div className="hide-scrollbar" style={{
-        display: 'flex', gap: 16, overflowX: 'auto',
-        paddingBottom: 20, margin: '0 -24px', paddingLeft: 24, paddingRight: 24,
-        scrollSnapType: 'x mandatory'
-      }}>
-        {EVENTS.map(event => (
-          <div key={event.id} style={{ minWidth: 260, width: '75%', scrollSnapAlign: 'center', height: 180 }}>
-            <EventCard event={event} />
-          </div>
-        ))}
+        {/* Horizontal Scroll Container */}
+        <div className="hide-scrollbar" style={{
+          display: 'flex', gap: 16, overflowX: 'auto',
+          paddingBottom: 20, paddingRight: 24,
+          scrollSnapType: 'x mandatory'
+        }}>
+          {EVENTS.map(event => (
+            <div key={event.id} style={{ minWidth: 260, width: '75%', scrollSnapAlign: 'center', height: 180 }}>
+              <EventCard event={event} />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* --- CATEGORY: EXPLORATION ZONE --- */}
