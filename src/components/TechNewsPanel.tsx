@@ -81,26 +81,32 @@ export default async function TechNewsPanel() {
                 <span style={{ fontSize: 10, fontWeight: 800, color: '#64748b', background: '#f1f5f9', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' }}>AI • RPL • Game</span>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{
+                display: 'flex', gap: 12, overflowX: 'auto',
+                paddingBottom: 16, // Space for scrollbar or shadow
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                scrollSnapType: 'x mandatory'
+            }}>
                 {news.map((item, i) => (
-                    <Link key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                    <Link key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', flexShrink: 0, scrollSnapAlign: 'start' }}>
                         <div style={{
+                            width: 260, height: '100%',
                             background: 'white', borderRadius: 16, padding: 16,
                             border: '1px solid #e2e8f0',
-                            transition: 'transform 0.2s',
-                            display: 'flex', flexDirection: 'column', gap: 6,
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                            display: 'flex', flexDirection: 'column', gap: 8,
+                            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+                            position: 'relative', overflow: 'hidden'
                         }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, fontWeight: 700 }}>
-                                <span style={{ color: item.sourceColor, background: `${item.sourceColor}15`, padding: '2px 8px', borderRadius: 6 }}>{item.source}</span>
+                            <div style={{ position: 'absolute', top: 0, right: 0, width: 60, height: 60, background: `radial-gradient(circle at top right, ${item.sourceColor}15, transparent 70%)` }} />
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, fontWeight: 700, position: 'relative' }}>
+                                <span style={{ color: item.sourceColor, background: `${item.sourceColor}15`, padding: '3px 8px', borderRadius: 6 }}>{item.source}</span>
                                 <span style={{ color: '#94a3b8' }}>• {new Date(item.isoDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
                             </div>
-                            <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1a1a2e', lineHeight: 1.4, margin: 0 }}>
+                            <h3 style={{ fontSize: 13, fontWeight: 700, color: '#1a1a2e', lineHeight: 1.4, margin: 0, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '3.6em' }}>
                                 {item.title}
                             </h3>
-                            {/* <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.5 }}>
-                  {item.contentSnippet}
-              </div> */}
                         </div>
                     </Link>
                 ))}
