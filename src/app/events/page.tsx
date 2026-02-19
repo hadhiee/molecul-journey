@@ -8,58 +8,67 @@ const EVENT_GROUPS = [
         title: "Vokasi & Kewirausahaan",
         description: "Kembangkan skill teknis dan jiwa bisnis profesional.",
         ids: ['lks', 'fiksi'],
-        color: 'from-rose-500 to-orange-500'
+        gradient: 'linear-gradient(to bottom, #f43f5e, #f97316)'
     },
     {
         title: "Sains & Riset",
         description: "Eksplorasi ilmu pengetahuan dan inovasi penemuan baru.",
         ids: ['osn', 'opsi'],
-        color: 'from-blue-500 to-cyan-500'
+        gradient: 'linear-gradient(to bottom, #3b82f6, #06b6d4)'
     },
     {
         title: "Seni, Bahasa & Olahraga",
         description: "Ekspresikan bakat seni, kemampuan komunikasi, dan ketangkasan fisik.",
         ids: ['fls2n', 'ldi', 'o2sn'],
-        color: 'from-violet-500 to-purple-500'
+        gradient: 'linear-gradient(to bottom, #8b5cf6, #a855f7)'
     }
 ];
 
 export default function EventsIndexPage() {
     return (
-        <div className="min-h-screen bg-[#f8fafc] font-sans pb-24">
+        <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', paddingBottom: 96, fontFamily: 'sans-serif' }}>
 
             {/* 1. Hero Section with Pattern */}
-            <div className="relative bg-slate-900 text-white overflow-hidden rounded-b-[40px] md:rounded-b-[60px] shadow-2xl">
-                <div className="absolute inset-0 opacity-20"
-                    style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
-                </div>
+            <div style={{
+                position: 'relative', backgroundColor: '#0f172a', color: 'white', overflow: 'hidden',
+                borderBottomLeftRadius: 60, borderBottomRightRadius: 60, boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+                paddingTop: 80, paddingBottom: 120
+            }}>
+                <div style={{
+                    position: 'absolute', inset: 0, opacity: 0.2,
+                    backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px'
+                }} />
 
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600 rounded-full blur-[120px] opacity-20 -translate-y-1/2 translate-x-1/2"></div>
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-rose-600 rounded-full blur-[100px] opacity-20 translate-y-1/2 -translate-x-1/4"></div>
+                <div style={{ position: 'absolute', top: 0, right: 0, width: 500, height: 500, backgroundColor: '#2563eb', borderRadius: 999, filter: 'blur(120px)', opacity: 0.2, transform: 'translate(50%, -50%)' }} />
+                <div style={{ position: 'absolute', bottom: 0, left: 0, width: 400, height: 400, backgroundColor: '#e11d48', borderRadius: 999, filter: 'blur(100px)', opacity: 0.2, transform: 'translate(-25%, 50%)' }} />
 
-                <div className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-32 text-center">
+                <div style={{ position: 'relative', zIndex: 10, maxWidth: 1000, margin: '0 auto', textAlign: 'center', padding: '0 24px' }}>
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-sm font-bold transition-all mb-8 border border-white/10"
+                        style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderRadius: 99,
+                            backgroundColor: 'rgba(255,255,255,0.1)', color: 'white', fontSize: 14, fontWeight: 700,
+                            textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)', marginBottom: 32
+                        }}
                     >
                         <span>← Kembali ke Dashboard</span>
                     </Link>
 
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-slate-300 drop-shadow-sm">
+                    <h1 style={{ fontSize: 64, fontWeight: 900, marginBottom: 24, letterSpacing: '-0.02em', background: 'linear-gradient(to right, #ffffff, #d1d5db)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                         Puspresnas Arena
                     </h1>
-                    <p className="text-lg md:text-2xl text-slate-300 font-medium max-w-3xl mx-auto leading-relaxed">
+                    <p style={{ fontSize: 20, color: '#d1d5db', fontWeight: 500, maxWidth: 800, margin: '0 auto', lineHeight: 1.6 }}>
                         Pusat inkubasi talenta nasional. Asah karakter, raih prestasi, dan jadilah kebanggaan bangsa.
                     </p>
 
                     {/* Stats Pills */}
-                    <div className="flex flex-wrap justify-center gap-4 mt-10">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16, marginTop: 40 }}>
                         {[
                             { label: "7 Ajang Bergengsi", icon: "🏆" },
                             { label: "100+ Bidang Lomba", icon: "🎯" },
                             { label: "Pendidikan Karakter", icon: "🛡️" },
                         ].map((stat, i) => (
-                            <div key={i} className="flex items-center gap-2 px-5 py-2.5 bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-full text-sm font-bold text-slate-200 shadow-sm">
+                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', backgroundColor: 'rgba(31,41,55,0.5)', border: '1px solid #374151', borderRadius: 99, fontSize: 14, fontWeight: 700, color: '#e5e7eb' }}>
                                 <span>{stat.icon}</span>
                                 <span>{stat.label}</span>
                             </div>
@@ -69,24 +78,24 @@ export default function EventsIndexPage() {
             </div>
 
             {/* 2. Main Content - Grouped Layout */}
-            <div className="max-w-6xl mx-auto px-6 -mt-16 md:-mt-20 relative z-20 space-y-16">
+            <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px', marginTop: -60, position: 'relative', zIndex: 20, display: 'flex', flexDirection: 'column', gap: 64 }}>
 
                 {EVENT_GROUPS.map((group, idx) => {
                     const groupEvents = group.ids.map(id => EVENTS.find(e => e.id === id)).filter(Boolean) as PuspresnasEvent[];
 
                     return (
-                        <div key={idx} className="animate-fade-in-up" style={{ animationDelay: `${idx * 100}ms` }}>
-                            <div className="flex items-end gap-4 mb-6 px-2">
-                                <div className={`w-1.5 h-12 rounded-full bg-gradient-to-b ${group.color}`}></div>
+                        <div key={idx}>
+                            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, marginBottom: 24 }}>
+                                <div style={{ width: 6, height: 48, borderRadius: 99, background: group.gradient }}></div>
                                 <div>
-                                    <h2 className="text-2xl md:text-3xl font-black text-slate-800">{group.title}</h2>
-                                    <p className="text-slate-500 font-medium">{group.description}</p>
+                                    <h2 style={{ fontSize: 28, fontWeight: 900, color: '#1e293b' }}>{group.title}</h2>
+                                    <p style={{ fontSize: 16, color: '#64748b', fontWeight: 500 }}>{group.description}</p>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
                                 {groupEvents.map(event => (
-                                    <div key={event.id} className="h-full">
+                                    <div key={event.id}>
                                         <EventCard event={event} />
                                     </div>
                                 ))}
@@ -96,19 +105,27 @@ export default function EventsIndexPage() {
                 })}
 
                 {/* 3. Bottom CTA - Encouragement */}
-                <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-[32px] p-8 md:p-12 text-center text-white shadow-2xl overflow-hidden relative">
-                    <div className="absolute top-0 right-0 text-[15rem] leading-none opacity-5 -translate-y-1/2 translate-x-1/4 font-black">
+                <div style={{
+                    background: 'linear-gradient(to bottom right, #4f46e5, #7c3aed)', borderRadius: 32, padding: 48,
+                    textAlign: 'center', color: 'white', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+                    position: 'relative', overflow: 'hidden'
+                }}>
+                    <div style={{ position: 'absolute', top: 0, right: 0, fontSize: '15rem', fontWeight: 900, color: 'white', opacity: 0.05, transform: 'translate(25%, -25%)' }}>
                         GO
                     </div>
 
-                    <div className="relative z-10 max-w-2xl mx-auto">
-                        <h2 className="text-3xl font-bold mb-4">Belum yakin harus mulai dari mana?</h2>
-                        <p className="text-indigo-100 text-lg mb-8">
+                    <div style={{ position: 'relative', zIndex: 10, maxWidth: 600, margin: '0 auto' }}>
+                        <h2 style={{ fontSize: 32, fontWeight: 900, marginBottom: 16 }}>Belum yakin harus mulai dari mana?</h2>
+                        <p style={{ fontSize: 18, color: '#e0e7ff', marginBottom: 32, fontWeight: 500 }}>
                             Coba eksplorasi "Journey Map" untuk menemukan minat bakatmu melalui game simulasi.
                         </p>
                         <Link
                             href="/journey"
-                            className="inline-block px-8 py-4 bg-white text-indigo-700 font-black rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all text-lg"
+                            style={{
+                                display: 'inline-block', padding: '16px 40px', backgroundColor: 'white', color: '#4338ca',
+                                fontWeight: 900, borderRadius: 20, textDecoration: 'none', fontSize: 18,
+                                boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'
+                            }}
                         >
                             Mulai Petualangan 🗺️
                         </Link>
