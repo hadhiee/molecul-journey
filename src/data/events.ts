@@ -12,8 +12,9 @@ export interface PuspresnasEvent {
     name: string;
     shortName: string;
     description: string;
-    color: string; // Hex for gradient start or main theme
+    color: string;
     icon: string;
+    characterValues: string[]; // Added character values
     branches: Branch[];
 }
 
@@ -27,6 +28,7 @@ export const EVENTS: PuspresnasEvent[] = [
         description: 'Ajang kompetisi keterampilan siswa SMK tingkat nasional dalam berbagai bidang keahlian.',
         color: '#e11d48', // Rose-600
         icon: '🛠️',
+        characterValues: ['Profesionalisme', 'Disiplin Tinggi', 'Ketangguhan Mental', 'Problem Solving'],
         branches: lksSkills.map(skill => ({
             id: skill.id,
             name: skill.name,
@@ -40,6 +42,7 @@ export const EVENTS: PuspresnasEvent[] = [
         description: 'Kompetisi kewirausahaan siswa SMA/SMK/MA untuk menumbuhkan jiwa wirausaha muda.',
         color: '#d97706', // Amber-600
         icon: '💡',
+        characterValues: ['Kreativitas', 'Kepekaan Sosial', 'Kemandirian Ekonomi', 'Inovasi Berkelanjutan'],
         branches: [
             // Rencana Usaha
             { id: 'ru-agri', name: 'Agribisnis, Agroteknologi & Kemaritiman', category: 'Rencana Usaha' },
@@ -75,22 +78,8 @@ export const EVENTS: PuspresnasEvent[] = [
         description: 'Ajang kompetisi penelitian ilmiah bagi siswa jenjang SMA/MA.',
         color: '#0ea5e9', // Sky-500
         icon: '🔬',
+        characterValues: ['Berpikir Kritis', 'Kejujuran Ilmiah', 'Objektivitas', 'Rasa Ingin Tahu'],
         branches: [
-            // Matematika, Sains, dan Teknologi (MST)
-            { id: 'mst-math', name: 'Matematika', category: 'Matematika, Sains, dan Teknologi (MST)' },
-            { id: 'mst-phys', name: 'Fisika', category: 'Matematika, Sains, dan Teknologi (MST)' },
-            { id: 'mst-bio', name: 'Biologi', category: 'Matematika, Sains, dan Teknologi (MST)' },
-            { id: 'mst-chem', name: 'Kimia', category: 'Matematika, Sains, dan Teknologi (MST)' },
-            { id: 'mst-astro', name: 'Astronomi', category: 'Matematika, Sains, dan Teknologi (MST)' },
-            { id: 'mst-comp', name: 'Informatika', category: 'Matematika, Sains, dan Teknologi (MST)' },
-            { id: 'mst-env', name: 'Ilmu Lingkungan', category: 'Matematika, Sains, dan Teknologi (MST)' },
-            { id: 'mst-eng', name: 'Rekayasa', category: 'Matematika, Sains, dan Teknologi (MST)' },
-
-            // Fisika Terapan dan Rekayasa (FTR) - merging into simplified categories requested by user logic
-            // User request logic: IPA, IPS, IPT (Agrikultur etc). Adapting to valid OPSI categories.
-            // Wait, User requested STRICT categories: IPA, IPS, IPT.
-            // Let's follow user Instruction STRICTLY for categories.
-
             // IPA
             { id: 'ipa-math', name: 'Matematika', category: 'IPA' },
             { id: 'ipa-phys', name: 'Fisika', category: 'IPA' },
@@ -120,6 +109,7 @@ export const EVENTS: PuspresnasEvent[] = [
         description: 'Ajang talenta di bidang seni budaya bagi peserta didik jenjang SMA/SMK.',
         color: '#8b5cf6', // Violet-500
         icon: '🎨',
+        characterValues: ['Estetika', 'Kreativitas Artistik', 'Apresiasi Budaya', 'Percaya Diri'],
         branches: [
             { id: 'baca-puisi', name: 'Baca Puisi' },
             { id: 'cipta-lagu', name: 'Cipta Lagu' },
@@ -145,6 +135,7 @@ export const EVENTS: PuspresnasEvent[] = [
         description: 'Ajang kompetisi bidang sains bagi peserta didik SD/SMP/SMA.',
         color: '#2563eb', // Blue-600
         icon: '⚛️',
+        characterValues: ['Sportivitas', 'Integritas Akademik', 'Ketekunan', 'Analisis Logis'],
         branches: [
             { id: 'math', name: 'Matematika' },
             { id: 'phys', name: 'Fisika' },
@@ -164,10 +155,13 @@ export const EVENTS: PuspresnasEvent[] = [
         description: 'Ajang kompetisi bidang olahraga bagi peserta didik.',
         color: '#16a34a', // Green-600
         icon: '🏆',
+        characterValues: ['Fair Play', 'Kerja Keras', 'Kesehatan Jasmani', 'Jiwa Korsa'],
         branches: [
             { id: 'silat', name: 'Pencak Silat (Jurus Tunggal)', category: 'Beladiri' },
             { id: 'karate', name: 'Karate (Kata Perorangan)', category: 'Beladiri' },
-            // Additional common branches if needed, but user specifically asked for these 2
+            { id: 'atletik', name: 'Atletik', category: 'Fisik' },
+            { id: 'renang', name: 'Renang', category: 'Fisik' },
+            { id: 'bulutangkis', name: 'Bulutangkis', category: 'Permainan' },
         ]
     },
     {
@@ -177,6 +171,7 @@ export const EVENTS: PuspresnasEvent[] = [
         description: 'Ajang kompetisi debat untuk mengasah kemampuan berpikir kritis dan komunikasi.',
         color: '#f43f5e', // Rose-500
         icon: '🗣️',
+        characterValues: ['Komunikasi Efektif', 'Toleransi', 'Wawasan Luas', 'Logika Argumen'],
         branches: [
             { id: 'ldbi', name: 'LDBI (Debat Bahasa Indonesia)' },
             { id: 'nsdc', name: 'NSDC (Debat Bahasa Inggris)' },
