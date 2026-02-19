@@ -25,32 +25,39 @@ export default function BranchList({ branches, eventId, themeColor }: BranchList
     });
 
     return (
-        <div className="space-y-6">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">Cari Cabang / Bidang Lomba</label>
-                <div className="relative">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+            <div style={{ backgroundColor: 'white', borderRadius: 24, padding: 32, boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
+                <label style={{ fontSize: 11, fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 16, display: 'block' }}>
+                    Cari Cabang / Bidang Lomba
+                </label>
+                <div style={{ position: 'relative' }}>
                     <input
                         type="text"
                         placeholder="Ketik nama lomba..."
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 pl-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all"
-                        style={{ '--tw-ring-color': themeColor } as React.CSSProperties}
+                        style={{
+                            width: '100%', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0',
+                            borderRadius: 16, padding: '16px 20px', paddingLeft: 48,
+                            fontSize: 14, fontWeight: 600, color: '#1e293b', outline: 'none'
+                        }}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <span className="absolute left-3 top-3 text-slate-400">🔍</span>
+                    <span style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', fontSize: 18, opacity: 0.6 }}>🔍</span>
                 </div>
 
                 {categories.length > 1 && (
-                    <div className="flex flex-wrap gap-2 mt-4">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 24 }}>
                         {categories.map(cat => (
                             <button
                                 key={cat}
                                 onClick={() => setSelectedCategory(cat as string)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${selectedCategory === cat
-                                        ? 'text-white shadow-md transform scale-105'
-                                        : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
-                                    }`}
-                                style={selectedCategory === cat ? { backgroundColor: themeColor, borderColor: themeColor } : {}}
+                                style={{
+                                    padding: '8px 16px', borderRadius: 99, fontSize: 11, fontWeight: 800,
+                                    transition: 'all 0.2s', border: '1px solid #e2e8f0', cursor: 'pointer',
+                                    backgroundColor: selectedCategory === cat ? themeColor : 'white',
+                                    color: selectedCategory === cat ? 'white' : '#64748b',
+                                    boxShadow: selectedCategory === cat ? `0 4px 12px ${themeColor}33` : 'none'
+                                }}
                             >
                                 {cat}
                             </button>
@@ -59,40 +66,54 @@ export default function BranchList({ branches, eventId, themeColor }: BranchList
                 )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
                 {filteredBranches.map((branch) => (
                     <Link
                         href={`/events/${eventId}/${branch.id}`}
                         key={branch.id}
-                        className="group block bg-white rounded-xl p-5 border border-slate-100 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 relative overflow-hidden"
+                        style={{ textDecoration: 'none' }}
                     >
-                        <div className="absolute top-0 left-0 w-1 h-full bg-slate-200 group-hover:bg-opacity-100 transition-colors" style={{ backgroundColor: themeColor }} />
-
-                        <div className="pl-3">
-                            {branch.category && (
-                                <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1 block">
-                                    {branch.category}
-                                </span>
-                            )}
-                            <h4 className="font-bold text-slate-800 text-sm leading-snug group-hover:text-amber-600 transition-colors mb-2">
-                                {branch.name}
-                            </h4>
-                            <div className="flex items-center text-xs font-semibold text-slate-400 group-hover:text-slate-600 transition-colors">
-                                <span>Mulai Latihan</span>
-                                <span className="ml-1 opacity-0 group-hover:opacity-100 transform translate-x-[-4px] group-hover:translate-x-0 transition-all">→</span>
-                            </div>
-                        </div>
-
-                        {/* Subtle category dot */}
                         <div
-                            className="absolute top-3 right-3 w-2 h-2 rounded-full opacity-20"
-                            style={{ backgroundColor: themeColor }}
-                        />
+                            className="game-card"
+                            style={{
+                                backgroundColor: 'white', borderRadius: 24, padding: 24,
+                                border: '1px solid #f1f5f9', boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
+                                transition: 'all 0.3s', position: 'relative', overflow: 'hidden',
+                                height: '100%', display: 'flex', flexDirection: 'column'
+                            }}
+                        >
+                            <div style={{ position: 'absolute', top: 0, left: 0, width: 4, height: '100%', backgroundColor: themeColor }} />
+
+                            <div style={{ flex: 1 }}>
+                                {branch.category && (
+                                    <span style={{ fontSize: 9, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#94a3b8', marginBottom: 8, display: 'block' }}>
+                                        {branch.category}
+                                    </span>
+                                )}
+                                <h4 style={{ fontSize: 15, fontWeight: 800, color: '#1e293b', lineHeight: 1.4, marginBottom: 16 }}>
+                                    {branch.name}
+                                </h4>
+                            </div>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, color: themeColor }}>
+                                <span>Mulai Latihan</span>
+                                <span>→</span>
+                            </div>
+
+                            {/* Subtle background icon/decor */}
+                            <div
+                                style={{
+                                    position: 'absolute', bottom: -10, right: -10,
+                                    width: 80, height: 80, borderRadius: 99,
+                                    backgroundColor: themeColor, opacity: 0.05
+                                }}
+                            />
+                        </div>
                     </Link>
                 ))}
 
                 {filteredBranches.length === 0 && (
-                    <div className="col-span-full text-center py-12 text-slate-400 text-sm">
+                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '64px 0', color: '#94a3b8', fontSize: 14, fontWeight: 500 }}>
                         Tidak ditemukan cabang dengan kata kunci "{searchTerm}".
                     </div>
                 )}

@@ -18,74 +18,86 @@ export default async function EventDetailPage({ params }: { params: Promise<{ ev
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 relative overflow-hidden font-sans">
+        <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', position: 'relative', overflow: 'hidden', paddingBottom: 80 }}>
             {/* Background decoration */}
-            <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-white to-transparent opacity-60 z-0" />
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 400, background: 'linear-gradient(to bottom, white, transparent)', opacity: 0.6, zIndex: 0 }} />
 
-            <div className="relative z-10 max-w-5xl mx-auto px-6 py-8">
-                {/* Navigation - Sticky Top or just prominent */}
-                <div className="mb-8">
+            <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
+                {/* Navigation */}
+                <div style={{ marginBottom: 32 }}>
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-sm font-bold text-slate-600 hover:text-slate-900 shadow-sm border border-slate-200 transition-all hover:shadow-md"
+                        style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px',
+                            backgroundColor: 'white', borderRadius: 99, fontSize: 13, fontWeight: 700,
+                            color: '#64748b', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0',
+                            textDecoration: 'none'
+                        }}
                     >
                         <span>← Kembali ke Dashboard</span>
                     </Link>
                 </div>
 
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row gap-8 items-start md:items-center mb-10">
-                    <div
-                        className="w-24 h-24 md:w-32 md:h-32 rounded-[2rem] shadow-2xl flex items-center justify-center text-6xl md:text-7xl transform rotate-3 hover:rotate-6 transition-transform duration-500 bg-white border-4 border-white"
-                        style={{
-                            boxShadow: `0 20px 40px -10px ${event.color}66`
-                        }}
-                    >
-                        {event.icon}
-                    </div>
-
-                    <div className="flex-1">
-                        <div className="flex flex-wrap items-center gap-3 mb-3">
-                            <span className="bg-slate-900 text-white text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-wider">
-                                Official Puspresnas
-                            </span>
-                            <span className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-widest bg-white">
-                                {event.branches.length} Bidang Lomba
-                            </span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 32, marginBottom: 48 }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'center' }}>
+                        <div
+                            style={{
+                                width: 120, height: 120, borderRadius: 32,
+                                backgroundColor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 64, boxShadow: `0 20px 40px -10px ${event.color}66`,
+                                border: '4px solid white', transform: 'rotate(3deg)'
+                            }}
+                        >
+                            {event.icon}
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-none mb-4">
-                            {event.name}
-                        </h1>
-                        <p className="text-slate-600 text-lg font-medium leading-relaxed max-w-3xl">
-                            {event.description}
-                        </p>
+
+                        <div style={{ flex: 1 }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
+                                <span style={{ backgroundColor: '#0f172a', color: 'white', fontSize: 10, fontWeight: 900, padding: '6px 12px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    Official Puspresnas
+                                </span>
+                                <span style={{ backgroundColor: 'white', border: '1px solid #e2e8f0', color: '#64748b', fontSize: 10, fontWeight: 800, padding: '6px 12px', borderRadius: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    {event.branches.length} Bidang Lomba
+                                </span>
+                            </div>
+                            <h1 style={{ fontSize: 36, fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: 12, lineHeight: 1.1 }}>
+                                {event.name}
+                            </h1>
+                            <p style={{ fontSize: 16, color: '#64748b', fontWeight: 500, lineHeight: 1.6, maxWidth: 600 }}>
+                                {event.description}
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 {/* Character Values Section */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-                    <div className="md:col-span-1">
-                        <h3 className="text-sm font-extrabold text-slate-400 uppercase tracking-widest mb-4">
+                <div style={{ marginBottom: 48, background: 'white', padding: 32, borderRadius: 32, boxShadow: '0 10px 25px rgba(0,0,0,0.03)', border: '1px solid #f1f5f9' }}>
+                    <div style={{ marginBottom: 24 }}>
+                        <h3 style={{ fontSize: 12, fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>
                             Nilai Karakter Utama
                         </h3>
-                        <div className="w-12 h-1 rounded-full mb-2" style={{ backgroundColor: event.color }} />
+                        <div style={{ width: 40, height: 4, borderRadius: 99, backgroundColor: event.color }} />
                     </div>
-                    <div className="md:col-span-3 flex flex-wrap gap-3">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
                         {event.characterValues.map((value, idx) => (
                             <div
                                 key={idx}
-                                className="px-5 py-3 rounded-2xl bg-white border border-slate-100 shadow-sm flex items-center gap-3 hover:-translate-y-1 transition-transform"
+                                style={{
+                                    padding: '12px 20px', borderRadius: 16, backgroundColor: '#f8fafc',
+                                    border: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 12
+                                }}
                             >
-                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: event.color }} />
-                                <span className="font-bold text-slate-700 text-sm">{value}</span>
+                                <div style={{ width: 8, height: 8, borderRadius: 99, backgroundColor: event.color }} />
+                                <span style={{ fontSize: 14, fontWeight: 700, color: '#334155' }}>{value}</span>
                             </div>
                         ))}
                     </div>
                 </div>
 
                 {/* Search and List Section */}
-                <div className="bg-white/80 backdrop-blur-xl rounded-[32px] p-2 shadow-xl border border-white/50 ring-1 ring-slate-900/5">
-                    <div className="bg-slate-50/50 rounded-[24px] p-6 md:p-8">
+                <div style={{ backgroundColor: 'rgba(255,255,255,0.8)', padding: 8, borderRadius: 40, boxShadow: '0 20px 50px rgba(0,0,0,0.05)', border: '1px solid rgba(255,255,255,0.5)' }}>
+                    <div style={{ backgroundColor: 'rgba(248,250,252,0.5)', borderRadius: 32, padding: 32 }}>
                         <BranchList branches={event.branches} eventId={event.id} themeColor={event.color} />
                     </div>
                 </div>
