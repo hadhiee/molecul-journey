@@ -6,6 +6,8 @@ import { supabase } from "@/lib/supabase";
 import SignOutButton from "@/components/SignOutButton";
 import HomeActivityPanel from "@/components/HomeActivityPanel";
 import TechNewsPanel from "@/components/TechNewsPanel";
+import { EVENTS } from '@/data/events';
+import EventCard from '@/components/EventCard';
 import { Suspense } from "react";
 
 export default async function Home() {
@@ -395,6 +397,20 @@ export default async function Home() {
             </div>
           </Link>
         </div>
+      </div>
+
+      {/* --- CATEGORY: PUSPRESNAS ARENA --- */}
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ width: 4, height: 24, background: '#8b5cf6', borderRadius: 2 }} />
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Puspresnas Arena</h2>
+        <span style={{ fontSize: 10, fontWeight: 700, color: '#8b5cf6', background: '#f3e8ff', padding: '4px 10px', borderRadius: 20 }}>PRESTASI NASIONAL</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 40 }}>
+        {EVENTS.map(event => (
+          <div key={event.id} style={{ height: 180 }}>
+            <EventCard event={event} />
+          </div>
+        ))}
       </div>
 
       {/* --- CATEGORY: EXPLORATION ZONE --- */}
