@@ -23,7 +23,8 @@ export default function EventCard({ event }: { event: PuspresnasEvent }) {
                 style={{
                     background: bgGradient,
                     color: 'white',
-                    boxShadow: `0 10px 20px -5px ${event.color}66`
+                    boxShadow: `0 10px 20px -5px ${event.color}66`,
+                    borderRadius: 24,
                 }}
             >
                 {/* Background Decor */}
