@@ -2,11 +2,23 @@
 
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 function SignInContent() {
     const searchParams = useSearchParams();
     const error = searchParams.get("error");
+    const [isRedirecting, setIsRedirecting] = useState(false);
+
+    useEffect(() => {
+        // Auto-redirect if no error is present
+        if (!error && !isRedirecting) {
+            const timer = setTimeout(() => {
+                setIsRedirecting(true);
+                signIn("google", { callbackUrl: "/" });
+            }, 800); // Small delay for UX
+            return () => clearTimeout(timer);
+        }
+    }, [error, isRedirecting]);
 
     const getErrorMessage = (error: string) => {
         switch (error) {
@@ -29,11 +41,11 @@ function SignInContent() {
                 position: 'relative', zIndex: 1,
             }}>
                 {/* Header */}
-                <div style={{ textAlign: 'center' as const, marginBottom: 40 }}>
+                <div style={{ textAlign: 'center' as const, marginBottom: 32 }}>
                     <span style={{ display: 'inline-block', fontSize: 10, fontWeight: 800, color: '#e11d48', background: '#fff1f2', padding: '5px 14px', borderRadius: 99, textTransform: 'uppercase' as const, letterSpacing: '0.15em', marginBottom: 16 }}>
-                        Login Required
+                        Login Secure
                     </span>
-                    <h1 style={{ fontSize: 48, fontWeight: 800, background: 'linear-gradient(135deg, #1a1a2e, #e11d48)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.04em', fontStyle: 'italic', marginBottom: 4 }}>
+                    <h1 style={{ fontSize: 32, fontWeight: 800, color: '#1e293b', letterSpacing: '-0.02em', marginBottom: 4 }}>
                         MoLeCul
                     </h1>
                     <p style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' as const, letterSpacing: '0.2em' }}>
@@ -41,42 +53,66 @@ function SignInContent() {
                     </p>
                 </div>
 
-                {error && (
-                    <div style={{
-                        marginBottom: 24, padding: 16, borderRadius: 12,
-                        backgroundColor: '#fee2e2', border: '1px solid #fecaca',
-                        color: '#991b1b', fontSize: 13, fontWeight: 600, textAlign: 'center'
-                    }}>
-                        {getErrorMessage(error)}
+                {error ? (
+                    <>
+                        <div style={{
+                            marginBottom: 24, padding: 16, borderRadius: 12,
+                            backgroundColor: '#fee2e2', border: '1px solid #fecaca',
+                            color: '#991b1b', fontSize: 13, fontWeight: 600, textAlign: 'center'
+                        }}>
+                            {getErrorMessage(error)}
+                        </div>
+                        <button
+                            onClick={() => signIn("google", { callbackUrl: "/" })}
+                            style={{
+                                width: '100%', padding: '16px 24px', border: 'none', borderRadius: 16,
+                                background: '#e11d48', color: 'white', fontSize: 15, fontWeight: 800,
+                                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
+                                boxShadow: '0 12px 24px -4px rgba(225,29,72,0.35)',
+                            }}
+                        >
+                            Coba Login Lagi
+                        </button>
+                    </>
+                ) : (
+                    <div style={{ textAlign: 'center', padding: '10px 0' }}>
+                        <div style={{
+                            width: 48, height: 48, border: '4px solid #f1f5f9',
+                            borderTop: '4px solid #e11d48', borderRadius: '50%',
+                            margin: '0 auto 24px', animation: 'spin 1s linear infinite'
+                        }} />
+                        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b', marginBottom: 8 }}>
+                            Mengantarkan ke Beranda...
+                        </h2>
+                        <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.5, marginBottom: 24 }}>
+                            Sistem sedang memproses login Anda secara otomatis. Mohon tunggu sebentar.
+                        </p>
+
+                        <button
+                            onClick={() => signIn("google", { callbackUrl: "/" })}
+                            style={{
+                                background: 'transparent', border: 'none', padding: 0,
+                                color: '#e11d48', fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                                textDecoration: 'underline'
+                            }}
+                        >
+                            Klik di sini jika tidak otomatis
+                        </button>
                     </div>
                 )}
 
-                <div style={{ textAlign: 'center' as const, marginBottom: 32 }}>
-                    <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1a1a2e', marginBottom: 6 }}>Mulai Perjalanan</h2>
-                    <p style={{ fontSize: 13, color: '#94a3b8', fontWeight: 500 }}>Masuk untuk memulai simulasi budaya MOKLET.</p>
-                </div>
-
-                <button
-                    onClick={() => signIn("google", { callbackUrl: "/" })}
-                    style={{
-                        width: '100%', padding: '18px 24px', border: 'none', borderRadius: 16,
-                        background: '#e11d48', color: 'white', fontSize: 15, fontWeight: 800,
-                        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
-                        boxShadow: '0 12px 24px -4px rgba(225,29,72,0.35)',
-                        transition: 'all 0.2s',
-                    }}
-                >
-                    <img src="https://www.google.com/favicon.ico" alt="G" style={{ width: 20, height: 20, background: 'white', borderRadius: '50%', padding: 2 }} />
-                    Sign in with Google
-                </button>
-
-                <div style={{ marginTop: 28, paddingTop: 24, borderTop: '1px solid #f3f4f6', textAlign: 'center' as const }}>
-                    <p style={{ fontSize: 12, color: '#94a3b8', fontWeight: 500, lineHeight: 1.5 }}>
-                        Terbuka untuk akun <strong style={{ color: '#e11d48' }}>@smktelkom-mlg.sch.id</strong><br />
-                        & akun Google lainnya untuk mengenal lebih dalam Moklet.
+                <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid #f3f4f6', textAlign: 'center' as const }}>
+                    <p style={{ fontSize: 11, color: '#cbd5e1', fontWeight: 600 }}>
+                        &copy; {new Date().getFullYear()} MoLeCul Journey
                     </p>
                 </div>
             </div>
+            <style jsx global>{`
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `}</style>
         </div>
     );
 }
