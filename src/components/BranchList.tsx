@@ -38,11 +38,23 @@ export default function BranchList({ branches, eventId, themeColor }: BranchList
         "ai"
     ];
 
+    const osnPriorityIds = [
+        "info",
+        "math",
+        "phys"
+    ];
+
     const sortedBranches = [...filteredBranches].sort((a, b) => {
-        if (eventId !== 'lks') return 0;
-        const aIndex = lksPriorityIds.includes(a.id) ? lksPriorityIds.indexOf(a.id) : 999;
-        const bIndex = lksPriorityIds.includes(b.id) ? lksPriorityIds.indexOf(b.id) : 999;
-        return aIndex - bIndex;
+        if (eventId === 'lks') {
+            const aIndex = lksPriorityIds.includes(a.id) ? lksPriorityIds.indexOf(a.id) : 999;
+            const bIndex = lksPriorityIds.includes(b.id) ? lksPriorityIds.indexOf(b.id) : 999;
+            return aIndex - bIndex;
+        } else if (eventId === 'osn') {
+            const aIndex = osnPriorityIds.includes(a.id) ? osnPriorityIds.indexOf(a.id) : 999;
+            const bIndex = osnPriorityIds.includes(b.id) ? osnPriorityIds.indexOf(b.id) : 999;
+            return aIndex - bIndex;
+        }
+        return 0;
     });
 
     return (
@@ -89,7 +101,20 @@ export default function BranchList({ branches, eventId, themeColor }: BranchList
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
                 {sortedBranches.map((branch) => {
-                    const isPriority = eventId === 'lks' && lksPriorityIds.includes(branch.id);
+                    let isPriority = false;
+                    let priorityLabel = "";
+                    let priorityBgColor = 'white';
+
+                    if (eventId === 'lks' && lksPriorityIds.includes(branch.id)) {
+                        isPriority = true;
+                        priorityLabel = " • PRIORITAS UTAMA ⭐";
+                        priorityBgColor = '#fff1f2'; // Soft rose
+                    } else if (eventId === 'osn' && osnPriorityIds.includes(branch.id)) {
+                        isPriority = true;
+                        priorityLabel = " • TERDAFTAR BPTI 🏆";
+                        priorityBgColor = '#eff6ff'; // Soft blue
+                    }
+
                     return (
                         <Link
                             href={`/events/${eventId}/${branch.id}`}
@@ -99,7 +124,7 @@ export default function BranchList({ branches, eventId, themeColor }: BranchList
                             <div
                                 className="game-card"
                                 style={{
-                                    backgroundColor: isPriority ? '#fff1f2' : 'white',
+                                    backgroundColor: isPriority ? priorityBgColor : 'white',
                                     borderRadius: 24, padding: 24,
                                     border: isPriority ? `2px solid ${themeColor}` : '1px solid #f1f5f9',
                                     boxShadow: isPriority ? `0 10px 25px -5px ${themeColor}40` : '0 4px 15px rgba(0,0,0,0.03)',
@@ -110,9 +135,9 @@ export default function BranchList({ branches, eventId, themeColor }: BranchList
                                 <div style={{ position: 'absolute', top: 0, left: 0, width: isPriority ? 6 : 4, height: '100%', backgroundColor: themeColor }} />
 
                                 <div style={{ flex: 1 }}>
-                                    {branch.category && (
+                                    {(branch.category || isPriority) && (
                                         <span style={{ fontSize: 9, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: isPriority ? themeColor : '#94a3b8', marginBottom: 8, display: 'block' }}>
-                                            {branch.category} {isPriority && " • PRIORITAS UTAMA ⭐"}
+                                            {branch.category || "UMUM"} {isPriority && priorityLabel}
                                         </span>
                                     )}
                                     <h4 style={{ fontSize: 15, fontWeight: 800, color: '#1e293b', lineHeight: 1.4, marginBottom: 16 }}>
