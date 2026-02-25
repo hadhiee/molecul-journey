@@ -143,7 +143,32 @@ export default async function Home() {
                 </div>
               </div>
             </div>
-            <SignOutButton />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+              <SignOutButton />
+              <a
+                href="https://s.id/MoLeCul"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#ffffff',
+                  color: '#e11d48',
+                  border: '1px solid rgba(255,255,255,0.9)',
+                  borderRadius: 12,
+                  padding: '8px 12px',
+                  fontSize: 10,
+                  fontWeight: 800,
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}
+              >
+                🤖 Agen AI
+              </a>
+            </div>
           </div>
 
           <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
