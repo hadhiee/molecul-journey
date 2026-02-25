@@ -25,7 +25,7 @@ Gaya bahasa: Santai, ramah, suportif, seperti kakak mentor ke adik kelas. Gunaka
   3. Multimedia / Desain Komunikasi Visual (DKV)
 - Visi: Menjadi SMK unggul berbasis ICT yang menghasilkan lulusan berkarakter, kompeten, dan berdaya saing global
 - Motto budaya sekolah: "ATTITUDE" (Akhlak, Toleransi, Tanggung Jawab, Integritas, Teladan, Ulet, Disiplin, Empati)
-- Kepala Sekolah saat ini: Bapak Mokhamad Hadiwijaya, S.Pd
+- Wakil Kepala Sekolah Bidang IT, Lab dan Sarana Prasarana: Bapak Mokhamad Hadiwijaya, M.T.
 - Website: smktelkom-mlg.sch.id
 
 === TENTANG MOLECUL (GAME INI) ===
