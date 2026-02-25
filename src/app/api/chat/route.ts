@@ -15,21 +15,24 @@ export async function POST(req: Request) {
             return NextResponse.json({ reply: "Pesan kosong." }, { status: 400 });
         }
 
-        // Format for Gemini API (user vs model)
-        const contents = messages.map((m: any) => ({
-            role: m.role === 'ai' ? 'model' : 'user',
-            parts: [{ text: m.content || "" }]
-        }));
-
-        // System instruction (injected silently in the last message or first)
+        // System instruction
         const systemContext = `Instruksi Sistem (PENTING): Anda adalah asisten AI resmi bernama "MoLeCul AI" untuk game edukasi "MoLeCul" (Moklet Learning Culture Journey). Game ini ditujukan untuk siswa SMK Telkom Malang untuk belajar budaya, salat, mengaji (quran), dan kegiatan ramadan dll melalui gamifikasi (peta, chapter, leaderboard, dsb). Selalu jawab pertanyaan dengan ramah, suportif, informatif, dan menggunakan gaya bahasa yang santai namun sopan seperti seorang mentor ke siswa. Jawab menggunakan Bahasa Indonesia.\n\n`;
 
-        // Ambil pesan terakhir dari user dan sisipkan instruksi rahasia ini agar Gemini tau konteksnya
-        if (contents.length > 0) {
-            const lastMsg = contents[contents.length - 1];
-            if (lastMsg.role === 'user') {
-                const originalText = lastMsg.parts[0].text;
-                lastMsg.parts[0].text = systemContext + "Pertanyaan user: " + originalText;
+        // Format for Gemini API
+        let validMessages = [...messages];
+        // Gemini MUST start with a 'user' message
+        while (validMessages.length > 0 && validMessages[0].role === 'ai') {
+            validMessages.shift();
+        }
+
+        const consolidated: any[] = [];
+        for (const msg of validMessages) {
+            const role = msg.role === 'ai' ? 'model' : 'user';
+            const text = msg.content || "";
+            if (consolidated.length > 0 && consolidated[consolidated.length - 1].role === role) {
+                consolidated[consolidated.length - 1].parts[0].text += "\n" + text;
+            } else {
+                consolidated.push({ role, parts: [{ text }] });
             }
         }
 
@@ -39,7 +42,10 @@ export async function POST(req: Request) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                contents
+                systemInstruction: {
+                    parts: [{ text: systemContext }]
+                },
+                contents: consolidated
             })
         });
 
