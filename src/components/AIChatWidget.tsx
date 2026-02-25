@@ -1,12 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./AIChatWidget.module.css";
+
+interface Message {
+    role: "user" | "ai";
+    content: string;
+}
 
 export default function AIChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
+    const [messages, setMessages] = useState<Message[]>([
+        {
+            role: "ai",
+            content: "Halo! Saya adalah asisten AI MoLeCul. Ada yang bisa saya bantu tentang pengalaman belajarmu hari ini?",
+        },
+    ]);
+    const [input, setInput] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages, isLoading]);
 
     const toggleChat = () => setIsOpen((prev) => !prev);
+
+    const sendMessage = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!input.trim() || isLoading) return;
+
+        const userMsg = input.trim();
+        setInput("");
+        setMessages((prev) => [...prev, { role: "user", content: userMsg }]);
+        setIsLoading(true);
+
+        try {
+            const res = await fetch("/api/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    messages: [...messages, { role: "user", content: userMsg }],
+                }),
+            });
+
+            const data = await res.json();
+
+            setMessages((prev) => [
+                ...prev,
+                { role: "ai", content: data.reply || "Maaf, terjadi kesalahan saat merespon." },
+            ]);
+        } catch (error) {
+            console.error(error);
+            setMessages((prev) => [
+                ...prev,
+                { role: "ai", content: "Maaf, jaringan sepertinya bermasalah." },
+            ]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className={styles.chatContainer}>
@@ -28,21 +86,42 @@ export default function AIChatWidget() {
                     </button>
                 </div>
 
-                {/* Body for iframe */}
-                <div className={styles.chatBody} style={{ padding: 0, overflow: 'hidden' }}>
-                    <iframe
-                        /* 
-                          Catatan Penting: 
-                          Situs utama ChatGPT (chatgpt.com) biasanya memblokir akses iframe (X-Frame-Options: DENY). 
-                          Jika tertulis "chatgpt.com refused to connect", itu berarti kebijakan blokir milik OpenAI yang bekerja.
-                          Kamu bisa mengganti URL di bawah dengan penyedia Chatbot Embed (seperti Chatbase, Typebot, dll) yang mengizinkan Iframe.
-                        */
-                        src="https://chatgpt.com"
-                        style={{ width: '100%', height: '100%', border: 'none' }}
-                        title="AI Assistant"
-                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                    />
+                <div className={styles.chatBody}>
+                    {messages.map((msg, i) => (
+                        <div key={i} className={styles.messageRow}>
+                            <div className={msg.role === "user" ? styles.messageUser : styles.messageAi}>
+                                {msg.content}
+                            </div>
+                        </div>
+                    ))}
+                    {isLoading && (
+                        <div className={styles.messageRow}>
+                            <div className={styles.typingIndicator}>
+                                <div className={styles.typingDot}></div>
+                                <div className={styles.typingDot}></div>
+                                <div className={styles.typingDot}></div>
+                            </div>
+                        </div>
+                    )}
+                    <div ref={bottomRef} />
                 </div>
+
+                <form onSubmit={sendMessage} className={styles.chatFooter}>
+                    <input
+                        type="text"
+                        className={styles.chatInput}
+                        placeholder="Tanya apapun tentang MoLeCul..."
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        disabled={isLoading}
+                    />
+                    <button type="submit" className={styles.sendButton} disabled={!input.trim() || isLoading}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </form>
             </div>
 
             {!isOpen && (
