@@ -3,6 +3,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import GlobalActivityTracker from "@/components/GlobalActivityTracker";
 import TopWeatherBar from "@/components/TopWeatherBar";
+import AIChatWidget from "@/components/AIChatWidget";
 
 export const metadata: Metadata = {
   title: "MoLeCul - Moklet Learning Culture Journey",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Providers>
           <GlobalActivityTracker />
           {children}
+          <AIChatWidget />
         </Providers>
       </body>
     </html>
