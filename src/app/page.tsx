@@ -152,21 +152,20 @@ export default async function Home() {
                 style={{
                   background: '#ffffff',
                   color: '#e11d48',
-                  border: '1px solid rgba(255,255,255,0.9)',
-                  borderRadius: 12,
-                  padding: '8px 12px',
-                  fontSize: 10,
-                  fontWeight: 800,
+                  borderRadius: 16,
+                  padding: '12px 24px',
+                  fontSize: 14,
+                  fontWeight: 900,
                   textDecoration: 'none',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 6,
-                  boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
+                  gap: 8,
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em'
                 }}
               >
-                🤖 Agen AI
+                🤖 TANYA AGEN AI
               </a>
             </div>
           </div>
