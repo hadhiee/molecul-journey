@@ -36,7 +36,7 @@ export async function POST(req: Request) {
             }
         }
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -52,6 +52,11 @@ export async function POST(req: Request) {
         if (!response.ok) {
             const errText = await response.text();
             console.error("Gemini API Error:", errText);
+
+            if (response.status === 429) {
+                return NextResponse.json({ reply: "Maaf, kuota/limit API Gemini kamu saat ini sudah habis. Silakan gunakan API Key yang baru atau tunggu beberapa saat." });
+            }
+
             return NextResponse.json({ reply: "Terjadi kesalahan pada layanan AI. Silakan coba lagi nanti." });
         }
 
