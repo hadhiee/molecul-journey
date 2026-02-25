@@ -12,57 +12,92 @@ export default function TopWeatherBar() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function getWeatherData() {
-            try {
-                // 1. Get location via IP
-                const locRes = await fetch("https://ipapi.co/json/");
-                const locData = await locRes.json();
-                const { city, latitude, longitude } = locData;
+        let isMounted = true;
 
-                // 2. Get weather via Open-Meteo
-                const weatherRes = await fetch(
-                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
-                );
+        const getCondition = (code: number) => {
+            if (code === 0) return { text: "Cerah", icon: "☀️" };
+            if (code <= 3) return { text: "Berawan", icon: "☁️" };
+            if (code <= 48) return { text: "Kabut", icon: "🌫️" };
+            if (code <= 57) return { text: "Gerimis", icon: "🌦️" };
+            if (code <= 67) return { text: "Hujan", icon: "🌧️" };
+            if (code <= 77) return { text: "Salju", icon: "❄️" };
+            if (code <= 82) return { text: "Hujan Deras", icon: "⛈️" };
+            if (code <= 99) return { text: "Badai Guntur", icon: "🌩️" };
+            return { text: "Unknown", icon: "🌡️" };
+        };
+
+        const fetchWeatherData = async (lat: number, lon: number, defaultCity?: string) => {
+            try {
+                let city = defaultCity;
+
+                // Jika kota tidak diketahui (dari GPS), reverse geocode pakai BigDataCloud API (gratis, tanpa key)
+                if (!city) {
+                    const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=id`);
+                    if (geoRes.ok) {
+                        const geoData = await geoRes.json();
+                        city = geoData.city || geoData.locality || "Lokasi Anda";
+                    }
+                }
+
+                const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                if (!weatherRes.ok) throw new Error("Gagal ambil cuaca");
+
                 const weatherData = await weatherRes.json();
                 const { temperature, weathercode } = weatherData.current_weather;
-
-                // 3. Map weather code to emoji/text
-                // Ref: https://open-meteo.com/en/docs
-                const getCondition = (code: number) => {
-                    if (code === 0) return { text: "Cerah", icon: "☀️" };
-                    if (code <= 3) return { text: "Berawan", icon: "☁️" };
-                    if (code <= 48) return { text: "Kabut", icon: "🌫️" };
-                    if (code <= 57) return { text: "Gerimis", icon: "🌦️" };
-                    if (code <= 67) return { text: "Hujan", icon: "🌧️" };
-                    if (code <= 77) return { text: "Salju", icon: "❄️" };
-                    if (code <= 82) return { text: "Hujan Deras", icon: "⛈️" };
-                    if (code <= 99) return { text: "Badai Guntur", icon: "🌩️" };
-                    return { text: "Unknown", icon: "🌡️" };
-                };
-
                 const condition = getCondition(weathercode);
 
-                setWeather({
-                    city: city || "Unknown Location",
-                    temp: Math.round(temperature),
-                    condition: condition.text,
-                    icon: condition.icon,
-                });
+                if (isMounted) {
+                    setWeather({
+                        city: city || "Lokasi Anda",
+                        temp: Math.round(temperature),
+                        condition: condition.text,
+                        icon: condition.icon,
+                    });
+                    setLoading(false);
+                }
             } catch (error) {
-                console.error("Failed to fetch weather:", error);
-                // Fallback weather
-                setWeather({
-                    city: "Malang (Default)",
-                    temp: 24,
-                    condition: "Cerah Berawan",
-                    icon: "⛅",
-                });
-            } finally {
+                console.error("Gagal memuat cuaca via koordinat:", error);
+                fallbackWeather();
+            }
+        };
+
+        const fallbackWeather = () => {
+            if (isMounted) {
+                setWeather({ city: "Malang (Default)", temp: 24, condition: "Cerah Berawan", icon: "⛅" });
                 setLoading(false);
             }
+        };
+
+        const fetchByIP = async () => {
+            try {
+                const locRes = await fetch("https://ipapi.co/json/");
+                if (!locRes.ok) throw new Error("Ipapi error");
+                const locData = await locRes.json();
+                await fetchWeatherData(locData.latitude, locData.longitude, locData.city);
+            } catch (err) {
+                fallbackWeather();
+            }
+        };
+
+        // Mulai logika utama: Coba GPS Device -> Jika ditolak/timeout -> Coba IP API -> Jika gagal -> Fallback Malang
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    fetchWeatherData(position.coords.latitude, position.coords.longitude);
+                },
+                (error) => {
+                    console.warn("User menolak akses lokasi atau GPS gagal. Beralih ke IP Based Location.", error.message);
+                    fetchByIP();
+                },
+                { timeout: 10000, enableHighAccuracy: true, maximumAge: 300000 }
+            );
+        } else {
+            fetchByIP();
         }
 
-        getWeatherData();
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     if (loading || !weather) {
