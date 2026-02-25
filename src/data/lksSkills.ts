@@ -75,6 +75,7 @@ export const lksSkills: LksSkill[] = [
     { id: "industry-4.0", name: "Industry 4.0", cluster: "Manufacturing and Engineering Technology" },
     { id: "industrial-design-technology", name: "Industrial Design Technology", cluster: "Manufacturing and Engineering Technology" },
     { id: "mobile-applications-development", name: "Mobile Applications Development", cluster: "Information and Communication Technology" },
+    { id: "ai", name: "AI", cluster: "Information and Communication Technology" },
     { id: "marketing-online", name: "Marketing Online", cluster: "Social and Personal Services" },
     { id: "bilingual-secretary", name: "Bilingual Secretary", cluster: "Social and Personal Services" },
     { id: "livestock-technology", name: "Livestock Technology", cluster: "Social and Personal Services" },

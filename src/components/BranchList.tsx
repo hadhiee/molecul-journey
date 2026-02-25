@@ -24,6 +24,27 @@ export default function BranchList({ branches, eventId, themeColor }: BranchList
         return matchesSearch && matchesCategory;
     });
 
+    const lksPriorityIds = [
+        "graphic-design-technology",
+        "cyber-security",
+        "it-network-systems-administration",
+        "cloud-computing",
+        "it-software-solutions-for-business",
+        "information-network-cabling",
+        "web-technologies",
+        "mobile-robotics",
+        "3d-digital-game-art",
+        "marketing-online",
+        "ai"
+    ];
+
+    const sortedBranches = [...filteredBranches].sort((a, b) => {
+        if (eventId !== 'lks') return 0;
+        const aIndex = lksPriorityIds.includes(a.id) ? lksPriorityIds.indexOf(a.id) : 999;
+        const bIndex = lksPriorityIds.includes(b.id) ? lksPriorityIds.indexOf(b.id) : 999;
+        return aIndex - bIndex;
+    });
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             <div style={{ backgroundColor: 'white', borderRadius: 24, padding: 32, boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
@@ -67,50 +88,55 @@ export default function BranchList({ branches, eventId, themeColor }: BranchList
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
-                {filteredBranches.map((branch) => (
-                    <Link
-                        href={`/events/${eventId}/${branch.id}`}
-                        key={branch.id}
-                        style={{ textDecoration: 'none' }}
-                    >
-                        <div
-                            className="game-card"
-                            style={{
-                                backgroundColor: 'white', borderRadius: 24, padding: 24,
-                                border: '1px solid #f1f5f9', boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
-                                transition: 'all 0.3s', position: 'relative', overflow: 'hidden',
-                                height: '100%', display: 'flex', flexDirection: 'column'
-                            }}
+                {sortedBranches.map((branch) => {
+                    const isPriority = eventId === 'lks' && lksPriorityIds.includes(branch.id);
+                    return (
+                        <Link
+                            href={`/events/${eventId}/${branch.id}`}
+                            key={branch.id}
+                            style={{ textDecoration: 'none' }}
                         >
-                            <div style={{ position: 'absolute', top: 0, left: 0, width: 4, height: '100%', backgroundColor: themeColor }} />
-
-                            <div style={{ flex: 1 }}>
-                                {branch.category && (
-                                    <span style={{ fontSize: 9, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#94a3b8', marginBottom: 8, display: 'block' }}>
-                                        {branch.category}
-                                    </span>
-                                )}
-                                <h4 style={{ fontSize: 15, fontWeight: 800, color: '#1e293b', lineHeight: 1.4, marginBottom: 16 }}>
-                                    {branch.name}
-                                </h4>
-                            </div>
-
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, color: themeColor }}>
-                                <span>Mulai Latihan</span>
-                                <span>→</span>
-                            </div>
-
-                            {/* Subtle background icon/decor */}
                             <div
+                                className="game-card"
                                 style={{
-                                    position: 'absolute', bottom: -10, right: -10,
-                                    width: 80, height: 80, borderRadius: 99,
-                                    backgroundColor: themeColor, opacity: 0.05
+                                    backgroundColor: isPriority ? '#fff1f2' : 'white',
+                                    borderRadius: 24, padding: 24,
+                                    border: isPriority ? `2px solid ${themeColor}` : '1px solid #f1f5f9',
+                                    boxShadow: isPriority ? `0 10px 25px -5px ${themeColor}40` : '0 4px 15px rgba(0,0,0,0.03)',
+                                    transition: 'all 0.3s', position: 'relative', overflow: 'hidden',
+                                    height: '100%', display: 'flex', flexDirection: 'column'
                                 }}
-                            />
-                        </div>
-                    </Link>
-                ))}
+                            >
+                                <div style={{ position: 'absolute', top: 0, left: 0, width: isPriority ? 6 : 4, height: '100%', backgroundColor: themeColor }} />
+
+                                <div style={{ flex: 1 }}>
+                                    {branch.category && (
+                                        <span style={{ fontSize: 9, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: isPriority ? themeColor : '#94a3b8', marginBottom: 8, display: 'block' }}>
+                                            {branch.category} {isPriority && " • PRIORITAS UTAMA ⭐"}
+                                        </span>
+                                    )}
+                                    <h4 style={{ fontSize: 15, fontWeight: 800, color: '#1e293b', lineHeight: 1.4, marginBottom: 16 }}>
+                                        {branch.name}
+                                    </h4>
+                                </div>
+
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, color: themeColor }}>
+                                    <span>Mulai Latihan</span>
+                                    <span>→</span>
+                                </div>
+
+                                {/* Subtle background icon/decor */}
+                                <div
+                                    style={{
+                                        position: 'absolute', bottom: -10, right: -10,
+                                        width: 80, height: 80, borderRadius: 99,
+                                        backgroundColor: themeColor, opacity: isPriority ? 0.15 : 0.05
+                                    }}
+                                />
+                            </div>
+                        </Link>
+                    )
+                })}
 
                 {filteredBranches.length === 0 && (
                     <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '64px 0', color: '#94a3b8', fontSize: 14, fontWeight: 500 }}>
