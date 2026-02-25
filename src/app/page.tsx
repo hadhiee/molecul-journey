@@ -165,7 +165,7 @@ export default async function Home() {
                   letterSpacing: '0.05em'
                 }}
               >
-                🤖 TANYA AGEN AI
+                <img src="/smk-logo.png" alt="SMK" style={{ width: 22, height: 22, objectFit: 'contain' }} /> TANYA AGEN AI
               </a>
             </div>
           </div>
