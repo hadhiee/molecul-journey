@@ -196,6 +196,45 @@ export default async function Home() {
       {/* 2. Panel Hari Ini (Check-in/Bukti/Refleksi) */}
       <HomeActivityPanel userEmail={userEmail} />
 
+      {/* AI Study Buddy Card */}
+      <Link href="/ai-tutor" style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #312e81, #4c1d95, #6d28d9)',
+          borderRadius: 24, padding: 24, color: 'white',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          border: '1px solid rgba(139,92,246,0.3)',
+          boxShadow: '0 12px 32px -8px rgba(109,40,217,0.4)',
+          position: 'relative', overflow: 'hidden'
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.15, background: 'radial-gradient(circle at 80% 20%, rgba(167,139,250,0.6), transparent 60%)' }} />
+          <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+              <span style={{ fontSize: 10, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase' as const, letterSpacing: '0.15em' }}>
+                AI Study Buddy
+              </span>
+              <span style={{ fontSize: 8, fontWeight: 700, background: '#22c55e', color: 'white', padding: '2px 8px', borderRadius: 20 }}>
+                NEW
+              </span>
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4, letterSpacing: '-0.02em' }}>
+              Chat dengan Gemini AI 🤖
+            </div>
+            <div style={{ fontSize: 12, color: '#c4b5fd', fontWeight: 500 }}>
+              Tanya pelajaran, persiapan lomba, atau minta saran belajar
+            </div>
+          </div>
+          <div style={{
+            width: 56, height: 56, borderRadius: 20,
+            background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 28, flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 8px 16px rgba(0,0,0,0.15)'
+          }}>
+            <span className="animate-float">🎓</span>
+          </div>
+        </div>
+      </Link>
+
       {/* 3. Culture Hub Card */}
       <Link href="/culture" style={{ textDecoration: 'none', display: 'block', marginBottom: 40 }}>
         <div style={{
@@ -613,6 +652,95 @@ export default async function Home() {
           </Link>
         </div>
       )}
+
+      {/* ===== FIXED BOTTOM NAVIGATION BAR ===== */}
+      <nav style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 99999,
+        background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+        borderTop: '1px solid rgba(0,0,0,0.06)',
+        boxShadow: '0 -4px 24px -4px rgba(0,0,0,0.08)',
+        padding: '6px 8px env(safe-area-inset-bottom, 8px)',
+        display: 'flex', justifyContent: 'space-around', alignItems: 'center',
+      }}>
+        {/* Home */}
+        <Link href="/" style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+          textDecoration: 'none', padding: '4px 10px', borderRadius: 12,
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#e11d48" stroke="#e11d48" strokeWidth="0">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z" fill="none" stroke="#e11d48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span style={{ fontSize: 9, fontWeight: 800, color: '#e11d48', letterSpacing: '0.02em' }}>Home</span>
+        </Link>
+
+        {/* Journey */}
+        <Link href="/journey" style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+          textDecoration: 'none', padding: '4px 10px', borderRadius: 12,
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+            <line x1="9" y1="3" x2="9" y2="18" /><line x1="15" y1="6" x2="15" y2="21" />
+          </svg>
+          <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Journey</span>
+        </Link>
+
+        {/* AI Study Buddy — CENTER PROMINENT */}
+        <Link href="/ai-tutor" style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          textDecoration: 'none', marginTop: -22, position: 'relative',
+        }}>
+          <div style={{
+            width: 52, height: 52, borderRadius: 18,
+            background: 'linear-gradient(135deg, #6366f1, #7c3aed)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 6px 20px -4px rgba(99,102,241,0.5)',
+            border: '3px solid white',
+            position: 'relative',
+          }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" />
+              <path d="M2 14h2" /><path d="M20 14h2" />
+              <path d="M15 13v2" /><path d="M9 13v2" />
+            </svg>
+            <span style={{
+              position: 'absolute', top: -4, right: -4,
+              width: 16, height: 16, borderRadius: 8,
+              background: '#22c55e', border: '2px solid white',
+              fontSize: 7, fontWeight: 900, color: 'white',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>AI</span>
+          </div>
+          <span style={{ fontSize: 9, fontWeight: 800, color: '#6366f1', marginTop: 2, letterSpacing: '0.02em' }}>Study Buddy</span>
+        </Link>
+
+        {/* Culture */}
+        <Link href="/culture" style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+          textDecoration: 'none', padding: '4px 10px', borderRadius: 12,
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
+          <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Culture</span>
+        </Link>
+
+        {/* Events */}
+        <Link href="/events" style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+          textDecoration: 'none', padding: '4px 10px', borderRadius: 12,
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7" />
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7" />
+            <path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22" />
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22" />
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+          </svg>
+          <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Lomba</span>
+        </Link>
+      </nav>
     </div>
   );
 }
