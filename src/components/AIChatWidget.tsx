@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import styles from "./AIChatWidget.module.css";
 
 interface Message {
@@ -9,6 +10,7 @@ interface Message {
 }
 
 export default function AIChatWidget() {
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         {
@@ -65,6 +67,9 @@ export default function AIChatWidget() {
             setIsLoading(false);
         }
     };
+
+    // Hide widget on the dedicated AI tutor page
+    if (pathname === "/ai-tutor") return null;
 
     return (
         <div className={styles.chatContainer}>

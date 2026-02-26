@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function TopWeatherBar() {
+    const pathname = usePathname();
     const [weather, setWeather] = useState<{
         city: string;
         temp: number;
@@ -99,6 +101,9 @@ export default function TopWeatherBar() {
             isMounted = false;
         };
     }, []);
+
+    // Hide on immersive pages
+    if (pathname === "/ai-tutor") return null;
 
     if (loading || !weather) {
         return (
