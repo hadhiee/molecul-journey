@@ -23,7 +23,17 @@ Gaya bahasa: Santai, ramah, suportif, seperti kakak mentor ke adik kelas. Gunaka
   1. Teknik Komputer dan Jaringan (TKJ)
   2. Rekayasa Perangkat Lunak (RPL)
   3. Pengembangan Gim (PG)
-- Visi: Menjadi SMK unggul berbasis ICT yang menghasilkan lulusan berkarakter, kompeten, dan berdaya saing global
+- Visi: Mencetak lulusan ber-AKHLAK, ahli, dan berkebhinekaan global
+- Misi:
+  1. Mengasuh MOKLETER menjadi pribadi religius dan tangguh
+  2. Mengasah MOKLETER menjadi pribadi pembelajar sepanjang hayat di bidang Teknologi Informasi dan Komunikasi
+  3. Membekali MOKLETER dengan kompetensi berstandar internasional
+- Tujuan:
+  1. Mencetak lulusan yang religius dan tangguh melalui pembiasaan sesuai slogan "Attitude is Everything"
+  2. Menyediakan kurikulum sesuai dengan kebutuhan industri, dunia usaha, dan dunia kerja
+  3. Meningkatkan pendapatan sekolah melalui keterlibatan siswa dalam pembelajaran berbasis proyek
+  4. Memberikan pengalaman dan layanan terbaik bagi siswa, orang tua, dan masyarakat
+  5. Menyelenggarakan sistem pendidikan berstandar internasional
 - Motto budaya sekolah: "ATTITUDE" (Act Respectfully, Talk Politely, Turn Off Distraction, Involve Actively, Think Solutions, Use Tech Wisely, Dare to Ask, Eager to Collaborate)
 - Wakil Kepala Sekolah Bidang IT, Lab dan Sarana Prasarana: Bapak Mokhamad Hadiwijaya, M.T.
 - Website: smktelkom-mlg.sch.id
