@@ -406,6 +406,30 @@ export default async function Home() {
             <div style={{ fontSize: 10, opacity: 0.7, fontWeight: 600 }}>Matching Logic</div>
           </div>
         </Link>
+
+        {/* Focus Guard */}
+        <Link href="/focus-guard" style={{ textDecoration: 'none' }}>
+          <div className="game-card" style={{
+            background: 'linear-gradient(135deg, #b45309, #d97706)',
+            borderRadius: 24, padding: '20px 16px',
+            color: 'white', height: '100%',
+            position: 'relative', overflow: 'hidden',
+            boxShadow: '0 10px 20px -5px rgba(217,119,6,0.4)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
+          }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)' }} />
+            <div style={{
+              width: 56, height: 56, borderRadius: 20,
+              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 28, marginBottom: 12,
+              boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
+              border: '1px solid rgba(255,255,255,0.2)'
+            }}>🛡️</div>
+            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Focus Guard</div>
+            <div style={{ fontSize: 10, opacity: 0.7, fontWeight: 600 }}>Action Smasher</div>
+          </div>
+        </Link>
       </div>
 
       {/* --- CATEGORY: STRATEGY LAB --- */}
