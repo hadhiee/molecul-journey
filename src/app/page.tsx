@@ -196,7 +196,7 @@ export default async function Home() {
       {/* 2. Panel Hari Ini (Check-in/Bukti/Refleksi) */}
       <HomeActivityPanel userEmail={userEmail} />
 
-      {/* AI Study Buddy Card */}
+      {/* MoDy - AI Moklet Buddy Card */}
       <Link href="/ai-tutor" style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
         <div style={{
           background: 'linear-gradient(135deg, #312e81, #4c1d95, #6d28d9)',
@@ -210,7 +210,7 @@ export default async function Home() {
           <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
               <span style={{ fontSize: 10, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase' as const, letterSpacing: '0.15em' }}>
-                AI Study Buddy
+                MoDy - AI Moklet Buddy
               </span>
               <span style={{ fontSize: 8, fontWeight: 700, background: '#22c55e', color: 'white', padding: '2px 8px', borderRadius: 20 }}>
                 NEW
@@ -685,7 +685,7 @@ export default async function Home() {
           <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Journey</span>
         </Link>
 
-        {/* AI Study Buddy — CENTER PROMINENT */}
+        {/* MoDy - AI Moklet Buddy — CENTER PROMINENT */}
         <Link href="/ai-tutor" style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           textDecoration: 'none', marginTop: -22, position: 'relative',
@@ -711,7 +711,7 @@ export default async function Home() {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>AI</span>
           </div>
-          <span style={{ fontSize: 9, fontWeight: 800, color: '#6366f1', marginTop: 2, letterSpacing: '0.02em' }}>Study Buddy</span>
+          <span style={{ fontSize: 9, fontWeight: 800, color: '#6366f1', marginTop: 2, letterSpacing: '0.02em' }}>MoDy</span>
         </Link>
 
         {/* Culture */}

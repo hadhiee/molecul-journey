@@ -198,7 +198,7 @@ export default function AITutorPage() {
                             </svg>
                         </div>
                         <div>
-                            <h1 className={styles.headerTitle}>AI Study Buddy</h1>
+                            <h1 className={styles.headerTitle}>MoDy - AI Moklet Buddy</h1>
                             <div className={styles.headerStatus}>
                                 <span className={styles.statusDot} />
                                 Powered by Gemini AI
@@ -229,7 +229,7 @@ export default function AITutorPage() {
                                 <path d="M15 13v2" /><path d="M9 13v2" />
                             </svg>
                         </div>
-                        <h2 className={styles.welcomeTitle}>Halo! Saya AI Study Buddy 🎓</h2>
+                        <h2 className={styles.welcomeTitle}>Halo! Saya MoDy - AI Moklet Buddy 🎓</h2>
                         <p className={styles.welcomeSubtitle}>
                             Asisten belajar pribadi kamu dari MoLeCul. Tanya apapun tentang pelajaran,
                             budaya sekolah, persiapan lomba, atau minta saran belajar!
@@ -387,7 +387,7 @@ export default function AITutorPage() {
                     </button>
                 </div>
                 <p className={styles.disclaimer}>
-                    AI Study Buddy menggunakan Gemini AI. Jawaban mungkin tidak selalu 100% akurat.
+                    MoDy - AI Moklet Buddy menggunakan Gemini AI. Jawaban mungkin tidak selalu 100% akurat.
                 </p>
             </div>
         </div>
