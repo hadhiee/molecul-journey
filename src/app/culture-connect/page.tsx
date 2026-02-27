@@ -102,16 +102,34 @@ export default function CultureConnectPage() {
     const scoreRef = useRef(0);
     scoreRef.current = score;
 
+    const saveScore = async (amount: number) => {
+        if (amount > 0 && session?.user?.email) {
+            try {
+                await supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID("CULTURE_CONNECT"),
+                    score: amount,
+                    choice_label: "CONNECT_GAME"
+                });
+            } catch (e) { }
+        }
+    };
+
+    const handleExit = async () => {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = scoreRef.current;
+        }
+        window.location.href = "/";
+    };
+
     useEffect(() => {
         const diff = scoreRef.current - savedScoreRef.current;
         if (diff > 0 && session?.user?.email) {
-            supabase.from("user_progress").insert({
-                user_email: session.user.email,
-                mission_id: stringToUUID("CULTURE_CONNECT"),
-                score: diff,
-                choice_label: "CONNECT_GAME"
-            }).then(() => console.log(`Saved partial score: ${diff} XP`));
-            savedScoreRef.current = scoreRef.current;
+            saveScore(diff).then(() => {
+                savedScoreRef.current = scoreRef.current;
+            });
         }
     }, [currentRound, gameOver, session]);
 
@@ -255,13 +273,14 @@ export default function CultureConnectPage() {
             {/* Header / UI Layer */}
             <div style={{ position: "absolute", zIndex: 10, pointerEvents: "none", inset: 0, padding: 24, paddingTop: 48 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Link href="/" style={{
+                    <button onClick={handleExit} style={{
+                        cursor: "pointer",
                         color: "white", textDecoration: "none", fontWeight: 700, pointerEvents: "auto",
                         background: "rgba(255,255,255,0.1)", padding: "10px 20px", borderRadius: 99,
                         backdropFilter: "blur(4px)", border: "1px solid rgba(255,255,255,0.2)"
                     }}>
                         ← KEMBALI
-                    </Link>
+                    </button>
                     <div style={{
                         fontSize: 28, fontWeight: 900, color: "white", textShadow: "0 0 20px #22c55e",
                         background: "rgba(34, 197, 94, 0.2)", padding: "8px 24px", borderRadius: 99,
@@ -420,7 +439,7 @@ export default function CultureConnectPage() {
                     >
                         MAIN LAGI
                     </button>
-                    <Link href="/" style={{ color: "#94a3b8", textDecoration: "none" }}>Kembali ke Dashboard</Link>
+                    <button onClick={handleExit} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: "#94a3b8", textDecoration: "none", fontSize: 16 }}>Kembali ke Menu</button>
                 </div>
             )}
 
