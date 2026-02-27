@@ -132,23 +132,25 @@ Fitur unggulan berupa **peta petualangan interaktif** yang mensimulasikan satu h
 
 **Halaman:** `/ai-tutor`
 
-Asisten belajar pribadi berbasis **Google Gemini AI** yang siap membantu siswa 24/7.
+MoDy adalah asisten virtual berbasis **Google Gemini AI** yang di-prompt khusus (custom prompt engineering) agar bertindak sebagai kakak tingkat (senior) di SMK Telkom Malang yang suportif, asik, cerdas, dan selalu mendorong penerapan nilai **ATTITUDE**.
 
-**Kemampuan MoDy:**
-- 📚 **Bantuan Belajar** — Menjelaskan pelajaran apapun
-- 🏆 **Persiapan Lomba** — Tips dan strategi OSN, LKS, FIKSI
-- 💡 **Budaya ATTITUDE** — Menjelaskan nilai-nilai Moklet Learning Culture
-- 🎯 **Motivasi** — Memberikan semangat dan inspirasi belajar
-- 💻 **Belajar Coding** — Panduan belajar programming dari dasar
-- 🔒 **Cyber Security** — Pengenalan keamanan siber untuk siswa SMK
-- ☁️ **Cloud Computing** — Dasar-dasar cloud computing
+**Keunggulan & Karakter MoDy:**
+- 🎭 **Persona Anak Moklet:** Menggunakan salam khas "Semangat Pagi!" dan gaya bahasa "Sam" / "Mbak" / "Rek" layaknya kakak tingkat (senior) asli SMK Telkom Malang.
+- 🛡️ **Anti-Plagiasi (Socratic Method):** MoDy dirancang untuk tidak langsung memberikan jawaban tugas atau kode lengkap. MoDy memberikan *hint* (petunjuk), menanyakan kembali pemahaman siswa, dan membimbing siswa menemukan jawabannya sendiri (menstimulasi *Think Solutions*).
+- 🧭 **Pengetahuan Spesifik Jurusan (TKJ & RPL):** MoDy bisa memberikan contoh logis yang disesuaikan dengan program keahlian siswa (misal: analogi routing untuk anak Teknik Komputer dan Jaringan, atau analogi algoritma untuk anak Rekayasa Perangkat Lunak).
 
-**Fitur Chat:**
-- Typing animation real-time
-- Formatting markdown (bold, italic, code blocks)
-- History percakapan (per session)
-- Topic chips untuk quick start
-- Powered by Gemini AI
+**Fitur & Kemampuan Utama:**
+- 📚 **Bimbingan Akademik & Kejuruan:** Membantu memahami konsep algoritma, jaringan dasar, matematika, hingga bahasa Inggris.
+- 🏆 **Puspresnas & Mentoring Lomba:** Memberikan pedoman strategi memenangkan LKS (Lomba Kompetensi Siswa), OSN, atau FIKSI berdasarkan panduan terbaru.
+- 💡 **Konselor Budaya ATTITUDE:** Menjawab kebingungan siswa tentang apa maksud nilai *Turn Off Distraction* saat praktek di lab, atau cara *Act Respectfully* kepada guru.
+- 💻 **Mentor Coding & Troubleshooting:** Membantu men-debug error (menunjukkan error-nya dimana, bukan sekedar mengetikkan kode yang benar), dan praktik DevSecOps.
+- 🔒 **Edukasi Cyber Security & Cloud Computing:** Menyediakan materi interaktif tentang praktik aman berinternet, hingga pemahaman dasar Cloud.
+
+**Fitur Chat UI:**
+- Typing animation real-time yang terasa natural.
+- Formatting markdown (bold, italic, code blocks dengan syntax highlighting).
+- History percakapan yang disimpan per sesi untuk melacak progress belajar.
+- Topic chips untuk memulai obrolan dengan cepat (misal: "Bantu aku belajar JavaScript", "Apa itu Moklet Culture?").
 
 ---
 
@@ -170,32 +172,50 @@ Pusat pembelajaran lengkap tentang Moklet Learning Culture.
 
 ### 5. 🎮 Training Grounds — Mini Games
 
-Koleksi mini-game edukatif yang melatih berbagai aspek karakter siswa. Setiap game terintegrasi dengan sistem XP dan leaderboard.
+Koleksi 10 mini-game edukatif interaktif yang dirancang untuk membangun _muscle memory_ dan kesadaran akan nilai-nilai ATTITUDE melalui pengalaman bermain yang seru. Setiap game dihubungkan dengan sistem XP dan leaderboard untuk menjaga retensi.
 
-#### 🔴 Action Arena (Ketangkasan)
+#### 🔴 Action Arena (Ketangkasan & Refleks)
 
-| Game | Deskripsi | Teknologi |
-|---|---|---|
-| 🏃 **Moklet Runner** | Endless runner dengan tema Moklet. Lari, lompat, dan hindari rintangan sambil mengumpulkan poin. Ada sistem skin/karakter yang bisa dipilih. | Canvas 2D |
-| 🥊 **Attitude Fighter** | Game fighting 2D dimana pemain meninju musuh-musuh yang merepresentasikan perilaku negatif. Setiap hit memunculkan nilai ATTITUDE. | React + SVG |
-| 🚀 **Space Culture** | 3D space shooter dimana pemain menembak asteroid yang berisi nilai-nilai budaya negatif. Skor disimpan ke database. | Three.js + React Three Fiber |
-| 🧩 **Moklet Tetris** | Puzzle tetris klasik dimana setiap blok berisi nilai budaya karakter. Baris penuh = nilai budaya terselesaikan. | React Canvas |
+<p align="center">
+  <img src="public/images/action_arena.png" width="600" alt="Action Arena Illustration" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+</p>
 
-#### 🔵 Strategy Lab (Berpikir Kritis)
+Mengasah kelincahan motorik, fokus, dan pengambilan keputusan cepat dalam menghindari hal negatif.
 
-| Game | Deskripsi | Teknologi |
-|---|---|---|
-| 🔮 **Moklet Culture Simulation** | Decision-making game dengan 10 chapter skenario. Setiap pilihan mempengaruhi stat karakter (ATTITUDE, AKHLAK, BISA). | React Interactive |
-| 🏗️ **Arsitek Masa Depan** | Simulasi pemilihan karier 4 fase (Sekolah → Lulus → Karir Awal → Lima Tahun). Setiap pilihan mempengaruhi stat: Technical Skill, Soft Skill, Portfolio, Network, Kesehatan. | React Interactive |
-| ⚡ **Tantangan Kilat** | Speed quiz dengan timer ketat. Skenario budaya sekolah yang harus dijawab cepat dan tepat. | React + Timer |
+| Game | Deskripsi Detil & Mekanik | Nilai ATTITUDE yang Dilatih | Teknologi |
+|---|---|---|---|
+| 🏃 **Moklet Runner** | Endless runner tematik lingkungan sekolah SMK Telkom. Pemain berlari mengumpulkan "buku pelajaran" (poin) dan harus melompati/menghindari rintangan seperti "notifikasi sosmed" atau "kasur malas". Kecepatan bertambah seiring waktu. | **Turn Off Distraction**<br/>(Fokus pada tujuan) | Canvas 2D |
+| 🥊 **Attitude Fighter** | Game arcade fighting 2D. Pemain berhadapan dengan monster yang merepresentasikan "Hoax", "Bullying", atau "Kemalasan". Meninju monster akan memancarkan kalimat positif untuk mengubah mereka menjadi energi baik. Terdapat combo bar (*Respect Meter*). | **Act Respectfully** & **Talk Politely** | React + SVG |
+| 🚀 **Space Culture** | Game 3D space shooter _first-person_. Pemain mengendalikan pesawat dan menembak pesawat musuh/asteroid yang membawa label kebiasaan buruk ("Menyontek", "Terlambat"). Harus menembak akurat dan bertahan selama mungkin untuk skor tinggi. | **Think Solutions** & **Discipline** | Three.js + R3F |
+| 🧩 **Moklet Tetris** | Puzzle falling block. Blok-blok yang jatuh bukan bentuk biasa, melainkan membawa kepingan prinsip ATTITUDE. Jika baris berhasil penuh, pemain mendapat "Culture Point" bonus untuk menyelesaikan kalimat ATTITUDE secara utuh. | **Eager to Collaborate**<br/>(Menyusun komponen jadi kesatuan) | React Canvas |
 
-#### 🟢 Exploration Zone (Petualangan)
+#### 🔵 Strategy Lab (Berpikir Kritis & Empati)
 
-| Game | Deskripsi | Teknologi |
-|---|---|---|
-| 🗺️ **Journey Map** | Peta petualangan interaktif (dijelaskan di atas) | React Interactive |
-| 💎 **Crystal Discovery** | Eksplorasi 3D untuk menemukan kristal yang mewakili 8 nilai ATTITUDE. Klik kristal untuk membaca deskripsi nilai. | Three.js + OrbitControls |
-| 🧱 **Integrity Tower** | Stacking game 3D dimana pemain menyusun menara integritas dari balok-balok nilai ATTITUDE. | Three.js |
+<p align="center">
+  <img src="public/images/strategy_lab.png" width="600" alt="Strategy Lab Illustration" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+</p>
+
+Menguji cara berpikir jangka panjang, sebab-akibat, dan kebiasaan membuat keputusan dalam tekanan.
+
+| Game | Deskripsi Detil & Mekanik | Nilai ATTITUDE yang Dilatih | Teknologi |
+|---|---|---|---|
+| 🔮 **Moklet Culture Simulation** | *Visual Novel / Decision-making game*. Berisi 10 chapter cerita kehidupan sekolah (dari MPLS, ujian, hingga magang Industri). Setiap pilihan dialog bercabang dan mempengaruhi stat: ATTITUDE, AKHLAK, BISA. Terdapat _multiple endings_. | **Keseluruhan 8 Nilai ATTITUDE** | React Interactive |
+| 🏗️ **Arsitek Masa Depan** | Simulasi *Career Path* / *Resource Management* dari mulai masuk SMK hingga 5 tahun setelah lulus kuliah/kerja. Pemain harus membagi "Energi" dan "Waktu" harian untuk Belajar, Nongkrong, Berorganisasi, atau Istirahat. Pilihan yang seimbang menghasilkan _ending_ karir yang sukses. | **Think Solutions** & **Involve Actively** | React Interactive |
+| ⚡ **Tantangan Kilat** | Mode kuis cepat (Speed Quiz). Sistem akan menampilkan skenario sosial (misal: "Temanmu sedang presentasi namun laptopnya mati mendadak"). Pemain hanya diberi waktu 5 detik untuk memilih tidakan paling tepat. | **Dare to Ask** & **Involve Actively** | React + Timer |
+
+#### 🟢 Exploration Zone (Petualangan 3D & Spasial)
+
+<p align="center">
+  <img src="public/images/exploration_zone.png" width="600" alt="Exploration Zone Illustration" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+</p>
+
+Mengeksplorasi lingkungan sekolah secara virtual untuk menumbuhkan rasa memiliki (sense of belonging) dan kesadaran lingkungan.
+
+| Game | Deskripsi Detil & Mekanik | Nilai ATTITUDE yang Dilatih | Teknologi |
+|---|---|---|---|
+| 🗺️ **Journey Map** | Penjelasan detail ada pada poin "Journey Map Sekolah". Menghadirkan *top-down map* 2D. | **Involve Actively** & **Respect** | React Interactive |
+| 💎 **Crystal Discovery** | *First-Person 3D Explorer*. Pemain berada di labirin atau halaman luas, bertugas mencari 8 Kristal yang tersembunyi. Tiap kristal melambangkan 1 huruf A-T-T-I-T-U-D-E. Saat ditemukan, kristal akan menembakkan pilar cahaya dan meng-unlock *lore* dari nilai tersebut. | **Use Tech Wisely** & **Involve Actively** | Three.js + OrbitControls |
+| 🧱 **Integrity Tower** | Game fisika 3D menyusun balok menara (ala Jenga/Tower Bloxx). Balok melambangkan "Kejujuran", "Kerja Keras", dsb. Pemain harus menyusun setinggi mungkin. Jika fondasi nilai awal tidak kuat/miring, menara akan hancur lebur. | **Character** & **Think Solutions** | Three.js (Physics) |
 
 ---
 
