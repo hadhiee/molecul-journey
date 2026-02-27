@@ -11,14 +11,14 @@ interface Message {
 }
 
 const TOPIC_CHIPS = [
-    { label: "🚀 Persiapan Masuk Moklet", prompt: "Jelaskan materi persiapan dasar untuk calon Mokleters (RPL/TKJ/DKV) dan roadmap belajarnya." },
-    { label: "💻 Mulai Koding (HTML & CSS)", prompt: "Ajari saya langkah pertama belajar koding web (HTML & CSS) dong, pakai analogi yang seru ya." },
-    { label: "🛜 Konsep Jaringan Dasar", prompt: "Jelaskan apa itu IP Address, LAN, dan Router dengan bahasa yang gampang dipahami pemula." },
-    { label: "🎨 Dasar Multimedia / DKV", prompt: "Jelaskan bedanya desain Vektor dan Bitmap, serta warna RGB vs CMYK." },
-    { label: "🧠 Mindset Siswa IT", prompt: "Bagaimana sih cara berpikir yang benar kalau pas lagi belajar kena error atau bug?" },
-    { label: "💡 Apa itu ATTITUDE?", prompt: "Jelaskan 8 nilai budaya ATTITUDE di SMK Telkom Malang." },
-    { label: "🏆 Tips Juara Lomba", prompt: "Gimana caranya bisa ikut ajang bergengsi seperti LKS, OSN, atau FIKSI di Moklet?" },
-    { label: "📖 Minta Motivasi Belajar", prompt: "Saya merasa mentok nih belajar IT-nya. Tolong berikan saya semangat dong, Kak MoDy!" },
+    { label: "🚀 Persiapan Masuk Moklet", prompt: "Jelaskan roadmap belajar untuk siswa baru di RPL, TKJ, DKV, atau Pengembangan Gim." },
+    { label: "🌐 Cloud & Cyber Security", prompt: "Jelaskan konsep dasar Cloud Computing dan Cyber Security untuk pemula." },
+    { label: "🎮 Cara Bikin Game!", prompt: "Gimana sih cara awal bikin game 2D/3D pakai Game Engine?" },
+    { label: "💻 Web Framework & Koding", prompt: "Apa sih bedanya koding manual biasa dengan pakai Web Framework?" },
+    { label: "🎨 UI/UX & Desain Grafis", prompt: "Tolong jelaskan bedanya Vektor vs Bitmap, dan apa itu UI/UX." },
+    { label: "🧠 Mindset Error Koding", prompt: "Bagaimana cara menyikapi kode yang error merah semua tanpa harus panik?" },
+    { label: "💡 Nilai ATTITUDE", prompt: "Apa itu budaya ATTITUDE di Moklet dan berikan contohnya dong." },
+    { label: "📖 Minta Motivasi", prompt: "Sedang bingung belajar IT mulai dari mana, tolong kasih motivasi dong MoDy." },
 ];
 
 function formatAIContent(text: string): string {
