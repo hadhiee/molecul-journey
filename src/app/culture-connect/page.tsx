@@ -97,17 +97,23 @@ export default function CultureConnectPage() {
         return () => window.removeEventListener('resize', measurePoints);
     }, [leftItems, rightItems]);
 
-    // Save Score
+    // Save Score Per Round
+    const savedScoreRef = useRef(0);
+    const scoreRef = useRef(0);
+    scoreRef.current = score;
+
     useEffect(() => {
-        if (gameOver && score > 0 && session?.user?.email) {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0 && session?.user?.email) {
             supabase.from("user_progress").insert({
                 user_email: session.user.email,
                 mission_id: stringToUUID("CULTURE_CONNECT"),
-                score: score,
+                score: diff,
                 choice_label: "CONNECT_GAME"
-            }).then(() => console.log("Score saved!"));
+            }).then(() => console.log(`Saved partial score: ${diff} XP`));
+            savedScoreRef.current = scoreRef.current;
         }
-    }, [gameOver, score, session]);
+    }, [currentRound, gameOver, session]);
 
     const measurePoints = () => {
         if (!containerRef.current) return;
