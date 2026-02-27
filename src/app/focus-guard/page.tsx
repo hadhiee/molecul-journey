@@ -49,17 +49,26 @@ export default function FocusGuardGame() {
         if (score > 100) {
             triggerFireworks();
         }
+    }, [score]);
 
-        // Save progress to Supabase
-        if (score > 0 && session?.user?.email) {
-            supabase.from("user_progress").insert({
-                user_email: session.user.email,
-                mission_id: stringToUUID("FOCUS_GUARD"),
-                score: score,
-                choice_label: "FOCUS_GAME"
-            }).then(() => console.log("Focus Guard XP Saved"));
+    // Save Score Incrementally
+    const savedScoreRef = useRef(0);
+    useEffect(() => {
+        if (gameState === "PLAYING") {
+            const diff = score - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID("FOCUS_GUARD"),
+                    score: diff,
+                    choice_label: "FOCUS_GAME"
+                }).then(() => { });
+                savedScoreRef.current = score;
+            }
+        } else if (gameState === "START") {
+            savedScoreRef.current = 0;
         }
-    }, [score, session]);
+    }, [gameState, score, session]);
 
     // Timer Loop
     useEffect(() => {
@@ -186,9 +195,9 @@ export default function FocusGuardGame() {
         <div style={{ width: "100vw", height: "100vh", background: "#f8fafc", userSelect: "none", overflow: "hidden", fontFamily: "Inter, sans-serif" }}>
             {/* Nav */}
             <div style={{ position: "absolute", top: 24, left: 24, zIndex: 50 }}>
-                <Link href="/" style={{ background: "white", padding: "12px 20px", borderRadius: 16, fontWeight: 800, color: "#e11d48", textDecoration: "none", boxShadow: "0 4px 12px rgba(225,29,72,0.15)", border: "2px solid #fff1f2" }}>
+                <a href="/" style={{ background: "white", padding: "12px 20px", borderRadius: 16, fontWeight: 800, color: "#e11d48", textDecoration: "none", boxShadow: "0 4px 12px rgba(225,29,72,0.15)", border: "2px solid #fff1f2" }}>
                     ← Keluar
-                </Link>
+                </a>
             </div>
 
             {/* SCREEN: START */}
@@ -266,9 +275,9 @@ export default function FocusGuardGame() {
                         >
                             <span style={{ fontSize: 20, verticalAlign: "middle", marginRight: 8 }}>🔄</span> Main Lagi
                         </button>
-                        <Link href="/" style={{ background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)", padding: "18px 40px", borderRadius: 16, fontSize: 16, fontWeight: 800, textDecoration: "none", display: "inline-block" }}>
+                        <a href="/" style={{ background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)", padding: "18px 40px", borderRadius: 16, fontSize: 16, fontWeight: 800, textDecoration: "none", display: "inline-block" }}>
                             Beranda
-                        </Link>
+                        </a>
                     </div>
                 </div>
             )}

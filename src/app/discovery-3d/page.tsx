@@ -220,9 +220,9 @@ export default function Discovery3DGame() {
             {gameState === "PLAYING" && (
                 <>
                     <div style={{ position: "absolute", top: 24, left: 24, zIndex: 10 }}>
-                        <Link href="/" style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", padding: "12px 20px", borderRadius: 12, color: "white", fontWeight: 700, textDecoration: "none", border: "1px solid rgba(255,255,255,0.2)" }}>
+                        <a href="/" style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", padding: "12px 20px", borderRadius: 12, color: "white", fontWeight: 700, textDecoration: "none", border: "1px solid rgba(255,255,255,0.2)" }}>
                             ← Exit
-                        </Link>
+                        </a>
                     </div>
 
                     <div style={{ position: "absolute", top: 24, right: 24, zIndex: 10, display: "flex", gap: 12 }}>
@@ -307,9 +307,9 @@ export default function Discovery3DGame() {
                         <div style={{ fontSize: 16, fontWeight: 800, textTransform: "uppercase", opacity: 0.8, marginBottom: 12 }}>Total Karakter XP</div>
                         <div style={{ fontSize: 72, fontWeight: 900 }}>{score}</div>
                     </div>
-                    <Link href="/" style={{ background: "#0f172a", color: "white", padding: "22px 72px", borderRadius: 24, fontSize: 20, fontWeight: 800, textDecoration: "none" }}>
+                    <a href="/" style={{ background: "#0f172a", color: "white", padding: "22px 72px", borderRadius: 24, fontSize: 20, fontWeight: 800, textDecoration: "none" }}>
                         Kembali ke Home
-                    </Link>
+                    </a>
                 </div>
             )}
 

@@ -222,9 +222,9 @@ export default function Integrity3DGame() {
         <div style={{ position: "relative", width: "100vw", height: "100vh", overflow: "hidden", background: "#f0f2f5", fontFamily: "Inter, sans-serif" }}>
             {/* UI Layer */}
             <div style={{ position: "absolute", top: 24, left: 24, zIndex: 10 }}>
-                <Link href="/" style={{ background: "white", padding: "10px 20px", borderRadius: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)", textDecoration: "none", color: "#1a1a2e" }}>
+                <a href="/" style={{ background: "white", padding: "10px 20px", borderRadius: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)", textDecoration: "none", color: "#1a1a2e" }}>
                     ← Keluar
-                </Link>
+                </a>
             </div>
 
             <div style={{ position: "absolute", top: 24, right: 24, zIndex: 10, textAlign: "right" }}>
@@ -302,9 +302,9 @@ export default function Integrity3DGame() {
                         >
                             Coba Lagi
                         </button>
-                        <Link href="/" style={{ background: "rgba(255,255,255,0.1)", color: "white", padding: "18px 32px", borderRadius: 16, fontSize: 16, fontWeight: 800, textDecoration: "none", display: "inline-block", border: "1px solid rgba(255,255,255,0.2)" }}>
+                        <a href="/" style={{ background: "rgba(255,255,255,0.1)", color: "white", padding: "18px 32px", borderRadius: 16, fontSize: 16, fontWeight: 800, textDecoration: "none", display: "inline-block", border: "1px solid rgba(255,255,255,0.2)" }}>
                             Ke Beranda
-                        </Link>
+                        </a>
                     </div>
                 </div>
             )}

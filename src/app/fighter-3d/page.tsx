@@ -246,7 +246,7 @@ export default function FighterPage() {
                         MULAI BERTARUNG 🥊
                     </button>
 
-                    <Link href="/" style={{ marginTop: 24, color: "#94a3b8", fontWeight: 700, textDecoration: "none", fontSize: 14 }}>← BERANDA</Link>
+                    <a href="/" style={{ marginTop: 24, color: "#94a3b8", fontWeight: 700, textDecoration: "none", fontSize: 14 }}>← BERANDA</a>
                 </div>
             )}
 
@@ -318,9 +318,9 @@ export default function FighterPage() {
                         >
                             MAIN LAGI
                         </button>
-                        <Link href="/" className="btn-home">
+                        <a href="/" className="btn-home">
                             BERANDA
-                        </Link>
+                        </a>
                     </div>
                 </div>
             )}
