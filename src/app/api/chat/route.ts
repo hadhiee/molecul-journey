@@ -24,7 +24,7 @@ Gaya bahasa: Santai, ramah, suportif, seperti kakak mentor ke adik kelas. Gunaka
   2. Rekayasa Perangkat Lunak (RPL)
   3. Pengembangan Gim (PG)
 - Visi: Menjadi SMK unggul berbasis ICT yang menghasilkan lulusan berkarakter, kompeten, dan berdaya saing global
-- Motto budaya sekolah: "ATTITUDE" (Akhlak, Toleransi, Tanggung Jawab, Integritas, Teladan, Ulet, Disiplin, Empati)
+- Motto budaya sekolah: "ATTITUDE" (Act Respectfully, Talk Politely, Turn Off Distraction, Involve Actively, Think Solutions, Use Tech Wisely, Dare to Ask, Eager to Collaborate)
 - Wakil Kepala Sekolah Bidang IT, Lab dan Sarana Prasarana: Bapak Mokhamad Hadiwijaya, M.T.
 - Website: smktelkom-mlg.sch.id
 
@@ -82,14 +82,14 @@ Event kompetisi nasional yang diikuti siswa Moklet:
 6. **GSI** (Gala Siswa Indonesia) - kompetisi futsal/sepak bola siswa
 
 === BUDAYA SEKOLAH ATTITUDE ===
-A = Akhlak - Berakhlak mulia dalam setiap tindakan
-T = Toleransi - Menghargai perbedaan
-T = Tanggung Jawab - Bertanggung jawab atas tugas dan perilaku
-I = Integritas - Jujur dan konsisten
-T = Teladan - Menjadi contoh yang baik
-U = Ulet - Pantang menyerah
-D = Disiplin - Tepat waktu dan taat aturan
-E = Empati - Peduli terhadap sesama
+A = Act Respectfully: Menjaga adab kepada guru dan saling menghargai sesama teman (Membudayakan 5S, mendengarkan, duduk dengan postur baik).
+T = Talk Politely: Bertutur kata santun, positif, dan menghindari ucapan kasar (Gunakan magic words maaf/tolong/terimakasih, zero tolerance untuk kata kasar/body shaming).
+T = Turn Off Distraction: Fokus penuh pada materi, tidak bermain game atau medsos saat jam belajar (HP silent, hanya buka tab relevan).
+I = Involve Actively: Hadir sepenuhnya, merespon instruksi, dan aktif berpartisipasi (Mencatat poin penting, angkat tangan untuk relawan).
+T = Think Solutions: Berorientasi pada penyelesaian masalah, bukan mengeluh saat menemui kesulitan (Membaca pesan error dulu, ubah mindset jadi "ini tantangan").
+U = Use Tech Wisely: Memanfaatkan teknologi & AI sebagai alat bantu belajar, bukan untuk plagiasi (Jujur mencantumkan sumber, gunakan internet untuk produktif).
+D = Dare to Ask: Membangun rasa ingin tahu dan tidak malu bertanya saat belum paham (Berani tanya "Mengapa", mengkonfirmasi pemahaman).
+E = Eager to Collaborate: Terbuka untuk bekerja sama, berbagi ilmu, dan berkontribusi dalam tim (Tidak one man show, membantu teman tertinggal, menerima tugas lapang dada).
 
 === KEGIATAN KEAGAMAAN ===
 - Salat Dhuha berjamaah (setiap pagi)
