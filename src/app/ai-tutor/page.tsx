@@ -11,7 +11,7 @@ interface Message {
 }
 
 const TOPIC_CHIPS = [
-    { label: "🚀 Persiapan Masuk Moklet", prompt: "Jelaskan roadmap belajar untuk siswa baru di RPL, TKJ, DKV, atau Pengembangan Gim." },
+    { label: "🚀 Persiapan Masuk Moklet", prompt: "Jelaskan roadmap belajar untuk siswa baru di RPL, TKJ, atau Pengembangan Gim (PG)." },
     { label: "🌐 Cloud & Cyber Security", prompt: "Jelaskan konsep dasar Cloud Computing dan Cyber Security untuk pemula." },
     { label: "🎮 Cara Bikin Game!", prompt: "Gimana sih cara awal bikin game 2D/3D pakai Game Engine?" },
     { label: "💻 Web Framework & Koding", prompt: "Apa sih bedanya koding manual biasa dengan pakai Web Framework?" },
