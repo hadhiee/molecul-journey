@@ -171,7 +171,7 @@ export default function MokletRunner() {
             try {
                 await supabase.from("user_progress").insert({
                     user_email: session.user.email.toLowerCase(),
-                    mission_id: stringToUUID("RUNNER"),
+                    mission_id: null,
                     score: amount,
                     choice_label: "RUNNER"
                 });

@@ -132,7 +132,7 @@ export default function FighterPage() {
             try {
                 await supabase.from("user_progress").insert({
                     user_email: session.user.email.toLowerCase(),
-                    mission_id: stringToUUID("FIGHTER_3D"),
+                    mission_id: null,
                     score: amount,
                     choice_label: "FIGHTER_GAME"
                 });

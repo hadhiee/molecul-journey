@@ -322,7 +322,7 @@ export default function SimulationPage() {
 
         if (session?.user?.email) {
             const { stringToUUID } = require("@/lib/ids");
-            supabase.from("user_progress").insert({ user_email: session.user.email.toLowerCase(), mission_id: stringToUUID(currentScenario.id.toString()), score: pts * 10, choice_label: c.id }).then(() => { });
+            supabase.from("user_progress").insert({ user_email: session.user.email.toLowerCase(), mission_id: null, score: pts * 10, choice_label: c.id }).then(() => { });
         }
     };
 

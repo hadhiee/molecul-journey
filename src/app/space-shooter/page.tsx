@@ -563,7 +563,7 @@ export default function SpaceShooterPage() {
             try {
                 await supabase.from("user_progress").insert({
                     user_email: session.user.email.toLowerCase(),
-                    mission_id: stringToUUID("SPACE_CULTURE"),
+                    mission_id: null,
                     score: amount,
                     choice_label: "SPACE_CULTURE"
                 });

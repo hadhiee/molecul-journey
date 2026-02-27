@@ -227,7 +227,7 @@ export default function TetrisPage() {
             try {
                 await supabase.from("user_progress").insert({
                     user_email: session.user.email.toLowerCase(),
-                    mission_id: stringToUUID("TETRIS"),
+                    mission_id: null,
                     score: amount,
                     choice_label: "TETRIS_GAME"
                 });

@@ -36,7 +36,7 @@ export default function Discovery3DGame() {
             try {
                 await supabase.from("user_progress").insert({
                     user_email: session.user.email.toLowerCase(),
-                    mission_id: stringToUUID("DISCOVERY_3D"),
+                    mission_id: null,
                     score: amount,
                     choice_label: "CRYSTAL_GAME"
                 });

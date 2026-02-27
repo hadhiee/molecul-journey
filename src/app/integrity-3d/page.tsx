@@ -34,7 +34,7 @@ export default function Integrity3DGame() {
             try {
                 await supabase.from("user_progress").insert({
                     user_email: session.user.email.toLowerCase(),
-                    mission_id: stringToUUID("INTEGRITY_TOWER"),
+                    mission_id: null,
                     score: amount,
                     choice_label: "TOWER_GAME"
                 });

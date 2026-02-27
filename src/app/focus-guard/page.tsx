@@ -60,7 +60,7 @@ export default function FocusGuardGame() {
             try {
                 await supabase.from("user_progress").insert({
                     user_email: session.user.email.toLowerCase(),
-                    mission_id: stringToUUID("FOCUS_GUARD"),
+                    mission_id: null,
                     score: amount,
                     choice_label: "FOCUS_GAME"
                 });

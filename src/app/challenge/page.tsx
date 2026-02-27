@@ -149,7 +149,7 @@ export default function LightningChallenge() {
             try {
                 await supabase.from("user_progress").insert({
                     user_email: session.user.email.toLowerCase(),
-                    mission_id: stringToUUID(scenarios[0]?.id.toString()),
+                    mission_id: null,
                     score: amount,
                     choice_label: "LIGHTNING"
                 });

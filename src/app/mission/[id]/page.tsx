@@ -57,7 +57,7 @@ export default function MissionPlay() {
 
         await supabase.from("user_progress").insert({
             user_email: session.user.email.toLowerCase(),
-            mission_id: stringToUUID(scenario.id),
+            mission_id: scenario.id,
             score: score,
             choice_label: choice.id
         });

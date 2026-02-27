@@ -210,7 +210,7 @@ export default function FutureArchitect() {
             const total = Object.values(finalStats).reduce((a, b) => a + b, 0);
             await supabase.from("user_progress").insert({
                 user_email: session.user.email.toLowerCase(),
-                mission_id: stringToUUID("FUTURE_ARCHITECT"),
+                mission_id: null,
                 score: total * 10,
                 choice_label: "FUTURE_ARCHITECT"
             });
