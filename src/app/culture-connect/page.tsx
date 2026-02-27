@@ -38,6 +38,11 @@ export default function CultureConnectPage() {
     const [dragging, setDragging] = useState<{ startId: number, startSide: string, x: number, y: number } | null>(null);
     const [pointsCache, setPointsCache] = useState<Record<string, { x: number, y: number }>>({});
 
+    // New Feature States
+    const [timeLeft, setTimeLeft] = useState(100);
+    const [maxTime, setMaxTime] = useState(100);
+    const [shakeId, setShakeId] = useState<number | null>(null);
+
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Init Round
@@ -56,9 +61,34 @@ export default function CultureConnectPage() {
         setRightItems([...roundData].sort(() => Math.random() - 0.5));
         setConnections([]);
 
+        // Set Timer dynamically based on items (e.g., 5 seconds per item)
+        const allottedTime = itemCount * 7;
+        setMaxTime(allottedTime);
+        setTimeLeft(allottedTime);
+
         // Wait for render to measure coords
         setTimeout(measurePoints, 100);
     }, [currentRound]);
+
+    // Timer Logic
+    useEffect(() => {
+        if (gameOver || currentRound >= TOTAL_ROUNDS) return;
+
+        // Stop timer if round is already won and waiting for next
+        const correctCount = connections.filter(c => c.status === 'correct').length + 1;
+        if (correctCount > leftItems.length) return;
+
+        if (timeLeft <= 0) {
+            setGameOver(true);
+            return;
+        }
+
+        const tick = setInterval(() => {
+            setTimeLeft(prev => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(tick);
+    }, [timeLeft, gameOver, currentRound, leftItems.length, connections]);
 
     // Handle window resize
     useEffect(() => {
@@ -171,10 +201,17 @@ export default function CultureConnectPage() {
             // Check if round won (all items connected)
             const correctCount = connections.filter(c => c.status === 'correct').length + 1;
             if (correctCount === leftItems.length) {
+                // Add bonus XP based on time remaining!
+                const timeBonus = Math.floor(timeLeft * 1.5);
+                setScore(s => s + timeBonus);
+
                 setTimeout(() => setCurrentRound(r => r + 1), 1000);
             }
         } else {
-            // Remove wrong connection after 1 second
+            // Shake effect & Remove wrong connection
+            setShakeId(leftId);
+            setTimeout(() => setShakeId(null), 500);
+
             setTimeout(() => {
                 setConnections(prev => prev.filter(c => c.id !== newConn.id));
             }, 800);
@@ -205,7 +242,21 @@ export default function CultureConnectPage() {
                     <div style={{ textAlign: "center", marginTop: 20 }}>
                         <h2 style={{ color: "white", fontSize: 24, fontWeight: 800, margin: 0 }}>CULTURE CONNECT</h2>
                         <p style={{ color: "#94a3b8", margin: "5px 0 0 0" }}>Tarik garis untuk menghubungkan nilai yang tepat!</p>
-                        <p style={{ color: "#3b82f6", fontWeight: "bold", fontSize: 14 }}>Ronde {currentRound + 1} / {TOTAL_ROUNDS}</p>
+
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "60%", margin: "15px auto", background: "rgba(0,0,0,0.5)", borderRadius: 99, padding: "5px 15px" }}>
+                            <p style={{ color: "#3b82f6", fontWeight: "bold", fontSize: 14, margin: 0 }}>Ronde {currentRound + 1} / {TOTAL_ROUNDS}</p>
+
+                            {/* Timer Bar */}
+                            <div style={{ flex: 1, margin: "0 15px", height: 8, background: "#334155", borderRadius: 99, overflow: "hidden", position: "relative" }}>
+                                <div style={{
+                                    position: "absolute", left: 0, top: 0, bottom: 0,
+                                    width: `${(timeLeft / maxTime) * 100}%`,
+                                    background: timeLeft < Math.floor(maxTime * 0.3) ? "#ef4444" : "#3b82f6",
+                                    transition: "width 1s linear, background 0.5s"
+                                }} />
+                            </div>
+                            <p style={{ color: timeLeft < Math.floor(maxTime * 0.3) ? "#ef4444" : "white", fontWeight: "bold", fontSize: 14, margin: 0 }}>{timeLeft}s</p>
+                        </div>
                     </div>
                 )}
             </div>
@@ -264,6 +315,7 @@ export default function CultureConnectPage() {
                         {leftItems.map(item => {
                             const isConnected = connections.find(c => c.fromId === item.id && c.status === "correct");
                             const isWrongTarget = connections.find(c => c.fromId === item.id && c.status === "wrong");
+                            const isShaking = shakeId === item.id;
                             return (
                                 <div key={item.id} className="match-item transition-all" data-id={item.id} data-side="left"
                                     style={{
@@ -272,6 +324,8 @@ export default function CultureConnectPage() {
                                         padding: "15px", borderRadius: 12, cursor: "pointer", position: "relative",
                                         color: "white", fontWeight: 700, textAlign: "center", backdropFilter: "blur(5px)",
                                         boxShadow: isConnected ? "0 0 15px rgba(34, 197, 94, 0.3)" : isWrongTarget ? "0 0 15px rgba(239, 68, 68, 0.3)" : "none",
+                                        transform: isShaking ? "translateX(5px)" : "translateX(0)",
+                                        animation: isShaking ? "shake 0.4s cubic-bezier(.36,.07,.19,.97) both" : "none"
                                     }}>
                                     {item.left}
                                     {/* Connection Dot */}
@@ -320,7 +374,9 @@ export default function CultureConnectPage() {
                     position: "absolute", inset: 0, zIndex: 30, background: "rgba(15, 23, 42, 0.9)",
                     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"
                 }}>
-                    <h1 style={{ color: "#22c55e", fontSize: 48, fontWeight: 900, marginBottom: 8, textAlign: "center" }}>MISI SELESAI!</h1>
+                    <h1 style={{ color: currentRound >= TOTAL_ROUNDS ? "#22c55e" : "#ef4444", fontSize: 48, fontWeight: 900, marginBottom: 8, textAlign: "center" }}>
+                        {currentRound >= TOTAL_ROUNDS ? "MISI SELESAI!" : "TIME'S UP!"}
+                    </h1>
                     <div style={{ color: "white", fontSize: 24, marginBottom: 32 }}>Total XP: <span style={{ color: "#22c55e", fontWeight: 800 }}>+{score}</span></div>
 
                     <button
@@ -335,6 +391,15 @@ export default function CultureConnectPage() {
                     <Link href="/" style={{ color: "#94a3b8", textDecoration: "none" }}>Kembali ke Dashboard</Link>
                 </div>
             )}
+
+            <style>{`
+                @keyframes shake {
+                  10%, 90% { transform: translate3d(-2px, 0, 0); }
+                  20%, 80% { transform: translate3d(4px, 0, 0); }
+                  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+                  40%, 60% { transform: translate3d(6px, 0, 0); }
+                }
+            `}</style>
         </div>
     );
 }
