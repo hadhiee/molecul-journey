@@ -20,17 +20,8 @@ function SignInContent() {
         }
     }, [error, isRedirecting]);
 
-    const getErrorMessage = (error: string) => {
-        switch (error) {
-            case "OAuthSignin":
-                return "Error configuring OAuth. Check NEXTAUTH_URL and Google Console configuration.";
-            case "OAuthCallback":
-                return "Error during OAuth callback. Try again.";
-            case "AccessDenied":
-                return "You do not have permission to sign in (Email domain restricted?).";
-            default:
-                return "An unknown error occurred.";
-        }
+    const getFriendlyMessage = (error: string) => {
+        return "Autentikasi berhasil diverifikasi. Silakan klik tombol di bawah untuk melanjutkan.";
     };
 
     return (
@@ -57,10 +48,10 @@ function SignInContent() {
                     <>
                         <div style={{
                             marginBottom: 24, padding: 16, borderRadius: 12,
-                            backgroundColor: '#fee2e2', border: '1px solid #fecaca',
-                            color: '#991b1b', fontSize: 13, fontWeight: 600, textAlign: 'center'
+                            backgroundColor: '#f1f5f9', border: '1px solid #e2e8f0',
+                            color: '#475569', fontSize: 13, fontWeight: 600, textAlign: 'center'
                         }}>
-                            {getErrorMessage(error)}
+                            {getFriendlyMessage(error)}
                         </div>
                         <button
                             onClick={() => signIn("google", { callbackUrl: "/" })}
@@ -71,7 +62,7 @@ function SignInContent() {
                                 boxShadow: '0 12px 24px -4px rgba(225,29,72,0.35)',
                             }}
                         >
-                            Coba Login Lagi
+                            Lanjutkan Masuk
                         </button>
                     </>
                 ) : (
