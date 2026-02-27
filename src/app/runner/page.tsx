@@ -164,6 +164,30 @@ export default function MokletRunner() {
         setCollected(0);
     }, [selectedAvatar]);
 
+    const savedScoreRef = useRef(0);
+
+    const saveScore = async (amount: number) => {
+        if (amount > 0 && session?.user?.email) {
+            try {
+                await supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID("RUNNER"),
+                    score: amount,
+                    choice_label: "RUNNER"
+                });
+            } catch (e) { }
+        }
+    };
+
+    const handleExit = async () => {
+        const diff = score - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = score;
+        }
+        window.location.href = "/";
+    };
+
     const endGame = useCallback(async () => {
         const g = gameRef.current;
         g.running = false;
@@ -172,27 +196,13 @@ export default function MokletRunner() {
         setGameState("over");
 
         if (finalScore > highScore) setHighScore(finalScore);
-    }, [highScore, session]);
 
-    // Save Score Incrementally
-    const savedScoreRef = useRef(0);
-    useEffect(() => {
-        if (gameState === "playing") {
-            const diff = score - savedScoreRef.current;
-            if (diff > 0 && session?.user?.email) {
-                // save in background without awaiting, to avoid blocking game loop
-                supabase.from("user_progress").insert({
-                    user_email: session.user.email,
-                    mission_id: stringToUUID("RUNNER"),
-                    score: diff,
-                    choice_label: "RUNNER"
-                }).then(() => { }); // silent save
-                savedScoreRef.current = score;
-            }
-        } else if (gameState === "menu") {
-            savedScoreRef.current = 0; // reset on new game
+        const diff = finalScore - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = finalScore;
         }
-    }, [score, gameState, session]);
+    }, [highScore, session]);
 
     // Game loop
     useEffect(() => {
@@ -708,9 +718,9 @@ export default function MokletRunner() {
 
             {/* Top Bar (Overlay) */}
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(to bottom, rgba(15,15,30,0.9), transparent)', zIndex: 20 }}>
-                <Link href="/" style={{ fontSize: 12, fontWeight: 700, color: 'white', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
+                <button onClick={handleExit} style={{ cursor: "pointer", border: "none", fontSize: 12, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
                     <span style={{ fontSize: 14 }}>←</span> Keluar
-                </Link>
+                </button>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(0,0,0,0.3)', padding: '4px 12px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(4px)' }}>
                     <span style={{ fontSize: 14 }}>🏆</span>
                     <span style={{ fontSize: 14, fontWeight: 800, color: '#f59e0b' }}>{highScore}</span>

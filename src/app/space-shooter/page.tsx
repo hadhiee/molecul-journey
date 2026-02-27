@@ -554,35 +554,55 @@ export default function SpaceShooterPage() {
         }
     }, [showPopup]);
 
-    useEffect(() => {
-        if (gameOver && score > 0) {
-            saveScore();
-        }
-    }, [gameOver]);
+    const savedScoreRef = useRef(0);
+    const scoreRef = useRef(0);
+    scoreRef.current = score;
 
-    const saveScore = async () => {
-        if (session?.user?.email) {
-            await supabase.from("user_progress").insert({
-                user_email: session.user.email,
-                mission_id: stringToUUID("SPACE_CULTURE"),
-                score: score,
-                choice_label: "SPACE_CULTURE"
-            });
+    const saveScore = async (amount: number) => {
+        if (amount > 0 && session?.user?.email) {
+            try {
+                await supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID("SPACE_CULTURE"),
+                    score: amount,
+                    choice_label: "SPACE_CULTURE"
+                });
+            } catch (e) { }
         }
     };
+
+    const handleExit = async () => {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = scoreRef.current;
+        }
+        window.location.href = "/";
+    };
+
+    useEffect(() => {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0 && session?.user?.email) {
+            // Save in background
+            saveScore(diff).then(() => {
+                savedScoreRef.current = scoreRef.current;
+            });
+        }
+    }, [score, gameOver, session]);
 
     return (
         <div style={{ width: "100vw", height: "100vh", background: "#020617", userSelect: "none" }}>
             {/* UI Layer */}
             <div style={{ position: "absolute", zIndex: 10, pointerEvents: "none", inset: 0, padding: 24, paddingTop: 48 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Link href="/" style={{
+                    <button onClick={handleExit} style={{
+                        cursor: "pointer",
                         color: "white", textDecoration: "none", fontWeight: 700, pointerEvents: "auto",
                         background: "rgba(255,255,255,0.1)", padding: "10px 20px", borderRadius: 99,
                         backdropFilter: "blur(4px)", border: "1px solid rgba(255,255,255,0.2)"
                     }}>
                         ← KEMBALI
-                    </Link>
+                    </button>
                     <div style={{
                         fontSize: 28, fontWeight: 900, color: "white", textShadow: "0 0 20px #0ea5e9",
                         background: "rgba(14, 165, 233, 0.2)", padding: "8px 24px", borderRadius: 99,
@@ -650,17 +670,24 @@ export default function SpaceShooterPage() {
                     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"
                 }}>
                     <h1 style={{ color: "#ef4444", fontSize: 48, fontWeight: 900, marginBottom: 8 }}>GAME OVER</h1>
-                    <div style={{ color: "white", fontSize: 24, marginBottom: 32 }}>Score Akhir: {score}</div>
-                    <button
-                        onClick={() => { setScore(0); setGameOver(false); setIsPlaying(true); }}
-                        style={{
-                            background: "white", color: "#0f172a", border: "none", padding: "16px 40px",
-                            borderRadius: 99, fontSize: 16, fontWeight: 800, cursor: "pointer", marginBottom: 16
-                        }}
-                    >
-                        MAIN LAGI
-                    </button>
-                    <Link href="/" style={{ color: "#94a3b8", textDecoration: "none" }}>Kembali ke Dashboard</Link>
+                    <div style={{
+                        display: "flex", flexDirection: "column", alignItems: "center",
+                        background: "rgba(14, 165, 233, 0.1)", padding: "20px 40px", borderRadius: 20,
+                        marginBottom: 32, border: "1px solid rgba(14, 165, 233, 0.2)"
+                    }}>
+                        <div style={{ fontSize: 16, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase" }}>XP DIDAPAT</div>
+                        <div style={{ fontSize: 48, fontWeight: 900, color: "#0ea5e9", lineHeight: 1 }}>{score}</div>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        <button onClick={() => { setScore(0); setGameOver(false); setIsPlaying(true); }} style={{
+                            background: "#0ea5e9", color: "white", border: "none", padding: "16px 32px",
+                            borderRadius: 16, fontSize: 16, fontWeight: 800, cursor: "pointer",
+                            boxShadow: "0 0 20px rgba(14, 165, 233, 0.4)"
+                        }}>
+                            MAIN LAGI
+                        </button>
+                        <button onClick={handleExit} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: "#94a3b8", textDecoration: "none", fontSize: 16 }}>Kembali ke Menu</button>
+                    </div>
                 </div>
             )}
         </div>
