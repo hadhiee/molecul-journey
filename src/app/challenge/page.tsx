@@ -212,9 +212,9 @@ export default function LightningChallenge() {
                         {scenarios.length > 0 ? '🚀 MULAI!' : 'Memuat...'}
                     </button>
 
-                    <Link href="/" style={{ display: 'block', marginTop: 20, fontSize: 12, color: '#64748b', textDecoration: 'none', fontWeight: 600 }}>
+                    <a href="/" style={{ display: 'block', marginTop: 20, fontSize: 12, color: '#64748b', textDecoration: 'none', fontWeight: 600 }}>
                         ← Kembali ke Dashboard
-                    </Link>
+                    </a>
                 </div>
             </div>
         );
@@ -283,14 +283,14 @@ export default function LightningChallenge() {
                         }}>
                             🔄 Main Lagi
                         </button>
-                        <Link href="/" style={{
+                        <a href="/" style={{
                             display: 'block', textAlign: 'center' as const, padding: 16, borderRadius: 14,
                             background: 'rgba(255,255,255,0.05)', color: '#94a3b8', fontSize: 12, fontWeight: 800,
                             textTransform: 'uppercase' as const, letterSpacing: '0.1em', textDecoration: 'none',
                             border: '1px solid rgba(255,255,255,0.1)',
                         }}>
                             Halaman Utama
-                        </Link>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -325,9 +325,9 @@ export default function LightningChallenge() {
                 {/* HUD Bar */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <Link href="/" style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textDecoration: 'none', background: 'rgba(255,255,255,0.06)', padding: '6px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <a href="/" style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textDecoration: 'none', background: 'rgba(255,255,255,0.06)', padding: '6px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)' }}>
                             ← Keluar
-                        </Link>
+                        </a>
                         <span style={{ fontSize: 11, fontWeight: 800, color: '#64748b' }}>{currentIndex + 1}/{scenarios.length}</span>
                     </div>
                     {streak > 0 && (
