@@ -123,22 +123,40 @@ export default function FighterPage() {
     const isRightPunching = (Date.now() - lastPunchTime < 150) && punchSide === "right";
     const isEnemyHit = (Date.now() - enemyHitTime < 200);
 
-    // Save Score Incrementally
     const savedScoreRef = useRef(0);
-    useEffect(() => {
-        if (gameState === "PLAYING") {
-            const diff = playerScore - savedScoreRef.current;
-            if (diff > 0 && session?.user?.email) {
-                supabase.from("user_progress").insert({
+    const scoreRef = useRef(0);
+    scoreRef.current = playerScore;
+
+    const saveScore = async (amount: number) => {
+        if (amount > 0 && session?.user?.email) {
+            try {
+                await supabase.from("user_progress").insert({
                     user_email: session.user.email,
                     mission_id: stringToUUID("FIGHTER_3D"),
-                    score: diff,
+                    score: amount,
                     choice_label: "FIGHTER_GAME"
-                }).then(() => { });
-                savedScoreRef.current = playerScore;
+                });
+            } catch (e) { }
+        }
+    };
+
+    const handleExit = async () => {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = scoreRef.current;
+        }
+        window.location.href = "/";
+    };
+
+    useEffect(() => {
+        if (gameState === "PLAYING" || gameState === "RESULT") {
+            const diff = scoreRef.current - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                saveScore(diff).then(() => {
+                    savedScoreRef.current = scoreRef.current;
+                });
             }
-        } else if (gameState === "AVATAR") {
-            savedScoreRef.current = 0;
         }
     }, [gameState, playerScore, session]);
 
@@ -246,7 +264,7 @@ export default function FighterPage() {
                         MULAI BERTARUNG 🥊
                     </button>
 
-                    <a href="/" style={{ marginTop: 24, color: "#94a3b8", fontWeight: 700, textDecoration: "none", fontSize: 14 }}>← BERANDA</a>
+                    <button onClick={handleExit} style={{ border: 'none', background: 'rgba(255,255,255,0.1)', padding: '10px 24px', borderRadius: 20, cursor: 'pointer', marginTop: 24, color: "#94a3b8", fontWeight: 700, textDecoration: "none", fontSize: 13 }}>← KUMPULKAN XP & KELUAR</button>
                 </div>
             )}
 
@@ -318,9 +336,9 @@ export default function FighterPage() {
                         >
                             MAIN LAGI
                         </button>
-                        <a href="/" className="btn-home">
-                            BERANDA
-                        </a>
+                        <button onClick={handleExit} className="btn-home" style={{ border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.1)', color: 'white', padding: '12px 24px', borderRadius: 12, fontWeight: 700 }}>
+                            KUMPULKAN XP & SELESAI
+                        </button>
                     </div>
                 </div>
             )}

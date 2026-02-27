@@ -218,25 +218,42 @@ export default function TetrisPage() {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [isPlaying, gameOver, move, rotate]);
 
-    // Save Score Incrementally
     const savedScoreRef = useRef(0);
-    useEffect(() => {
-        if (isPlaying) {
-            const diff = score - savedScoreRef.current;
-            if (diff > 0 && session?.user?.email) {
-                supabase.from("user_progress").insert({
+    const scoreRef = useRef(0);
+    scoreRef.current = score;
+
+    const saveScore = async (amount: number) => {
+        if (amount > 0 && session?.user?.email) {
+            try {
+                await supabase.from("user_progress").insert({
                     user_email: session.user.email,
-                    mission_id: stringToUUID("TETRIS_CULTURE"),
-                    score: diff,
-                    choice_label: "TETRIS_CULTURE"
-                }).then(() => { });
-                savedScoreRef.current = score;
-            }
-        } else if (!gameOver && !isPlaying) {
-            // reset on new game
-            savedScoreRef.current = 0;
+                    mission_id: stringToUUID("TETRIS"),
+                    score: amount,
+                    choice_label: "TETRIS_GAME"
+                });
+            } catch (e) { }
         }
-    }, [score, isPlaying, gameOver, session]);
+    };
+
+    const handleExit = async () => {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = scoreRef.current;
+        }
+        window.location.href = "/";
+    };
+
+    useEffect(() => {
+        if (isPlaying || gameOver) {
+            const diff = scoreRef.current - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                saveScore(diff).then(() => {
+                    savedScoreRef.current = scoreRef.current;
+                });
+            }
+        }
+    }, [score, gameOver, session, isPlaying]);
 
     // --- Rendering ---
     // Combine static grid + active piece for render
@@ -261,7 +278,7 @@ export default function TetrisPage() {
                 <h1 style={{ fontSize: 48, fontWeight: 900, marginBottom: 16 }}>Game Over</h1>
                 <div style={{ fontSize: 24, marginBottom: 32 }}>Score: {score}</div>
                 <button onClick={resetGame} style={{ background: "#e11d48", border: "none", padding: "16px 32px", borderRadius: 12, color: "white", fontWeight: 800, fontSize: 18, cursor: "pointer" }}>Main Lagi</button>
-                <a href="/" style={{ marginTop: 20, color: "#94a3b8", textDecoration: "none" }}>Kembali ke Menu</a>
+                <button onClick={handleExit} style={{ border: 'none', background: 'transparent', cursor: 'pointer', marginTop: 20, color: "#94a3b8", textDecoration: "none" }}>KUMPULKAN XP & KELUAR</button>
             </div>
         )
     }
@@ -270,7 +287,7 @@ export default function TetrisPage() {
         <div style={{ minHeight: "100vh", background: "#0f172a", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "sans-serif", padding: 20 }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", width: "100%", maxWidth: 400, marginBottom: 20, alignItems: "center" }}>
-                <a href="/" style={{ color: "#94a3b8", textDecoration: "none", fontWeight: 700 }}>← Kembali</a>
+                <button onClick={handleExit} style={{ border: 'none', background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: 10, cursor: 'pointer', color: "#94a3b8", textDecoration: "none", fontWeight: 700, fontSize: 11 }}>← KUMPULKAN XP & KELUAR</button>
                 <div style={{ fontSize: 24, fontWeight: 900, color: "white" }}>{score}</div>
             </div>
 

@@ -276,10 +276,10 @@ export default function CultureConnectPage() {
                     <button onClick={handleExit} style={{
                         cursor: "pointer",
                         color: "white", textDecoration: "none", fontWeight: 700, pointerEvents: "auto",
-                        background: "rgba(255,255,255,0.1)", padding: "10px 20px", borderRadius: 99,
-                        backdropFilter: "blur(4px)", border: "1px solid rgba(255,255,255,0.2)"
+                        background: "rgba(22, 163, 74, 0.2)", padding: "10px 20px", borderRadius: 99,
+                        backdropFilter: "blur(4px)", border: "1px solid rgba(34, 197, 94, 0.4)"
                     }}>
-                        ← KEMBALI
+                        ← KUMPULKAN XP & KELUAR
                     </button>
                     <div style={{
                         fontSize: 28, fontWeight: 900, color: "white", textShadow: "0 0 20px #22c55e",

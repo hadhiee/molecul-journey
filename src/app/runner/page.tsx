@@ -718,8 +718,8 @@ export default function MokletRunner() {
 
             {/* Top Bar (Overlay) */}
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(to bottom, rgba(15,15,30,0.9), transparent)', zIndex: 20 }}>
-                <button onClick={handleExit} style={{ cursor: "pointer", border: "none", fontSize: 12, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
-                    <span style={{ fontSize: 14 }}>←</span> Keluar
+                <button onClick={handleExit} style={{ cursor: "pointer", fontSize: 11, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(59, 130, 246, 0.3)', padding: '8px 16px', borderRadius: 20, backdropFilter: 'blur(4px)', border: '1px solid rgba(59, 130, 246, 0.4)' }}>
+                    <span style={{ fontSize: 14 }}>←</span> KUMPULKAN XP & KELUAR
                 </button>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(0,0,0,0.3)', padding: '4px 12px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(4px)' }}>
                     <span style={{ fontSize: 14 }}>🏆</span>

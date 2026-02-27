@@ -27,22 +27,40 @@ export default function Discovery3DGame() {
     const [activeTrait, setActiveTrait] = useState<any>(null);
     const [gameState, setGameState] = useState<"START" | "PLAYING" | "RESULT">("START");
 
-    // Save Score Incrementally
     const savedScoreRef = useRef(0);
-    useEffect(() => {
-        if (gameState === "PLAYING") {
-            const diff = score - savedScoreRef.current;
-            if (diff > 0 && session?.user?.email) {
-                supabase.from("user_progress").insert({
+    const scoreRef = useRef(0);
+    scoreRef.current = score;
+
+    const saveScore = async (amount: number) => {
+        if (amount > 0 && session?.user?.email) {
+            try {
+                await supabase.from("user_progress").insert({
                     user_email: session.user.email,
                     mission_id: stringToUUID("DISCOVERY_3D"),
-                    score: diff,
+                    score: amount,
                     choice_label: "CRYSTAL_GAME"
-                }).then(() => { });
-                savedScoreRef.current = score;
+                });
+            } catch (e) { }
+        }
+    };
+
+    const handleExit = async () => {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = scoreRef.current;
+        }
+        window.location.href = "/";
+    };
+
+    useEffect(() => {
+        if (gameState === "PLAYING" || gameState === "RESULT") {
+            const diff = scoreRef.current - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                saveScore(diff).then(() => {
+                    savedScoreRef.current = scoreRef.current;
+                });
             }
-        } else if (gameState === "START") {
-            savedScoreRef.current = 0;
         }
     }, [gameState, score, session]);
 
@@ -220,9 +238,9 @@ export default function Discovery3DGame() {
             {gameState === "PLAYING" && (
                 <>
                     <div style={{ position: "absolute", top: 24, left: 24, zIndex: 10 }}>
-                        <a href="/" style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", padding: "12px 20px", borderRadius: 12, color: "white", fontWeight: 700, textDecoration: "none", border: "1px solid rgba(255,255,255,0.2)" }}>
-                            ← Exit
-                        </a>
+                        <button onClick={handleExit} style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", padding: "12px 20px", borderRadius: 12, color: "white", fontWeight: 700, textDecoration: "none", border: "1px solid rgba(255,255,255,0.2)", cursor: "pointer" }}>
+                            ← KUMPULKAN XP & KELUAR
+                        </button>
                     </div>
 
                     <div style={{ position: "absolute", top: 24, right: 24, zIndex: 10, display: "flex", gap: 12 }}>
@@ -307,9 +325,9 @@ export default function Discovery3DGame() {
                         <div style={{ fontSize: 16, fontWeight: 800, textTransform: "uppercase", opacity: 0.8, marginBottom: 12 }}>Total Karakter XP</div>
                         <div style={{ fontSize: 72, fontWeight: 900 }}>{score}</div>
                     </div>
-                    <a href="/" style={{ background: "#0f172a", color: "white", padding: "22px 72px", borderRadius: 24, fontSize: 20, fontWeight: 800, textDecoration: "none" }}>
-                        Kembali ke Home
-                    </a>
+                    <button onClick={handleExit} style={{ background: "#0f172a", color: "white", padding: "22px 72px", borderRadius: 24, fontSize: 20, fontWeight: 800, textDecoration: "none", border: "none", cursor: "pointer" }}>
+                        KUMPULKAN XP & SELESAI
+                    </button>
                 </div>
             )}
 

@@ -51,22 +51,40 @@ export default function FocusGuardGame() {
         }
     }, [score]);
 
-    // Save Score Incrementally
     const savedScoreRef = useRef(0);
-    useEffect(() => {
-        if (gameState === "PLAYING") {
-            const diff = score - savedScoreRef.current;
-            if (diff > 0 && session?.user?.email) {
-                supabase.from("user_progress").insert({
+    const scoreRef = useRef(0);
+    scoreRef.current = score;
+
+    const saveScore = async (amount: number) => {
+        if (amount > 0 && session?.user?.email) {
+            try {
+                await supabase.from("user_progress").insert({
                     user_email: session.user.email,
                     mission_id: stringToUUID("FOCUS_GUARD"),
-                    score: diff,
+                    score: amount,
                     choice_label: "FOCUS_GAME"
-                }).then(() => { });
-                savedScoreRef.current = score;
+                });
+            } catch (e) { }
+        }
+    };
+
+    const handleExit = async () => {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = scoreRef.current;
+        }
+        window.location.href = "/";
+    };
+
+    useEffect(() => {
+        if (gameState === "PLAYING" || gameState === "RESULT") {
+            const diff = scoreRef.current - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                saveScore(diff).then(() => {
+                    savedScoreRef.current = scoreRef.current;
+                });
             }
-        } else if (gameState === "START") {
-            savedScoreRef.current = 0;
         }
     }, [gameState, score, session]);
 
@@ -195,9 +213,9 @@ export default function FocusGuardGame() {
         <div style={{ width: "100vw", height: "100vh", background: "#f8fafc", userSelect: "none", overflow: "hidden", fontFamily: "Inter, sans-serif" }}>
             {/* Nav */}
             <div style={{ position: "absolute", top: 24, left: 24, zIndex: 50 }}>
-                <a href="/" style={{ background: "white", padding: "12px 20px", borderRadius: 16, fontWeight: 800, color: "#e11d48", textDecoration: "none", boxShadow: "0 4px 12px rgba(225,29,72,0.15)", border: "2px solid #fff1f2" }}>
-                    ← Keluar
-                </a>
+                <button onClick={handleExit} style={{ background: "white", padding: "12px 20px", borderRadius: 16, fontWeight: 800, color: "#e11d48", textDecoration: "none", boxShadow: "0 4px 12px rgba(225,29,72,0.15)", border: "2px solid #fff1f2", cursor: "pointer" }}>
+                    ← KUMPULKAN XP & KELUAR
+                </button>
             </div>
 
             {/* SCREEN: START */}
@@ -275,9 +293,9 @@ export default function FocusGuardGame() {
                         >
                             <span style={{ fontSize: 20, verticalAlign: "middle", marginRight: 8 }}>🔄</span> Main Lagi
                         </button>
-                        <a href="/" style={{ background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)", padding: "18px 40px", borderRadius: 16, fontSize: 16, fontWeight: 800, textDecoration: "none", display: "inline-block" }}>
-                            Beranda
-                        </a>
+                        <button onClick={handleExit} style={{ background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)", padding: "18px 40px", borderRadius: 16, fontSize: 16, fontWeight: 800, textDecoration: "none", display: "inline-block", cursor: "pointer" }}>
+                            KUMPULKAN XP & SELESAI
+                        </button>
                     </div>
                 </div>
             )}

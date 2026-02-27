@@ -140,22 +140,40 @@ export default function LightningChallenge() {
         setPhase("result");
     };
 
-    // Save Score Incrementally
     const savedScoreRef = useRef(0);
-    useEffect(() => {
-        if (phase === "playing") {
-            const diff = totalScore - savedScoreRef.current;
-            if (diff > 0 && session?.user?.email && scenarios.length > 0) {
-                supabase.from("user_progress").insert({
+    const scoreRef = useRef(0);
+    scoreRef.current = totalScore;
+
+    const saveScore = async (amount: number) => {
+        if (amount > 0 && session?.user?.email && scenarios.length > 0) {
+            try {
+                await supabase.from("user_progress").insert({
                     user_email: session.user.email,
                     mission_id: stringToUUID(scenarios[0]?.id.toString()),
-                    score: diff,
+                    score: amount,
                     choice_label: "LIGHTNING"
-                }).then(() => { });
-                savedScoreRef.current = totalScore;
+                });
+            } catch (e) { }
+        }
+    };
+
+    const handleExit = async () => {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = scoreRef.current;
+        }
+        window.location.href = "/";
+    };
+
+    useEffect(() => {
+        if (scenarios.length > 0 && (phase === "playing" || phase === "result")) {
+            const diff = scoreRef.current - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                saveScore(diff).then(() => {
+                    savedScoreRef.current = scoreRef.current;
+                });
             }
-        } else if (phase === "intro") {
-            savedScoreRef.current = 0; // reset
         }
     }, [totalScore, phase, session, scenarios]);
 
@@ -212,9 +230,9 @@ export default function LightningChallenge() {
                         {scenarios.length > 0 ? '🚀 MULAI!' : 'Memuat...'}
                     </button>
 
-                    <a href="/" style={{ display: 'block', marginTop: 20, fontSize: 12, color: '#64748b', textDecoration: 'none', fontWeight: 600 }}>
-                        ← Kembali ke Dashboard
-                    </a>
+                    <button onClick={handleExit} style={{ display: 'block', width: '100%', marginTop: 20, fontSize: 13, color: '#64748b', textDecoration: 'none', fontWeight: 600, background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                        ← KUMPULKAN XP & KELUAR
+                    </button>
                 </div>
             </div>
         );
@@ -283,14 +301,14 @@ export default function LightningChallenge() {
                         }}>
                             🔄 Main Lagi
                         </button>
-                        <a href="/" style={{
-                            display: 'block', textAlign: 'center' as const, padding: 16, borderRadius: 14,
+                        <button onClick={handleExit} style={{
+                            width: '100%', textAlign: 'center' as const, padding: 16, borderRadius: 14,
                             background: 'rgba(255,255,255,0.05)', color: '#94a3b8', fontSize: 12, fontWeight: 800,
                             textTransform: 'uppercase' as const, letterSpacing: '0.1em', textDecoration: 'none',
-                            border: '1px solid rgba(255,255,255,0.1)',
+                            border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer'
                         }}>
-                            Halaman Utama
-                        </a>
+                            KUMPULKAN XP & SELESAI
+                        </button>
                     </div>
                 </div>
             </div>
@@ -325,9 +343,9 @@ export default function LightningChallenge() {
                 {/* HUD Bar */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <a href="/" style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textDecoration: 'none', background: 'rgba(255,255,255,0.06)', padding: '6px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)' }}>
-                            ← Keluar
-                        </a>
+                        <button onClick={handleExit} style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textDecoration: 'none', background: 'rgba(255,255,255,0.06)', padding: '6px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}>
+                            ← KUMPULKAN XP
+                        </button>
                         <span style={{ fontSize: 11, fontWeight: 800, color: '#64748b' }}>{currentIndex + 1}/{scenarios.length}</span>
                     </div>
                     {streak > 0 && (

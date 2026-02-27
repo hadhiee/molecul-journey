@@ -25,22 +25,40 @@ export default function Integrity3DGame() {
     const [gameState, setGameState] = useState<"IDLE" | "PLAYING" | "GAMEOVER">("IDLE");
     const [activeValue, setActiveValue] = useState<any>(null);
 
-    // Save Score Incrementally
     const savedScoreRef = useRef(0);
-    useEffect(() => {
-        if (gameState === "PLAYING") {
-            const diff = score - savedScoreRef.current;
-            if (diff > 0 && session?.user?.email) {
-                supabase.from("user_progress").insert({
+    const scoreRef = useRef(0);
+    scoreRef.current = score;
+
+    const saveScore = async (amount: number) => {
+        if (amount > 0 && session?.user?.email) {
+            try {
+                await supabase.from("user_progress").insert({
                     user_email: session.user.email,
                     mission_id: stringToUUID("INTEGRITY_TOWER"),
-                    score: diff,
+                    score: amount,
                     choice_label: "TOWER_GAME"
-                }).then(() => { });
-                savedScoreRef.current = score;
+                });
+            } catch (e) { }
+        }
+    };
+
+    const handleExit = async () => {
+        const diff = scoreRef.current - savedScoreRef.current;
+        if (diff > 0) {
+            await saveScore(diff);
+            savedScoreRef.current = scoreRef.current;
+        }
+        window.location.href = "/";
+    };
+
+    useEffect(() => {
+        if (gameState === "PLAYING" || gameState === "GAMEOVER") {
+            const diff = scoreRef.current - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                saveScore(diff).then(() => {
+                    savedScoreRef.current = scoreRef.current;
+                });
             }
-        } else if (gameState === "IDLE") {
-            savedScoreRef.current = 0;
         }
     }, [gameState, score, session]);
 
@@ -222,9 +240,9 @@ export default function Integrity3DGame() {
         <div style={{ position: "relative", width: "100vw", height: "100vh", overflow: "hidden", background: "#f0f2f5", fontFamily: "Inter, sans-serif" }}>
             {/* UI Layer */}
             <div style={{ position: "absolute", top: 24, left: 24, zIndex: 10 }}>
-                <a href="/" style={{ background: "white", padding: "10px 20px", borderRadius: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)", textDecoration: "none", color: "#1a1a2e" }}>
-                    ← Keluar
-                </a>
+                <button onClick={handleExit} style={{ background: "white", padding: "10px 20px", borderRadius: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)", textDecoration: "none", color: "#1a1a2e", border: "none", cursor: "pointer" }}>
+                    ← KUMPULKAN XP & KELUAR
+                </button>
             </div>
 
             <div style={{ position: "absolute", top: 24, right: 24, zIndex: 10, textAlign: "right" }}>
@@ -302,9 +320,9 @@ export default function Integrity3DGame() {
                         >
                             Coba Lagi
                         </button>
-                        <a href="/" style={{ background: "rgba(255,255,255,0.1)", color: "white", padding: "18px 32px", borderRadius: 16, fontSize: 16, fontWeight: 800, textDecoration: "none", display: "inline-block", border: "1px solid rgba(255,255,255,0.2)" }}>
-                            Ke Beranda
-                        </a>
+                        <button onClick={handleExit} style={{ background: "rgba(255,255,255,0.1)", color: "white", padding: "18px 32px", borderRadius: 16, fontSize: 16, fontWeight: 800, textDecoration: "none", display: "inline-block", border: "1px solid rgba(255,255,255,0.2)", cursor: "pointer" }}>
+                            KUMPULKAN XP & SELESAI
+                        </button>
                     </div>
                 </div>
             )}
