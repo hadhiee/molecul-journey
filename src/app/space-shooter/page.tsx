@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Text, Stars, Sparkles, Float, Image } from "@react-three/drei";
 import * as THREE from "three";
@@ -541,6 +541,11 @@ export default function SpaceShooterPage() {
     const [gameOver, setGameOver] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [showPopup, setShowPopup] = useState<string | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     useEffect(() => {
         if (showPopup) {
@@ -603,14 +608,18 @@ export default function SpaceShooterPage() {
             )}
             <style>{`@keyframes pop { from { opacity: 0; transform: translate(-50%, 0) scale(0.5); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }`}</style>
 
-            <Canvas>
-                <SceneContent
-                    setScore={setScore}
-                    setGameOver={setGameOver}
-                    setShowPopup={setShowPopup}
-                    isPlaying={isPlaying}
-                />
-            </Canvas>
+            {isMounted && (
+                <Canvas>
+                    <Suspense fallback={null}>
+                        <SceneContent
+                            setScore={setScore}
+                            setGameOver={setGameOver}
+                            setShowPopup={setShowPopup}
+                            isPlaying={isPlaying}
+                        />
+                    </Suspense>
+                </Canvas>
+            )}
 
             {/* Overlays */}
             {!isPlaying && !gameOver && (
