@@ -16,7 +16,6 @@ const BULLET_SPEED = 12; // units per second
 const ENEMY_SPEED = 3;
 const SPAWN_INTERVAL = 1.5; // seconds
 const BOUNDS = { x: 8, y: 10 };
-const SPACESHIP_URL = "https://raw.githubusercontent.com/CompleteUnityDeveloper/Laser-Defender-Original/master/Assets/Entities/Player/playerShip1_blue.png";
 
 const CULTURE_VALUES = [
     "Jujur", "Disiplin", "Mandiri", "Kreatif",
@@ -476,16 +475,13 @@ function SceneContent({ setScore, setGameOver, setShowPopup, isPlaying }: any) {
             <Background />
 
             <group ref={playerRef} position={[0, -boundY + 2, 0]}>
-                <Image
-                    url={SPACESHIP_URL}
-                    transparent
-                    scale={[1.2, 1.2]}
-                    toneMapped={false}
-                />
-                {/* Engine Glow */}
-                <mesh position={[0, -0.6, 0]}>
-                    <sphereGeometry args={[0.15]} />
-                    <meshBasicMaterial color="#3b82f6" />
+                <mesh rotation={[0, 0, 0]}>
+                    <coneGeometry args={[0.5, 1.5, 4]} />
+                    <meshStandardMaterial color="#0ea5e9" emissive="#0ea5e9" emissiveIntensity={0.5} />
+                </mesh>
+                <mesh position={[0, -0.8, 0]}>
+                    <sphereGeometry args={[0.3, 16, 16]} />
+                    <meshBasicMaterial color="orange" />
                 </mesh>
             </group>
 
