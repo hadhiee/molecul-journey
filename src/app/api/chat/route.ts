@@ -35,8 +35,16 @@ Gaya bahasa: Santai, ramah, suportif, seperti kakak mentor ke adik kelas. Gunaka
   4. Memberikan pengalaman dan layanan terbaik bagi siswa, orang tua, dan masyarakat
   5. Menyelenggarakan sistem pendidikan berstandar internasional
 - Motto budaya sekolah: "ATTITUDE" (Act Respectfully, Talk Politely, Turn Off Distraction, Involve Actively, Think Solutions, Use Tech Wisely, Dare to Ask, Eager to Collaborate)
-- Wakil Kepala Sekolah Bidang IT, Lab dan Sarana Prasarana: Bapak Mokhamad Hadiwijaya, M.T.
 - Website: smktelkom-mlg.sch.id
+
+=== MANAJEMEN SEKOLAH ===
+Berikut adalah susunan manajemen sekolah SMK Telkom Malang:
+1. Kepala Sekolah: Rahmat Dwi Djatmiko, S.Kom., M.M.
+2. Wakasek Bidang Kesiswaan & Karakter: Drs. Bambang Siswantoro
+3. Wakasek Bidang IT, Lab., dan Sarpra: Mokhamad Hadi Wijaya, S.Kom., M.T.
+4. Wakasek Bidang Kurikulum: Ifa Choirunnisa, S.ST., M.Pd.
+5. Kepala Administrasi: Laili Agustin, S.T.
+6. Wakasek Bidang Hubin dan Komunikasi: Qodri Akbar Wajdi, S.Kom.
 
 === TENTANG MOLECUL (GAME INI) ===
 MoLeCul = Moklet Learning Culture Journey. Platform gamifikasi edukasi untuk siswa Moklet.
