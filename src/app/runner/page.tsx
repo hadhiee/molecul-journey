@@ -172,16 +172,27 @@ export default function MokletRunner() {
         setGameState("over");
 
         if (finalScore > highScore) setHighScore(finalScore);
-
-        if (session?.user?.email && finalScore > 0) {
-            await supabase.from("user_progress").insert({
-                user_email: session.user.email,
-                mission_id: stringToUUID("RUNNER"),
-                score: finalScore,
-                choice_label: "RUNNER"
-            });
-        }
     }, [highScore, session]);
+
+    // Save Score Incrementally
+    const savedScoreRef = useRef(0);
+    useEffect(() => {
+        if (gameState === "playing") {
+            const diff = score - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                // save in background without awaiting, to avoid blocking game loop
+                supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID("RUNNER"),
+                    score: diff,
+                    choice_label: "RUNNER"
+                }).then(() => { }); // silent save
+                savedScoreRef.current = score;
+            }
+        } else if (gameState === "menu") {
+            savedScoreRef.current = 0; // reset on new game
+        }
+    }, [score, gameState, session]);
 
     // Game loop
     useEffect(() => {

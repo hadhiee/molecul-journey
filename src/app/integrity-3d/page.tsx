@@ -25,15 +25,22 @@ export default function Integrity3DGame() {
     const [gameState, setGameState] = useState<"IDLE" | "PLAYING" | "GAMEOVER">("IDLE");
     const [activeValue, setActiveValue] = useState<any>(null);
 
-    // Save Score
+    // Save Score Incrementally
+    const savedScoreRef = useRef(0);
     useEffect(() => {
-        if (gameState === "GAMEOVER" && score > 0 && session?.user?.email) {
-            supabase.from("user_progress").insert({
-                user_email: session.user.email,
-                mission_id: stringToUUID("INTEGRITY_TOWER"),
-                score: score,
-                choice_label: "TOWER_GAME"
-            }).then(() => console.log("Tower XP saved!"));
+        if (gameState === "PLAYING") {
+            const diff = score - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID("INTEGRITY_TOWER"),
+                    score: diff,
+                    choice_label: "TOWER_GAME"
+                }).then(() => { });
+                savedScoreRef.current = score;
+            }
+        } else if (gameState === "IDLE") {
+            savedScoreRef.current = 0;
         }
     }, [gameState, score, session]);
 

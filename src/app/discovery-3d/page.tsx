@@ -27,15 +27,22 @@ export default function Discovery3DGame() {
     const [activeTrait, setActiveTrait] = useState<any>(null);
     const [gameState, setGameState] = useState<"START" | "PLAYING" | "RESULT">("START");
 
-    // Save Score
+    // Save Score Incrementally
+    const savedScoreRef = useRef(0);
     useEffect(() => {
-        if (gameState === "RESULT" && score > 0 && session?.user?.email) {
-            supabase.from("user_progress").insert({
-                user_email: session.user.email,
-                mission_id: stringToUUID("DISCOVERY_3D"),
-                score: score,
-                choice_label: "CRYSTAL_GAME"
-            }).then(() => console.log("Discovery XP saved!"));
+        if (gameState === "PLAYING") {
+            const diff = score - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID("DISCOVERY_3D"),
+                    score: diff,
+                    choice_label: "CRYSTAL_GAME"
+                }).then(() => { });
+                savedScoreRef.current = score;
+            }
+        } else if (gameState === "START") {
+            savedScoreRef.current = 0;
         }
     }, [gameState, score, session]);
 

@@ -82,7 +82,6 @@ export default function TetrisPage() {
         if (checkCollision(piece.shape, { x: startX, y: 0 }, grid)) {
             setGameOver(true);
             setIsPlaying(false);
-            saveScore(score);
         }
     };
 
@@ -219,17 +218,25 @@ export default function TetrisPage() {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [isPlaying, gameOver, move, rotate]);
 
-    // Save Score
-    const saveScore = async (finalScore: number) => {
-        if (session?.user?.email && finalScore > 0) {
-            await supabase.from("user_progress").insert({
-                user_email: session.user.email,
-                mission_id: stringToUUID("TETRIS_CULTURE"),
-                score: finalScore,
-                choice_label: "TETRIS_CULTURE"
-            });
+    // Save Score Incrementally
+    const savedScoreRef = useRef(0);
+    useEffect(() => {
+        if (isPlaying) {
+            const diff = score - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID("TETRIS_CULTURE"),
+                    score: diff,
+                    choice_label: "TETRIS_CULTURE"
+                }).then(() => { });
+                savedScoreRef.current = score;
+            }
+        } else if (!gameOver && !isPlaying) {
+            // reset on new game
+            savedScoreRef.current = 0;
         }
-    };
+    }, [score, isPlaying, gameOver, session]);
 
     // --- Rendering ---
     // Combine static grid + active piece for render

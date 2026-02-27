@@ -123,15 +123,22 @@ export default function FighterPage() {
     const isRightPunching = (Date.now() - lastPunchTime < 150) && punchSide === "right";
     const isEnemyHit = (Date.now() - enemyHitTime < 200);
 
-    // Save Score
+    // Save Score Incrementally
+    const savedScoreRef = useRef(0);
     useEffect(() => {
-        if (gameState === "RESULT" && playerScore > 0 && session?.user?.email) {
-            supabase.from("user_progress").insert({
-                user_email: session.user.email,
-                mission_id: stringToUUID("FIGHTER_3D"),
-                score: playerScore,
-                choice_label: "FIGHTER_GAME"
-            }).then(() => console.log("Fighter XP saved!"));
+        if (gameState === "PLAYING") {
+            const diff = playerScore - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email) {
+                supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID("FIGHTER_3D"),
+                    score: diff,
+                    choice_label: "FIGHTER_GAME"
+                }).then(() => { });
+                savedScoreRef.current = playerScore;
+            }
+        } else if (gameState === "AVATAR") {
+            savedScoreRef.current = 0;
         }
     }, [gameState, playerScore, session]);
 

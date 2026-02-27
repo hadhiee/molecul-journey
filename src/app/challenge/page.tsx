@@ -138,16 +138,26 @@ export default function LightningChallenge() {
 
     const finishGame = async () => {
         setPhase("result");
-        // Save to Supabase
-        if (session?.user?.email) {
-            await supabase.from("user_progress").insert({
-                user_email: session.user.email,
-                mission_id: stringToUUID(scenarios[0]?.id.toString()),
-                score: totalScore,
-                choice_label: "LIGHTNING"
-            });
-        }
     };
+
+    // Save Score Incrementally
+    const savedScoreRef = useRef(0);
+    useEffect(() => {
+        if (phase === "playing") {
+            const diff = totalScore - savedScoreRef.current;
+            if (diff > 0 && session?.user?.email && scenarios.length > 0) {
+                supabase.from("user_progress").insert({
+                    user_email: session.user.email,
+                    mission_id: stringToUUID(scenarios[0]?.id.toString()),
+                    score: diff,
+                    choice_label: "LIGHTNING"
+                }).then(() => { });
+                savedScoreRef.current = totalScore;
+            }
+        } else if (phase === "intro") {
+            savedScoreRef.current = 0; // reset
+        }
+    }, [totalScore, phase, session, scenarios]);
 
     const scenario = scenarios[currentIndex];
     const timerPercent = (timer / 12) * 100;
