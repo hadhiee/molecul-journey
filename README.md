@@ -202,6 +202,7 @@ Menguji cara berpikir jangka panjang, sebab-akibat, dan kebiasaan membuat keputu
 | 🔮 **Moklet Culture Simulation** | *Visual Novel / Decision-making game*. Berisi 10 chapter cerita kehidupan sekolah (dari MPLS, ujian, hingga magang Industri). Setiap pilihan dialog bercabang dan mempengaruhi stat: ATTITUDE, AKHLAK, BISA. Terdapat _multiple endings_. | **Keseluruhan 8 Nilai ATTITUDE** | React Interactive |
 | 🏗️ **Arsitek Masa Depan** | Simulasi *Career Path* / *Resource Management* dari mulai masuk SMK hingga 5 tahun setelah lulus kuliah/kerja. Pemain harus membagi "Energi" dan "Waktu" harian untuk Belajar, Nongkrong, Berorganisasi, atau Istirahat. Pilihan yang seimbang menghasilkan _ending_ karir yang sukses. | **Think Solutions** & **Involve Actively** | React Interactive |
 | ⚡ **Tantangan Kilat** | Mode kuis cepat (Speed Quiz). Sistem akan menampilkan skenario sosial (misal: "Temanmu sedang presentasi namun laptopnya mati mendadak"). Pemain hanya diberi waktu 5 detik untuk memilih tidakan paling tepat. | **Dare to Ask** & **Involve Actively** | React + Timer |
+| 🔗 **Culture Connect** | *Tarik Garis / Matching Game*. Pemain menghubungkan blok konsep di sebelah kiri dengan pasangannya yang benar di kotak acak sebelah kanan menggunakan gestur *drag-and-drop*. Apabila cocok, balok berubah hijau dan menaikkan skor. Terdapat berbagai ronde untuk menghafal prinsip budaya dengan seru. | **Cognitve & Vocabulary Cerdas** | React + CSS SVG Lines |
 
 #### 🟢 Exploration Zone (Petualangan 3D & Spasial)
 
