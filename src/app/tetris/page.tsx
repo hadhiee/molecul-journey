@@ -261,7 +261,7 @@ export default function TetrisPage() {
                 <h1 style={{ fontSize: 48, fontWeight: 900, marginBottom: 16 }}>Game Over</h1>
                 <div style={{ fontSize: 24, marginBottom: 32 }}>Score: {score}</div>
                 <button onClick={resetGame} style={{ background: "#e11d48", border: "none", padding: "16px 32px", borderRadius: 12, color: "white", fontWeight: 800, fontSize: 18, cursor: "pointer" }}>Main Lagi</button>
-                <Link href="/" style={{ marginTop: 20, color: "#94a3b8", textDecoration: "none" }}>Kembali ke Menu</Link>
+                <a href="/" style={{ marginTop: 20, color: "#94a3b8", textDecoration: "none" }}>Kembali ke Menu</a>
             </div>
         )
     }
@@ -270,7 +270,7 @@ export default function TetrisPage() {
         <div style={{ minHeight: "100vh", background: "#0f172a", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "sans-serif", padding: 20 }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", width: "100%", maxWidth: 400, marginBottom: 20, alignItems: "center" }}>
-                <Link href="/" style={{ color: "#94a3b8", textDecoration: "none", fontWeight: 700 }}>← Kembali</Link>
+                <a href="/" style={{ color: "#94a3b8", textDecoration: "none", fontWeight: 700 }}>← Kembali</a>
                 <div style={{ fontSize: 24, fontWeight: 900, color: "white" }}>{score}</div>
             </div>
 
