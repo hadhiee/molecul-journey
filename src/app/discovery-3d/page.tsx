@@ -4,6 +4,9 @@ import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
+import { stringToUUID } from "@/lib/ids";
 
 const TRAITS = [
     { letter: "A", title: "Act Respectfully", color: 0xe11d48, desc: "Menjaga adab kepada guru dan saling menghargai sesama teman." },
@@ -17,11 +20,24 @@ const TRAITS = [
 ];
 
 export default function Discovery3DGame() {
+    const { data: session } = useSession();
     const containerRef = useRef<HTMLDivElement>(null);
     const [foundTraits, setFoundTraits] = useState<number[]>([]);
     const [score, setScore] = useState(0);
     const [activeTrait, setActiveTrait] = useState<any>(null);
     const [gameState, setGameState] = useState<"START" | "PLAYING" | "RESULT">("START");
+
+    // Save Score
+    useEffect(() => {
+        if (gameState === "RESULT" && score > 0 && session?.user?.email) {
+            supabase.from("user_progress").insert({
+                user_email: session.user.email,
+                mission_id: stringToUUID("DISCOVERY_3D"),
+                score: score,
+                choice_label: "CRYSTAL_GAME"
+            }).then(() => console.log("Discovery XP saved!"));
+        }
+    }, [gameState, score, session]);
 
     useEffect(() => {
         if (!containerRef.current || gameState !== "PLAYING") return;

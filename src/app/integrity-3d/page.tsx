@@ -3,6 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
+import { stringToUUID } from "@/lib/ids";
 
 const ATTITUDE_VALUES = [
     { letter: "A", title: "Act Respectfully", desc: "Menjaga adab kepada guru dan saling menghargai sesama teman.", color: 0xe11d48 },
@@ -16,10 +19,23 @@ const ATTITUDE_VALUES = [
 ];
 
 export default function Integrity3DGame() {
+    const { data: session } = useSession();
     const containerRef = useRef<HTMLDivElement>(null);
     const [score, setScore] = useState(0);
     const [gameState, setGameState] = useState<"IDLE" | "PLAYING" | "GAMEOVER">("IDLE");
     const [activeValue, setActiveValue] = useState<any>(null);
+
+    // Save Score
+    useEffect(() => {
+        if (gameState === "GAMEOVER" && score > 0 && session?.user?.email) {
+            supabase.from("user_progress").insert({
+                user_email: session.user.email,
+                mission_id: stringToUUID("INTEGRITY_TOWER"),
+                score: score,
+                choice_label: "TOWER_GAME"
+            }).then(() => console.log("Tower XP saved!"));
+        }
+    }, [gameState, score, session]);
 
     useEffect(() => {
         if (!containerRef.current || gameState !== "PLAYING") return;

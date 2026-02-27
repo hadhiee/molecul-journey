@@ -2,6 +2,9 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
+import { stringToUUID } from "@/lib/ids";
 
 // --- Assets ---
 const BG_URL = "https://images.unsplash.com/photo-1552072092-7f9b854618e7?q=80&w=2600&auto=format&fit=crop"; // Empty Gym Room
@@ -95,6 +98,8 @@ function Enemy2D({ isHit, name }: { isHit: boolean, name: string }) {
 // --- Main Component ---
 
 export default function FighterPage() {
+    const { data: session } = useSession();
+
     // Game State
     const [gameState, setGameState] = useState<"AVATAR" | "PLAYING" | "RESULT">("AVATAR");
     const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
@@ -117,6 +122,18 @@ export default function FighterPage() {
     const isLeftPunching = (Date.now() - lastPunchTime < 150) && punchSide === "left";
     const isRightPunching = (Date.now() - lastPunchTime < 150) && punchSide === "right";
     const isEnemyHit = (Date.now() - enemyHitTime < 200);
+
+    // Save Score
+    useEffect(() => {
+        if (gameState === "RESULT" && playerScore > 0 && session?.user?.email) {
+            supabase.from("user_progress").insert({
+                user_email: session.user.email,
+                mission_id: stringToUUID("FIGHTER_3D"),
+                score: playerScore,
+                choice_label: "FIGHTER_GAME"
+            }).then(() => console.log("Fighter XP saved!"));
+        }
+    }, [gameState, playerScore, session]);
 
     // Logic
     const spawnHitPopup = () => {
