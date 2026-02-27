@@ -11,14 +11,14 @@ interface Message {
 }
 
 const TOPIC_CHIPS = [
-    { label: "💡 Apa itu ATTITUDE?", prompt: "Jelaskan apa itu budaya ATTITUDE di Moklet secara lengkap" },
-    { label: "🏆 Tips Lomba OSN", prompt: "Berikan tips dan strategi untuk memenangkan OSN bidang Informatika" },
-    { label: "💻 Belajar Coding", prompt: "Saya ingin belajar coding dari dasar, mulai dari mana?" },
-    { label: "🎯 Persiapan LKS", prompt: "Bagaimana cara mempersiapkan diri untuk LKS bidang Cyber Security?" },
-    { label: "📖 Motivasi Belajar", prompt: "Saya sedang malas belajar, berikan motivasi dong" },
-    { label: "🌐 Cloud Computing", prompt: "Jelaskan tentang Cloud Computing dan bagaimana belajarnya untuk pemula" },
-    { label: "🔒 Cyber Security", prompt: "Apa itu Cyber Security dan kenapa penting untuk siswa SMK?" },
-    { label: "🤖 Tentang AI", prompt: "Jelaskan tentang Artificial Intelligence dan perannya di dunia IT" },
+    { label: "🚀 Persiapan Masuk Moklet", prompt: "Jelaskan materi persiapan dasar untuk calon Mokleters (RPL/TKJ/DKV) dan roadmap belajarnya." },
+    { label: "💻 Mulai Koding (HTML & CSS)", prompt: "Ajari saya langkah pertama belajar koding web (HTML & CSS) dong, pakai analogi yang seru ya." },
+    { label: "🛜 Konsep Jaringan Dasar", prompt: "Jelaskan apa itu IP Address, LAN, dan Router dengan bahasa yang gampang dipahami pemula." },
+    { label: "🎨 Dasar Multimedia / DKV", prompt: "Jelaskan bedanya desain Vektor dan Bitmap, serta warna RGB vs CMYK." },
+    { label: "🧠 Mindset Siswa IT", prompt: "Bagaimana sih cara berpikir yang benar kalau pas lagi belajar kena error atau bug?" },
+    { label: "💡 Apa itu ATTITUDE?", prompt: "Jelaskan 8 nilai budaya ATTITUDE di SMK Telkom Malang." },
+    { label: "🏆 Tips Juara Lomba", prompt: "Gimana caranya bisa ikut ajang bergengsi seperti LKS, OSN, atau FIKSI di Moklet?" },
+    { label: "📖 Minta Motivasi Belajar", prompt: "Saya merasa mentok nih belajar IT-nya. Tolong berikan saya semangat dong, Kak MoDy!" },
 ];
 
 function formatAIContent(text: string): string {
