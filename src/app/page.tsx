@@ -8,7 +8,11 @@ import HomeActivityPanel from "@/components/HomeActivityPanel";
 import TechNewsPanel from "@/components/TechNewsPanel";
 import { EVENTS } from '@/data/events';
 import EventCard from '@/components/EventCard';
+import AutoRefresh from '@/components/AutoRefresh';
 import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -114,6 +118,7 @@ export default async function Home() {
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 16px 80px' }}>
+      <AutoRefresh />
 
       {/* 1. Banner User */}
       <div style={{
