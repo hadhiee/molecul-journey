@@ -6,22 +6,25 @@ import { supabase } from "@/lib/supabase";
 import { stringToUUID } from "@/lib/ids";
 import Link from "next/link";
 
-const ROUNDS = [
-    [
-        { id: 1, left: "Act", right: "Respectfully" },
-        { id: 2, left: "Talk", right: "Politely" },
-        { id: 3, left: "Turn Off", right: "Distraction" },
-        { id: 4, left: "Involve", right: "Actively" },
-        { id: 5, left: "Think", right: "Solutions" },
-    ],
-    [
-        { id: 6, left: "Use Tech", right: "Wisely" },
-        { id: 7, left: "Dare to", right: "Ask" },
-        { id: 8, left: "Eager to", right: "Collaborate" },
-        { id: 10, left: "Growth", right: "Mindset" },
-        { id: 11, left: "Problem", right: "Solving" },
-    ]
+const ALL_PAIRS = [
+    { id: 1, left: "Act", right: "Respectfully" },
+    { id: 2, left: "Talk", right: "Politely" },
+    { id: 3, left: "Turn Off", right: "Distraction" },
+    { id: 4, left: "Involve", right: "Actively" },
+    { id: 5, left: "Think", right: "Solutions" },
+    { id: 6, left: "Use Tech", right: "Wisely" },
+    { id: 7, left: "Dare to", right: "Ask" },
+    { id: 8, left: "Eager to", right: "Collaborate" },
+    { id: 9, left: "Growth", right: "Mindset" },
+    { id: 10, left: "Problem", right: "Solving" },
+    { id: 11, left: "Jujur", right: "Berkata" },
+    { id: 12, left: "Disiplin", right: "Waktu" },
+    { id: 13, left: "Kerja", right: "Sama" },
+    { id: 14, left: "Tanggung", right: "Jawab" },
+    { id: 15, left: "Berpikir", right: "Kritis" }
 ];
+
+const TOTAL_ROUNDS = 5;
 
 export default function CultureConnectPage() {
     const { data: session } = useSession();
@@ -39,12 +42,15 @@ export default function CultureConnectPage() {
 
     // Init Round
     useEffect(() => {
-        if (currentRound >= ROUNDS.length) {
+        if (currentRound >= TOTAL_ROUNDS) {
             if (currentRound > 0) setGameOver(true);
             return;
         }
 
-        const roundData = ROUNDS[currentRound];
+        const itemCount = Math.floor(Math.random() * 4) + 2; // Random 2 to 5 items
+        const shuffledPool = [...ALL_PAIRS].sort(() => Math.random() - 0.5);
+        const roundData = shuffledPool.slice(0, itemCount);
+
         // Shuffle left and right independently
         setLeftItems([...roundData].sort(() => Math.random() - 0.5));
         setRightItems([...roundData].sort(() => Math.random() - 0.5));
@@ -162,9 +168,9 @@ export default function CultureConnectPage() {
         if (isMatch) {
             setScore(s => s + 10);
 
-            // Check if round won (all 5 connected)
+            // Check if round won (all items connected)
             const correctCount = connections.filter(c => c.status === 'correct').length + 1;
-            if (correctCount === ROUNDS[currentRound].length) {
+            if (correctCount === leftItems.length) {
                 setTimeout(() => setCurrentRound(r => r + 1), 1000);
             }
         } else {
@@ -199,7 +205,7 @@ export default function CultureConnectPage() {
                     <div style={{ textAlign: "center", marginTop: 20 }}>
                         <h2 style={{ color: "white", fontSize: 24, fontWeight: 800, margin: 0 }}>CULTURE CONNECT</h2>
                         <p style={{ color: "#94a3b8", margin: "5px 0 0 0" }}>Tarik garis untuk menghubungkan nilai yang tepat!</p>
-                        <p style={{ color: "#3b82f6", fontWeight: "bold", fontSize: 14 }}>Ronde {currentRound + 1} / {ROUNDS.length}</p>
+                        <p style={{ color: "#3b82f6", fontWeight: "bold", fontSize: 14 }}>Ronde {currentRound + 1} / {TOTAL_ROUNDS}</p>
                     </div>
                 )}
             </div>
