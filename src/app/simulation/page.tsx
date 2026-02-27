@@ -322,8 +322,12 @@ export default function SimulationPage() {
 
         if (session?.user?.email) {
             const { stringToUUID } = require("@/lib/ids");
-            supabase.from("user_progress").insert({ user_email: session.user.email, mission_id: stringToUUID(currentScenario.id.toString()), score: pts * 10, choice_label: c.id }).then(() => { });
+            supabase.from("user_progress").insert({ user_email: session.user.email.toLowerCase(), mission_id: stringToUUID(currentScenario.id.toString()), score: pts * 10, choice_label: c.id }).then(() => { });
         }
+    };
+
+    const handleExit = () => {
+        window.location.href = "/";
     };
 
     const nextQ = () => {
@@ -348,9 +352,12 @@ export default function SimulationPage() {
             <div style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(15,23,42,0.9)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     {gameState === "chapterSelect" ? (
-                        <Link href="/" style={{ textDecoration: 'none', fontSize: 20, cursor: 'pointer', color: '#94a3b8' }}>
+                        <button
+                            onClick={handleExit}
+                            style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#94a3b8', padding: 0 }}
+                        >
                             ←
-                        </Link>
+                        </button>
                     ) : (
                         <button
                             onClick={() => setGameState("chapterSelect")}

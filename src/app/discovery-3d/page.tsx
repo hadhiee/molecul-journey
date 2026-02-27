@@ -35,7 +35,7 @@ export default function Discovery3DGame() {
         if (amount > 0 && session?.user?.email) {
             try {
                 await supabase.from("user_progress").insert({
-                    user_email: session.user.email,
+                    user_email: session.user.email.toLowerCase(),
                     mission_id: stringToUUID("DISCOVERY_3D"),
                     score: amount,
                     choice_label: "CRYSTAL_GAME"

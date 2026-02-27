@@ -148,7 +148,7 @@ export default function LightningChallenge() {
         if (amount > 0 && session?.user?.email && scenarios.length > 0) {
             try {
                 await supabase.from("user_progress").insert({
-                    user_email: session.user.email,
+                    user_email: session.user.email.toLowerCase(),
                     mission_id: stringToUUID(scenarios[0]?.id.toString()),
                     score: amount,
                     choice_label: "LIGHTNING"

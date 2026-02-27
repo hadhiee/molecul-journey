@@ -562,7 +562,7 @@ export default function SpaceShooterPage() {
         if (amount > 0 && session?.user?.email) {
             try {
                 await supabase.from("user_progress").insert({
-                    user_email: session.user.email,
+                    user_email: session.user.email.toLowerCase(),
                     mission_id: stringToUUID("SPACE_CULTURE"),
                     score: amount,
                     choice_label: "SPACE_CULTURE"

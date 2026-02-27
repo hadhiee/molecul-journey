@@ -56,7 +56,7 @@ export default function MissionPlay() {
         const { stringToUUID } = await import("@/lib/ids");
 
         await supabase.from("user_progress").insert({
-            user_email: session.user.email,
+            user_email: session.user.email.toLowerCase(),
             mission_id: stringToUUID(scenario.id),
             score: score,
             choice_label: choice.id

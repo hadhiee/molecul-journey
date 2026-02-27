@@ -33,7 +33,7 @@ export default function Integrity3DGame() {
         if (amount > 0 && session?.user?.email) {
             try {
                 await supabase.from("user_progress").insert({
-                    user_email: session.user.email,
+                    user_email: session.user.email.toLowerCase(),
                     mission_id: stringToUUID("INTEGRITY_TOWER"),
                     score: amount,
                     choice_label: "TOWER_GAME"

@@ -106,7 +106,7 @@ export default function CultureConnectPage() {
         if (amount > 0 && session?.user?.email) {
             try {
                 await supabase.from("user_progress").insert({
-                    user_email: session.user.email,
+                    user_email: session.user.email.toLowerCase(),
                     mission_id: stringToUUID("CULTURE_CONNECT"),
                     score: amount,
                     choice_label: "CONNECT_GAME"

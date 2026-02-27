@@ -209,12 +209,16 @@ export default function FutureArchitect() {
         if (session?.user?.email) {
             const total = Object.values(finalStats).reduce((a, b) => a + b, 0);
             await supabase.from("user_progress").insert({
-                user_email: session.user.email,
+                user_email: session.user.email.toLowerCase(),
                 mission_id: stringToUUID("FUTURE_ARCHITECT"),
                 score: total * 10,
                 choice_label: "FUTURE_ARCHITECT"
             });
         }
+    };
+
+    const handleExit = () => {
+        window.location.href = "/";
     };
 
     const startGame = () => {
@@ -287,9 +291,9 @@ export default function FutureArchitect() {
                         🎮 Mulai Strategi
                     </button>
 
-                    <Link href="/" style={{ display: 'block', marginTop: 20, fontSize: 12, color: '#64748b', textDecoration: 'none', fontWeight: 600 }}>
-                        ← Kembali ke Dashboard
-                    </Link>
+                    <button onClick={handleExit} style={{ display: 'block', width: '100%', marginTop: 20, fontSize: 12, color: '#64748b', textDecoration: 'none', fontWeight: 600, background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                        ← KUMPULKAN XP & KELUAR
+                    </button>
                 </div>
             </div>
         );
@@ -368,14 +372,14 @@ export default function FutureArchitect() {
                         }}>
                             🔄 Coba Strategi Lain
                         </button>
-                        <Link href="/" style={{
-                            display: 'block', textAlign: 'center' as const, padding: 16, borderRadius: 14,
+                        <button onClick={handleExit} style={{
+                            width: '100%', textAlign: 'center' as const, padding: 16, borderRadius: 14,
                             background: 'rgba(255,255,255,0.05)', color: '#94a3b8', fontSize: 12, fontWeight: 800,
                             textTransform: 'uppercase' as const, letterSpacing: '0.1em', textDecoration: 'none',
-                            border: '1px solid rgba(255,255,255,0.1)',
+                            border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer'
                         }}>
-                            Halaman Utama
-                        </Link>
+                            KUMPULKAN XP & SELESAI
+                        </button>
                     </div>
                 </div>
             </div>
@@ -393,9 +397,9 @@ export default function FutureArchitect() {
             <div style={{ maxWidth: 520, margin: '0 auto' }}>
                 {/* Progress bar */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <Link href="/" style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textDecoration: 'none', background: 'rgba(255,255,255,0.06)', padding: '6px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)' }}>
-                        ← Keluar
-                    </Link>
+                    <button onClick={handleExit} style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textDecoration: 'none', background: 'rgba(255,255,255,0.06)', padding: '6px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}>
+                        ← KUMPULKAN XP
+                    </button>
                     <span style={{ fontSize: 11, fontWeight: 700, color: '#64748b' }}>{session?.user?.name?.split(" ")[0]}</span>
                     <span style={{ fontSize: 10, fontWeight: 800, color: '#a78bfa' }}>FASE {currentPhase + 1}/4</span>
                 </div>
