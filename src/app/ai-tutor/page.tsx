@@ -187,7 +187,27 @@ export default function AITutorPage() {
         }
     };
 
-    const handleTopicClick = (prompt: string) => {
+    const handleTopicClick = async (prompt: string, label: string) => {
+        const email = session?.user?.email;
+        if (email) {
+            try {
+                // Give special exploration bonus XP for trying out the predefined topics!
+                const { error } = await supabase.from("user_progress").insert({
+                    user_email: email.toLowerCase(),
+                    mission_id: "MODY_TOPIC_EXPLORE",
+                    score: 15,
+                    choice_label: `Eksplorasi Topik AI: ${label}`
+                });
+
+                if (!error) {
+                    setXpPopup({ text: "+15 XP Eksplorasi! 🌟", id: Date.now() });
+                    // Keep popup visible a bit longer for this special action
+                    setTimeout(() => setXpPopup(null), 3500);
+                }
+            } catch (err) {
+                console.error("Gagal simpan XP eksplorasi:", err);
+            }
+        }
         sendMessage(prompt);
     };
 
@@ -291,7 +311,7 @@ export default function AITutorPage() {
                                     <button
                                         key={i}
                                         className={styles.topicChip}
-                                        onClick={() => handleTopicClick(chip.prompt)}
+                                        onClick={() => handleTopicClick(chip.prompt, chip.label)}
                                         style={{ animationDelay: `${i * 0.05}s` }}
                                     >
                                         {chip.label}
