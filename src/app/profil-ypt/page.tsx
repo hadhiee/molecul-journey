@@ -3,6 +3,8 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
 
 const VIDEOS = [
     { id: "1TNoXMCIMLYatRp4rosk2t20sCJwZz3r9", title: "Company Profile YPT" },
@@ -14,13 +16,34 @@ const VIDEOS = [
 ];
 
 export default function ProfilYPTPage() {
+    const { data: session } = useSession();
     const [activeVideo, setActiveVideo] = useState(VIDEOS[0]);
     const [isLoading, setIsLoading] = useState(true);
+    const [xpPopup, setXpPopup] = useState<{ text: string, id: number } | null>(null);
 
-    const handleSelectVideo = (video: typeof VIDEOS[0]) => {
+    const handleSelectVideo = async (video: typeof VIDEOS[0]) => {
         if (activeVideo.id !== video.id) {
             setIsLoading(true);
             setActiveVideo(video);
+
+            // Reward XP for watching a new video
+            const email = session?.user?.email;
+            if (email) {
+                try {
+                    const { error } = await supabase.from("user_progress").insert({
+                        user_email: email.toLowerCase(),
+                        mission_id: null,
+                        score: 10,
+                        choice_label: `Nonton YPT: ${video.title}`
+                    });
+                    if (!error) {
+                        setXpPopup({ text: "+10 XP! 🎥", id: Date.now() });
+                        setTimeout(() => setXpPopup(null), 3500);
+                    }
+                } catch (err) {
+                    console.error("Gagal simpan XP video YPT:", err);
+                }
+            }
         }
     };
 
@@ -64,7 +87,19 @@ export default function ProfilYPTPage() {
                         </div>
                     </div>
 
-                    <div className={styles.videoLayout}>
+                    <div className={styles.videoLayout} style={{ position: 'relative' }}>
+                        {xpPopup && (
+                            <div style={{
+                                position: 'absolute', top: -35, right: 10,
+                                background: '#e11d48', color: 'white', padding: '6px 14px',
+                                borderRadius: 16, fontSize: 13, fontWeight: 800,
+                                boxShadow: '0 8px 16px rgba(225,29,72,0.3)',
+                                animation: 'modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                                zIndex: 20
+                            }}>
+                                {xpPopup.text}
+                            </div>
+                        )}
                         {/* List of Videos */}
                         <div className={styles.videoList}>
                             {VIDEOS.map((video) => (
