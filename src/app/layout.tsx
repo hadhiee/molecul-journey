@@ -9,8 +9,32 @@ export const metadata: Metadata = {
   description: "A gamified learning experience for SMK Telkom Malang students.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/icon.svg",
-    apple: "/icon.svg",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "MoLeCul - Moklet Learning Culture Journey",
+    description: "Aplikasi simulasi budaya sekolah SMK Telkom Malang. Belajar sambil bermain! 🎮📚",
+    siteName: "MoLeCul",
+    type: "website",
+    locale: "id_ID",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "MoLeCul - Moklet Learning Culture Journey",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MoLeCul - Moklet Learning Culture Journey",
+    description: "Aplikasi simulasi budaya sekolah SMK Telkom Malang. Belajar sambil bermain! 🎮📚",
+    images: ["/opengraph-image"],
   },
 };
 

@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
 import styles from "./AIChatWidget.module.css";
 
 interface Message {
@@ -11,6 +13,8 @@ interface Message {
 
 export default function AIChatWidget() {
     const pathname = usePathname();
+    const { data: session } = useSession();
+    const [xpPopup, setXpPopup] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         {
@@ -57,6 +61,23 @@ export default function AIChatWidget() {
                 ...prev,
                 { role: "ai", content: data.reply || "Maaf, terjadi kesalahan saat merespon." },
             ]);
+
+            // Add XP for chatting
+            if (session?.user?.email) {
+                try {
+                    await supabase.from("user_progress").insert({
+                        user_email: session.user.email.toLowerCase(),
+                        mission_id: "MODY_CHAT",
+                        score: 5,
+                        choice_label: "Ngobrol dengan MoDy AI (Widget)"
+                    });
+                    setXpPopup(true);
+                    setTimeout(() => setXpPopup(false), 2000);
+                } catch (e) {
+                    console.error("Gagal tambah XP:", e);
+                }
+            }
+
         } catch (error) {
             console.error(error);
             setMessages((prev) => [
@@ -111,7 +132,18 @@ export default function AIChatWidget() {
                     <div ref={bottomRef} />
                 </div>
 
-                <form onSubmit={sendMessage} className={styles.chatFooter}>
+                <form onSubmit={sendMessage} className={styles.chatFooter} style={{ position: 'relative' }}>
+                    {xpPopup && (
+                        <div style={{
+                            position: 'absolute', top: -30, right: 10,
+                            background: '#22c55e', color: 'white', padding: '4px 10px',
+                            borderRadius: 12, fontSize: 11, fontWeight: 'bold',
+                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                            animation: 'modalIn 0.3s ease-out'
+                        }}>
+                            +5 XP! ⚡
+                        </div>
+                    )}
                     <input
                         type="text"
                         className={styles.chatInput}

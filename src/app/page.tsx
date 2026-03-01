@@ -10,6 +10,7 @@ import { EVENTS } from '@/data/events';
 import EventCard from '@/components/EventCard';
 import AutoRefresh from '@/components/AutoRefresh';
 import { Suspense } from "react";
+import FocusChatButton from "@/components/FocusChatButton";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -150,28 +151,7 @@ export default async function Home() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
               <SignOutButton />
-              <a
-                href="https://s.id/MoLeCul"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  background: '#ffffff',
-                  color: '#e11d48',
-                  borderRadius: 16,
-                  padding: '12px 24px',
-                  fontSize: 14,
-                  fontWeight: 900,
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}
-              >
-                <img src="/smk-logo.png" alt="SMK" style={{ width: 22, height: 22, objectFit: 'contain' }} /> YUK FOKUS NGOBROL SAMA AI
-              </a>
+              <FocusChatButton />
             </div>
           </div>
 
@@ -200,6 +180,78 @@ export default async function Home() {
 
       {/* 2. Panel Hari Ini (Check-in/Bukti/Refleksi) */}
       <HomeActivityPanel userEmail={userEmail} />
+
+      {/* 🔔 Notifikasi Fitur Baru - 3D Seragam */}
+      <Link href="/seragam" style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #0f172a, #1e1b4b)',
+          borderRadius: 20, padding: '16px 20px',
+          display: 'flex', alignItems: 'center', gap: 16,
+          border: '1px solid rgba(225,29,72,0.3)',
+          boxShadow: '0 0 24px -4px rgba(225,29,72,0.2)',
+          position: 'relative', overflow: 'hidden',
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(circle at 10% 50%, rgba(225,29,72,0.5), transparent 60%)' }} />
+          <div style={{
+            width: 44, height: 44, borderRadius: 14,
+            background: 'linear-gradient(135deg, #e11d48, #be123c)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 22, flexShrink: 0,
+            boxShadow: '0 4px 12px rgba(225,29,72,0.3)',
+          }}>👔</div>
+          <div style={{ flex: 1, zIndex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+              <span style={{ fontSize: 13, fontWeight: 800, color: 'white' }}>3D Seragam Mokleter</span>
+              <span style={{ fontSize: 8, fontWeight: 700, background: '#e11d48', color: 'white', padding: '2px 8px', borderRadius: 20, animation: 'pulse-glow 2s ease infinite' }}>BARU!</span>
+            </div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>
+              Jelajahi 7 model seragam & dapatkan +35 XP ⚡
+            </div>
+          </div>
+          <div style={{
+            width: 32, height: 32, borderRadius: 10,
+            background: 'rgba(255,255,255,0.1)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 14, color: 'white'
+          }}>→</div>
+        </div>
+      </Link>
+
+      {/* 🤖 BOMBI Mascot Card */}
+      <Link href="/bombi" style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #0c1929, #1e1b4b)',
+          borderRadius: 20, padding: '16px 20px',
+          display: 'flex', alignItems: 'center', gap: 16,
+          border: '1px solid rgba(59,130,246,0.3)',
+          boxShadow: '0 0 24px -4px rgba(59,130,246,0.2)',
+          position: 'relative', overflow: 'hidden',
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(circle at 10% 50%, rgba(59,130,246,0.5), transparent 60%)' }} />
+          <div style={{
+            width: 44, height: 44, borderRadius: 14,
+            background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 22, flexShrink: 0,
+            boxShadow: '0 4px 12px rgba(59,130,246,0.3)',
+          }}>🤖</div>
+          <div style={{ flex: 1, zIndex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+              <span style={{ fontSize: 13, fontWeight: 800, color: 'white' }}>BOMBI — Maskot Moklet</span>
+              <span style={{ fontSize: 8, fontWeight: 700, background: '#3b82f6', color: 'white', padding: '2px 8px', borderRadius: 20 }}>3D</span>
+            </div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>
+              Lihat Bocah Moklet Bionic dalam 3D! 🚀
+            </div>
+          </div>
+          <div style={{
+            width: 32, height: 32, borderRadius: 10,
+            background: 'rgba(255,255,255,0.1)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 14, color: 'white'
+          }}>→</div>
+        </div>
+      </Link>
 
       {/* MoDy - AI Moklet Buddy Card */}
       <Link href="/ai-tutor" style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
@@ -580,6 +632,39 @@ export default async function Home() {
             </div>
             <div style={{
               width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
+            }}>→</div>
+          </div>
+        </Link>
+
+        {/* Seragam 3D Viewer - Full Width */}
+        <Link href="/seragam" style={{ textDecoration: 'none' }}>
+          <div className="game-card" style={{
+            background: 'linear-gradient(135deg, #1a1145, #2d1b69)',
+            borderRadius: 24, padding: 24,
+            color: 'white',
+            display: 'flex', alignItems: 'center', gap: 20,
+            boxShadow: '0 10px 30px -10px rgba(109,40,217,0.3)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.15, background: 'radial-gradient(circle at 80% 20%, rgba(225,29,72,0.4), transparent 60%)' }} />
+            <div style={{
+              width: 64, height: 64, borderRadius: 20,
+              background: 'linear-gradient(135deg, #e11d48, #be123c)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 32, flexShrink: 0,
+              boxShadow: '0 8px 16px rgba(225,29,72,0.3)'
+            }}>👔</div>
+            <div style={{ flex: 1, zIndex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>3D Model Viewer</span>
+                <span style={{ fontSize: 8, fontWeight: 700, background: '#e11d48', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 800 }}>Seragam Mokleter</div>
+              <div style={{ fontSize: 12, color: '#c4b5fd', marginTop: 2 }}>Lihat model 3D seragam siswa Moklet</div>
+            </div>
+            <div style={{
+              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
             }}>→</div>
           </div>

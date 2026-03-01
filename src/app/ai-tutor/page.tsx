@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
 import styles from "./page.module.css";
 
 interface Message {
@@ -36,12 +38,14 @@ function formatAIContent(text: string): string {
 }
 
 export default function AITutorPage() {
+    const { data: session } = useSession();
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [showWelcome, setShowWelcome] = useState(true);
     const [typingText, setTypingText] = useState("");
     const [isTyping, setIsTyping] = useState(false);
+    const [xpPopup, setXpPopup] = useState<{ text: string, id: number } | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -141,6 +145,28 @@ export default function AITutorPage() {
                     timestamp: new Date(),
                 };
                 setMessages((prev) => [...prev, aiMessage]);
+
+                // Add XP specifically for full ai-tutor chat
+                const email = session?.user?.email;
+                if (email) {
+                    const saveXP = async () => {
+                        try {
+                            const { error } = await supabase.from("user_progress").insert({
+                                user_email: email.toLowerCase(),
+                                mission_id: "MODY_AITUTOR",
+                                score: 10,
+                                choice_label: "Fokus Belajar dengan MoDy AI"
+                            });
+                            if (!error) {
+                                setXpPopup({ text: "+10 XP! ⚡", id: Date.now() });
+                                setTimeout(() => setXpPopup(null), 2500);
+                            }
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    };
+                    saveXP();
+                }
             });
         } catch (error) {
             console.error(error);
@@ -363,7 +389,18 @@ export default function AITutorPage() {
 
             {/* Input Area */}
             <div className={styles.inputArea}>
-                <div className={styles.inputContainer}>
+                <div className={styles.inputContainer} style={{ position: 'relative' }}>
+                    {xpPopup && (
+                        <div style={{
+                            position: 'absolute', top: -35, right: 10,
+                            background: '#e11d48', color: 'white', padding: '6px 14px',
+                            borderRadius: 16, fontSize: 13, fontWeight: 800,
+                            boxShadow: '0 8px 16px rgba(225,29,72,0.3)',
+                            animation: 'modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                        }}>
+                            {xpPopup.text}
+                        </div>
+                    )}
                     <textarea
                         ref={inputRef}
                         className={styles.textInput}
