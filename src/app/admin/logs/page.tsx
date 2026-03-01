@@ -74,15 +74,15 @@ export default function AdminLogs() {
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
                 {/* Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 48 }}>
-                    <div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, justifyContent: 'space-between', alignItems: 'center', marginBottom: 48 }}>
+                    <div style={{ flex: '1 1 300px' }}>
                         <div style={{ fontSize: 10, fontWeight: 800, color: '#e11d48', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: 8 }}>Moklet Intelligence Center</div>
-                        <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: '-0.03em', marginBottom: 4 }}>Surveillance & Active Logs</h1>
+                        <h1 style={{ fontSize: 'clamp(28px, 6vw, 36px)', lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.03em', marginBottom: 10 }}>Surveillance & Active Logs</h1>
                         <p style={{ color: '#64748b', fontSize: 14 }}>Memantau setiap pergerakan user & detak jantung sistem (heartbeat).</p>
                     </div>
-                    <div style={{ display: 'flex', gap: 12 }}>
-                        <button onClick={fetchLogs} style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 20px', borderRadius: 12, cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>Refresh Now</button>
-                        <Link href="/" style={{ background: '#e11d48', color: 'white', padding: '12px 24px', borderRadius: 12, textDecoration: 'none', fontWeight: 800, fontSize: 13, boxShadow: '0 8px 16px rgba(225,29,72,0.2)' }}>← App Home</Link>
+                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                        <button onClick={fetchLogs} style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 20px', borderRadius: 12, cursor: 'pointer', fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap' }}>Refresh Now</button>
+                        <Link href="/" style={{ background: '#e11d48', color: 'white', padding: '12px 24px', borderRadius: 12, textDecoration: 'none', fontWeight: 800, fontSize: 13, boxShadow: '0 8px 16px rgba(225,29,72,0.2)', whiteSpace: 'nowrap' }}>← App Home</Link>
                     </div>
                 </div>
 
@@ -105,7 +105,7 @@ export default function AdminLogs() {
                 </div>
 
                 {/* Logs Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
 
                     {/* Section 1: Recent Sessions & Logins */}
                     <div>
