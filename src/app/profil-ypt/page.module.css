@@ -1,0 +1,144 @@
+.pageContainer {
+    min-height: 100vh;
+    background-color: #f8fafc;
+    padding-bottom: 2rem;
+}
+
+.header {
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: 0 4px 15px rgba(225, 29, 72, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.backButton {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.backButton:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.headerTitle {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.headerSubtitle {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 0.2rem;
+}
+
+.content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.videoSection {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.sectionIcon {
+    width: 48px;
+    height: 48px;
+    background: #fff1f2;
+    color: #e11d48;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.sectionDesc {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+
+.iframeContainer {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    min-height: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f1f5f9;
+    border: 2px solid #e2e8f0;
+}
+
+.iframeContainer iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem;
+    }
+
+    .videoSection {
+        padding: 1rem;
+    }
+
+    .iframeContainer {
+        height: 60vh;
+        min-height: 400px;
+    }
+}

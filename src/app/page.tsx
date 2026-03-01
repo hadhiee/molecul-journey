@@ -607,6 +607,39 @@ export default async function Home() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 14, marginBottom: 56 }}>
 
+        {/* Profil YPT - Full Width */}
+        <Link href="/profil-ypt" style={{ textDecoration: 'none' }}>
+          <div className="game-card" style={{
+            background: 'linear-gradient(135deg, #b91c1c, #991b1b)',
+            borderRadius: 24, padding: 24,
+            color: 'white',
+            display: 'flex', alignItems: 'center', gap: 20,
+            boxShadow: '0 10px 30px -10px rgba(185,28,28,0.3)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url(https://www.transparenttextures.com/patterns/cubes.png)' }} />
+            <div style={{
+              width: 64, height: 64, borderRadius: 20,
+              background: '#ef4444',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 32, flexShrink: 0,
+              boxShadow: '0 8px 16px rgba(239,68,68,0.3)'
+            }}>🏢</div>
+            <div style={{ flex: 1, zIndex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: '#fca5a5', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>Company Profile</span>
+                <span style={{ fontSize: 8, fontWeight: 700, background: '#ef4444', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 800 }}>Profil YPT</div>
+              <div style={{ fontSize: 12, color: '#fecaca', marginTop: 2 }}>Mengenal Yayasan Pendidikan Telkom</div>
+            </div>
+            <div style={{
+              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
+            }}>→</div>
+          </div>
+        </Link>
+
         {/* Journey Map - Full Width */}
         <Link href="/journey" style={{ textDecoration: 'none' }}>
           <div className="game-card" style={{
