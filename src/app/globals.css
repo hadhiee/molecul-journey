@@ -4,6 +4,61 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --theme-primary: #e11d48;
+  --theme-bg: linear-gradient(135deg, #e11d48, #be123c, #9f1239);
+  --theme-grad: linear-gradient(135deg, #e11d48, #be123c);
+  --theme-shadow: rgba(225, 29, 72, 0.4);
+  --theme-shadow-light: rgba(225, 29, 72, 0.2);
+  --theme-radial: radial-gradient(circle at 10% 50%, rgba(225, 29, 72, 0.5), transparent 60%);
+  --theme-light: #ffe4e6;
+  --theme-icon-bg: #e11d48;
+}
+
+[data-theme='blue'] {
+  --theme-primary: #3b82f6;
+  --theme-bg: linear-gradient(135deg, #3b82f6, #1d4ed8, #1e3a8a);
+  --theme-grad: linear-gradient(135deg, #3b82f6, #2563eb);
+  --theme-shadow: rgba(59, 130, 246, 0.4);
+  --theme-shadow-light: rgba(59, 130, 246, 0.2);
+  --theme-radial: radial-gradient(circle at 10% 50%, rgba(59, 130, 246, 0.5), transparent 60%);
+  --theme-light: #dbeafe;
+  --theme-icon-bg: #3b82f6;
+}
+
+[data-theme='green'] {
+  --theme-primary: #22c55e;
+  --theme-bg: linear-gradient(135deg, #22c55e, #15803d, #14532d);
+  --theme-grad: linear-gradient(135deg, #22c55e, #16a34a);
+  --theme-shadow: rgba(34, 197, 94, 0.4);
+  --theme-shadow-light: rgba(34, 197, 94, 0.2);
+  --theme-radial: radial-gradient(circle at 10% 50%, rgba(34, 197, 94, 0.5), transparent 60%);
+  --theme-light: #dcfce7;
+  --theme-icon-bg: #22c55e;
+}
+
+[data-theme='dark'] {
+  --theme-primary: #8b5cf6;
+  --theme-bg: linear-gradient(135deg, #0f172a, #1e293b, #020617);
+  --theme-grad: linear-gradient(135deg, #475569, #334155);
+  --theme-shadow: rgba(0, 0, 0, 0.4);
+  --theme-shadow-light: rgba(0, 0, 0, 0.2);
+  --theme-radial: radial-gradient(circle at 10% 50%, rgba(255, 255, 255, 0.05), transparent 60%);
+  --theme-light: #334155;
+  --theme-icon-bg: #8b5cf6;
+}
+
+[data-theme='yellow'] {
+  --theme-primary: #f59e0b;
+  --theme-bg: linear-gradient(135deg, #f59e0b, #d97706, #b45309);
+  --theme-grad: linear-gradient(135deg, #f59e0b, #d97706);
+  --theme-shadow: rgba(245, 158, 11, 0.4);
+  --theme-shadow-light: rgba(245, 158, 11, 0.2);
+  --theme-radial: radial-gradient(circle at 10% 50%, rgba(245, 158, 11, 0.5), transparent 60%);
+  --theme-light: #fef3c7;
+  --theme-icon-bg: #f59e0b;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

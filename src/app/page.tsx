@@ -11,6 +11,7 @@ import EventCard from '@/components/EventCard';
 import AutoRefresh from '@/components/AutoRefresh';
 import { Suspense } from "react";
 import FocusChatButton from "@/components/FocusChatButton";
+import ThemeSelector from "@/components/ThemeSelector";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -121,12 +122,16 @@ export default async function Home() {
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 16px 80px' }}>
       <AutoRefresh />
 
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+         <ThemeSelector />
+      </div>
+
       {/* 1. Banner User */}
       <div style={{
-        background: 'linear-gradient(135deg, #e11d48, #be123c, #9f1239)',
+        background: 'var(--theme-bg)',
         borderRadius: 28, padding: 28, color: 'white', marginBottom: 20,
         position: 'relative', overflow: 'hidden',
-        boxShadow: '0 20px 48px -12px rgba(225,29,72,0.4)',
+        boxShadow: '0 20px 48px -12px var(--theme-shadow)',
       }}>
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -181,116 +186,102 @@ export default async function Home() {
       {/* 2. Panel Hari Ini (Check-in/Bukti/Refleksi) */}
       <HomeActivityPanel userEmail={userEmail} />
 
-      {/* 🔔 Notifikasi Fitur Baru - 3D Seragam */}
-      <Link href="/seragam" style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
-        <div style={{
-          background: 'linear-gradient(135deg, #0f172a, #1e1b4b)',
-          borderRadius: 20, padding: '16px 20px',
-          display: 'flex', alignItems: 'center', gap: 16,
-          border: '1px solid rgba(225,29,72,0.3)',
-          boxShadow: '0 0 24px -4px rgba(225,29,72,0.2)',
-          position: 'relative', overflow: 'hidden',
-        }}>
-          <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(circle at 10% 50%, rgba(225,29,72,0.5), transparent 60%)' }} />
+            {/* 🔔 FITUR UNGGULAN (TERBARU) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 24 }}>
+        {/* 3D Seragam */}
+        <Link href="/seragam" style={{ textDecoration: 'none', display: 'block' }}>
           <div style={{
-            width: 44, height: 44, borderRadius: 14,
-            background: 'linear-gradient(135deg, #e11d48, #be123c)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 22, flexShrink: 0,
-            boxShadow: '0 4px 12px rgba(225,29,72,0.3)',
-          }}>👔</div>
-          <div style={{ flex: 1, zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: 'white' }}>3D Seragam Mokleter</span>
-              <span style={{ fontSize: 8, fontWeight: 700, background: '#e11d48', color: 'white', padding: '2px 8px', borderRadius: 20, animation: 'pulse-glow 2s ease infinite' }}>BARU!</span>
+            background: 'linear-gradient(135deg, #0f172a, #1e1b4b)',
+            borderRadius: 20, padding: '16px',
+            display: 'flex', flexDirection: 'column', gap: 12,
+            border: '1px solid rgba(225,29,72,0.3)',
+            boxShadow: '0 4px 20px -4px rgba(225,29,72,0.15)',
+            position: 'relative', overflow: 'hidden', height: '100%',
+          }}>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(circle at top right, rgba(225,29,72,0.5), transparent 70%)' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 1 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 12,
+                background: 'linear-gradient(135deg, #e11d48, #be123c)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 18, boxShadow: '0 4px 12px rgba(225,29,72,0.3)',
+              }}>👔</div>
+              <span style={{ fontSize: 8, fontWeight: 700, background: 'var(--theme-primary)', color: 'white', padding: '2px 8px', borderRadius: 20 }}>BARU</span>
             </div>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>
-              Jelajahi 7 model seragam & dapatkan +35 XP ⚡
+            <div style={{ zIndex: 1, marginTop: 'auto' }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: 'white', marginBottom: 4 }}>3D Seragam</div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.3 }}>
+                Model 3D seragam
+              </div>
             </div>
           </div>
+        </Link>
+        
+        {/* BOMBI Mascot */}
+        <Link href="/bombi" style={{ textDecoration: 'none', display: 'block' }}>
           <div style={{
-            width: 32, height: 32, borderRadius: 10,
-            background: 'rgba(255,255,255,0.1)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 14, color: 'white'
-          }}>→</div>
-        </div>
-      </Link>
-
-      {/* 🤖 BOMBI Mascot Card */}
-      <Link href="/bombi" style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
-        <div style={{
-          background: 'linear-gradient(135deg, #0c1929, #1e1b4b)',
-          borderRadius: 20, padding: '16px 20px',
-          display: 'flex', alignItems: 'center', gap: 16,
-          border: '1px solid rgba(59,130,246,0.3)',
-          boxShadow: '0 0 24px -4px rgba(59,130,246,0.2)',
-          position: 'relative', overflow: 'hidden',
-        }}>
-          <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(circle at 10% 50%, rgba(59,130,246,0.5), transparent 60%)' }} />
-          <div style={{
-            width: 44, height: 44, borderRadius: 14,
-            background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 22, flexShrink: 0,
-            boxShadow: '0 4px 12px rgba(59,130,246,0.3)',
-          }}>🤖</div>
-          <div style={{ flex: 1, zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: 'white' }}>BOMBI — Maskot Moklet</span>
+            background: 'linear-gradient(135deg, #0c1929, #1e1b4b)',
+            borderRadius: 20, padding: '16px',
+            display: 'flex', flexDirection: 'column', gap: 12,
+            border: '1px solid rgba(59,130,246,0.3)',
+            boxShadow: '0 4px 20px -4px rgba(59,130,246,0.15)',
+            position: 'relative', overflow: 'hidden', height: '100%',
+          }}>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(circle at top right, rgba(59,130,246,0.5), transparent 70%)' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 1 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 12,
+                background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 18, boxShadow: '0 4px 12px rgba(59,130,246,0.3)',
+              }}>🤖</div>
               <span style={{ fontSize: 8, fontWeight: 700, background: '#3b82f6', color: 'white', padding: '2px 8px', borderRadius: 20 }}>3D</span>
             </div>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>
-              Lihat Bocah Moklet Bionic dalam 3D! 🚀
+            <div style={{ zIndex: 1, marginTop: 'auto' }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: 'white', marginBottom: 4 }}>BOMBI 3D</div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.3 }}>
+                Bocah Moklet Bionic
+              </div>
             </div>
           </div>
-          <div style={{
-            width: 32, height: 32, borderRadius: 10,
-            background: 'rgba(255,255,255,0.1)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 14, color: 'white'
-          }}>→</div>
-        </div>
-      </Link>
+        </Link>
 
-      {/* MoDy - AI Moklet Buddy Card */}
-      <Link href="/ai-tutor" style={{ textDecoration: 'none', display: 'block', marginBottom: 20 }}>
-        <div style={{
-          background: 'linear-gradient(135deg, #312e81, #4c1d95, #6d28d9)',
-          borderRadius: 24, padding: 24, color: 'white',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          border: '1px solid rgba(139,92,246,0.3)',
-          boxShadow: '0 12px 32px -8px rgba(109,40,217,0.4)',
-          position: 'relative', overflow: 'hidden'
-        }}>
-          <div style={{ position: 'absolute', inset: 0, opacity: 0.15, background: 'radial-gradient(circle at 80% 20%, rgba(167,139,250,0.6), transparent 60%)' }} />
-          <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-              <span style={{ fontSize: 10, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase' as const, letterSpacing: '0.15em' }}>
-                MoDy - AI Moklet Buddy
-              </span>
-              <span style={{ fontSize: 8, fontWeight: 700, background: '#22c55e', color: 'white', padding: '2px 8px', borderRadius: 20 }}>
-                NEW
-              </span>
-            </div>
-            <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4, letterSpacing: '-0.02em' }}>
-              Chat dengan Gemini AI 🤖
-            </div>
-            <div style={{ fontSize: 12, color: '#c4b5fd', fontWeight: 500 }}>
-              Tanya pelajaran, persiapan lomba, atau minta saran belajar
-            </div>
-          </div>
+        {/* MoDy - AI Moklet Buddy Card (Spans full width) */}
+        <Link href="/ai-tutor" style={{ textDecoration: 'none', display: 'block', gridColumn: '1 / -1' }}>
           <div style={{
-            width: 56, height: 56, borderRadius: 20,
-            background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 28, flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)',
-            boxShadow: '0 8px 16px rgba(0,0,0,0.15)'
+            background: 'linear-gradient(135deg, #312e81, #4c1d95, #6d28d9)',
+            borderRadius: 20, padding: 20, color: 'white',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            border: '1px solid rgba(139,92,246,0.3)',
+            boxShadow: '0 8px 24px -8px rgba(109,40,217,0.4)',
+            position: 'relative', overflow: 'hidden'
           }}>
-            <span className="animate-float">🎓</span>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.15, background: 'radial-gradient(circle at 80% 20%, rgba(167,139,250,0.6), transparent 60%)' }} />
+            <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                <span style={{ fontSize: 10, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase' }}>
+                  MoDy AI Tutor
+                </span>
+                <span style={{ fontSize: 8, fontWeight: 700, background: '#22c55e', color: 'white', padding: '2px 8px', borderRadius: 20 }}>BARU</span>
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 2, letterSpacing: '-0.02em' }}>
+                Chat dengan Gemini AI
+              </div>
+              <div style={{ fontSize: 11, color: '#c4b5fd', fontWeight: 500 }}>
+                Tanya pelajaran atau lomba
+              </div>
+            </div>
+            <div style={{
+              width: 44, height: 44, borderRadius: 16,
+              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 22, flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)'
+            }}>
+              <span className="animate-float">🎓</span>
+            </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
 
       {/* 3. Culture Hub Card */}
       <Link href="/culture" style={{ textDecoration: 'none', display: 'block', marginBottom: 40 }}>
@@ -303,7 +294,7 @@ export default async function Home() {
           position: 'relative', overflow: 'hidden'
         }}>
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ fontSize: 10, fontWeight: 800, color: '#e11d48', textTransform: 'uppercase' as const, letterSpacing: '0.15em', marginBottom: 6 }}>
+            <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', textTransform: 'uppercase' as const, letterSpacing: '0.15em', marginBottom: 6 }}>
               Culture Hub
             </div>
             <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, letterSpacing: '-0.02em' }}>
@@ -332,15 +323,15 @@ export default async function Home() {
       {/* --- SECTION DIVIDER: GAMES --- */}
       <div style={{ marginTop: 40, marginBottom: 24, textAlign: 'center' }}>
         <h2 style={{ fontSize: 24, fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>Training Grounds</h2>
-        <div style={{ width: 40, height: 4, background: '#e11d48', borderRadius: 99, margin: '8px auto 0' }} />
+        <div style={{ width: 40, height: 4, background: 'var(--theme-primary)', borderRadius: 99, margin: '8px auto 0' }} />
         <p style={{ fontSize: 13, color: '#64748b', marginTop: 8, fontWeight: 500 }}>Asah karaktermu melalui berbagai mini-games seru</p>
       </div>
 
       {/* --- CATEGORY: ACTION ARENA --- */}
       <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ width: 4, height: 24, background: '#e11d48', borderRadius: 2 }} />
+        <div style={{ width: 4, height: 24, background: 'var(--theme-primary)', borderRadius: 2 }} />
         <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Action Arena</h2>
-        <span style={{ fontSize: 10, fontWeight: 700, color: '#e11d48', background: '#ffe4e6', padding: '4px 10px', borderRadius: 20 }}>KETANGKASAN</span>
+        <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '4px 10px', borderRadius: 20 }}>KETANGKASAN</span>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 40 }}>
 
@@ -691,7 +682,7 @@ export default async function Home() {
             <div style={{ flex: 1, zIndex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                 <span style={{ fontSize: 11, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>3D Model Viewer</span>
-                <span style={{ fontSize: 8, fontWeight: 700, background: '#e11d48', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
+                <span style={{ fontSize: 8, fontWeight: 700, background: 'var(--theme-primary)', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
               </div>
               <div style={{ fontSize: 18, fontWeight: 800 }}>Seragam Mokleter</div>
               <div style={{ fontSize: 12, color: '#c4b5fd', marginTop: 2 }}>Lihat model 3D seragam siswa Moklet</div>
@@ -752,7 +743,7 @@ export default async function Home() {
       {/* 5. Pilih Chapter (Skill Tree) */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Skill Tree: Pilih Chapter</h2>
-        <span style={{ fontSize: 10, fontWeight: 800, color: '#e11d48', background: '#fce7f3', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' as const }}>4 Sectors</span>
+        <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' as const }}>4 Sectors</span>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 56 }}>
@@ -788,7 +779,7 @@ export default async function Home() {
       {/* Bottom: Leaderboard */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Leaderboard</h2>
-        <span style={{ fontSize: 10, fontWeight: 800, color: '#e11d48', background: '#fce7f3', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' as const }}>Top {leaderboard.length || '-'}</span>
+        <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' as const }}>Top {leaderboard.length || '-'}</span>
       </div>
       <div style={{ background: 'white', borderRadius: 20, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
         {leaderboard.length > 0 ? leaderboard.map((player, i) => (
@@ -838,10 +829,10 @@ export default async function Home() {
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
           textDecoration: 'none', padding: '4px 10px', borderRadius: 12,
         }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="#e11d48" stroke="#e11d48" strokeWidth="0">
-            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z" fill="none" stroke="#e11d48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--theme-primary)" stroke="var(--theme-primary)" strokeWidth="0">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z" fill="none" stroke="var(--theme-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <span style={{ fontSize: 9, fontWeight: 800, color: '#e11d48', letterSpacing: '0.02em' }}>Home</span>
+          <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--theme-primary)', letterSpacing: '0.02em' }}>Home</span>
         </Link>
 
         {/* Journey */}
