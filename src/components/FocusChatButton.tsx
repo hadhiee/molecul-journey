@@ -20,7 +20,7 @@ export default function FocusChatButton() {
                 if (email) {
                     await supabase.from("user_progress").insert({
                         user_email: email.toLowerCase(),
-                        mission_id: "MODY_FOCUS_CHAT",
+                        mission_id: null,
                         score: 25,
                         choice_label: "Fokus Ngobrol sama AI"
                     });

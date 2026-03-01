@@ -39,7 +39,7 @@ export default async function Home() {
 
     if (progress && progress.length > 0) {
       const systemValues = new Set([...Object.values(SYSTEM_IDS), "SYSTEM_LOGIN", "SYSTEM_HEARTBEAT", "SYSTEM_REFLECTION", "SYSTEM_CHECKIN", "SYSTEM_EVIDENCE", "JOURNEY_MAP"]);
-      const actualMissions = progress.filter((p: any) => !systemValues.has(p.mission_id) && !systemValues.has(p.mission_id?.toUpperCase()));
+      const actualMissions = progress.filter((p: any) => p.mission_id && !systemValues.has(p.mission_id) && !systemValues.has(p.mission_id?.toUpperCase()));
 
       totalXP = progress.reduce((sum: number, p: any) => sum + (p.score || 0), 0);
       missionCount = actualMissions.length;

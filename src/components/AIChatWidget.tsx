@@ -67,7 +67,7 @@ export default function AIChatWidget() {
                 try {
                     await supabase.from("user_progress").insert({
                         user_email: session.user.email.toLowerCase(),
-                        mission_id: "MODY_CHAT",
+                        mission_id: null,
                         score: 5,
                         choice_label: "Ngobrol dengan MoDy AI (Widget)"
                     });

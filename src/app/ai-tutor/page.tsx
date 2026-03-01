@@ -153,7 +153,7 @@ export default function AITutorPage() {
                         try {
                             const { error } = await supabase.from("user_progress").insert({
                                 user_email: email.toLowerCase(),
-                                mission_id: "MODY_AITUTOR",
+                                mission_id: null,
                                 score: 10,
                                 choice_label: "Fokus Belajar dengan MoDy AI"
                             });
@@ -194,7 +194,7 @@ export default function AITutorPage() {
                 // Give special exploration bonus XP for trying out the predefined topics!
                 const { error } = await supabase.from("user_progress").insert({
                     user_email: email.toLowerCase(),
-                    mission_id: "MODY_TOPIC_EXPLORE",
+                    mission_id: null,
                     score: 15,
                     choice_label: `Eksplorasi Topik AI: ${label}`
                 });
