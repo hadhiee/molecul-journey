@@ -28,12 +28,18 @@ export default function FocusChatButton() {
             } catch (err) { }
         }
 
-        router.push("/ai-tutor");
+        // Tunggu sedikit agar UI effect terlihat, baru redirect external
+        setTimeout(() => {
+            window.open("https://s.id/MoLeCul", "_blank", "noopener,noreferrer");
+            setClicked(false); // Reset in case user comes back
+        }, 800);
     };
 
     return (
         <a
-            href="/ai-tutor"
+            href="https://s.id/MoLeCul"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={handleClick}
             style={{
                 background: '#ffffff',
