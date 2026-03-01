@@ -8,7 +8,7 @@ import { supabase } from "@/lib/supabase";
 
 const VIDEOS = [
     { id: "1TNoXMCIMLYatRp4rosk2t20sCJwZz3r9", title: "Company Profile YPT" },
-    { id: "1Yo_Iqcsih3SAyH6cAwhX9RFD48TE63OO", title: "Company Profile Telkom Schools" },
+    { id: "1R-g6DNOanReZozEnasRnZ_MPBrOejbLC", title: "Company Profile Telkom Schools" },
     { id: "1k5g3XJjVpspUVZK0Rtm7pXcZQqkd7p1M", title: "Indonesia Raya (Vocal) - Sept. 2025" },
     { id: "1IVq8mr8h8H9PFjHNZzlFwM02hCneAsml", title: "Jayalah Telkom - TW 1 2026" },
     { id: "15P4vm5etQk_bQQyYFFbzkrvsW0PRb5iQ", title: "Mars Telkom Schools" },
