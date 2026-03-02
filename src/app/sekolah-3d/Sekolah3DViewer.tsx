@@ -128,7 +128,7 @@ export default function Sekolah3DViewer({ userEmail }: { userEmail: string }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                     <div>
                         <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1e293b' }}>Interactive Viewer</h2>
-                        <p style={{ fontSize: 13, color: '#64748b' }}>Putar dan perbesar model simulasi kampus IT Telkom Schools</p>
+                        <p style={{ fontSize: 13, color: '#64748b' }}>Putar dan perbesar model Gedung SMK Telkom Malang</p>
                     </div>
                     {xpEarned ? (
                         <div style={{ background: '#dcfce7', color: '#16a34a', padding: '8px 16px', borderRadius: 99, fontSize: 13, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6 }}>
