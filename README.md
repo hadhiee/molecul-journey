@@ -255,7 +255,34 @@ Panel berita teknologi terkini yang berrotasi otomatis, mencakup 3 kategori utam
 
 ---
 
-### 8. 🌤️ Weather Bar
+### 8. 🏢 Manajemen Sekolah & Mini-Game Inspeksi
+**Halaman:** `/manajemen`
+
+Mengenal dewan pimpinan dan struktur organisasi SMK Telkom Malang.
+- Menampilkan daftar personel lengkap berdasarkan divisi (Kurikulum, Kesiswaan, dll).
+- Daftar dikonsep layaknya Accordion interaktif yang menampilkan data personel.
+- Dilengkapi **Mini Game: Inspeksi Pimpinan!** Pemain harus mengeksplorasi bagan organisasi interaktif (mendukung Pan & Zoom penuh) untuk mencari dan mengklik figur pimpinan yang disebutkan untuk mendapat XP bonus.
+
+---
+
+### 9. 🏫 Gedung Sekolah 3D
+**Halaman:** `/sekolah-3d`
+
+Lingkungan sekolah dalam bentuk model 3D utuh yang bisa dieksplorasi secara bebas.
+- Kontrol penuh 360 derajat (Rotate, Pan, Zoom).
+- Fitur auto-rotate untuk mengagumi bangunan dari berbagai sudut.
+- Pengguna yang menginspeksi selama minimal 5 detik otomatis mendapat XP apresiasi.
+
+---
+
+### 10. 🤖 BOMBI: Sang Mascot Bionik
+**Halaman:** `/bombi`
+
+Mengenal lebih dekat maskot kebanggaan SMK Telkom Malang, "BOMBI" (Bocah Moklet Bionik). Terdiri dari penampang 3D interaktif karakter BOMBI beserta filosofi akronim **B.I.O.N.I.K** (Berakhlak, Imaginatif, Optimis, Nasionalis, Inspiratif, dan Kreatif).
+
+---
+
+### 11. 🌤️ Weather Bar & Info Tambahan
 
 **Komponen:** Sticky bar di bagian atas setiap halaman
 
@@ -266,7 +293,7 @@ Bar cuaca real-time yang menampilkan:
 
 ---
 
-### 9. 📊 Sistem XP & Leaderboard
+### 12. 📊 Sistem XP & Leaderboard
 
 **Sistem Progres Terpadu:**
 - Setiap game dan aktivitas memberikan **XP (Experience Points)**
@@ -281,10 +308,11 @@ Bar cuaca real-time yang menampilkan:
 - 🎮 Menyelesaikan game
 - 🗺️ Menyelesaikan Journey Map
 - 🔮 Menyelesaikan simulasi
+- 🔍 Mengeksplorasi halaman Budaya, BOMBI, Manajemen, dan 3D Bangunan
 
 ---
 
-### 10. 📱 Progressive Web App (PWA)
+### 13. 📱 Progressive Web App (PWA)
 
 MoLeCul bisa di-**install** sebagai aplikasi di perangkat:
 
@@ -377,9 +405,13 @@ Malam   → Chat dengan MoDy + Belajar di Culture Hub
 /                     → Dashboard (Home)
 /culture              → Culture Hub (Pengenalan Budaya)
 /journey              → Journey Map Sekolah
+/manajemen            → Manajemen & Struktur Org.
+/sekolah-3d           → 3D Viewer Gedung Sekolah
+/bombi                → Profil Maskot BOMBI 3D
 /ai-tutor             → MoDy - AI Moklet Buddy
 /events               → Puspresnas Arena
 /events/[eventId]     → Detail Event + Cabang Lomba
+/about                → About Page Detail Fitur Aplikasi
 /chapter/[id]         → Skill Tree Chapter (1-4)
 /mission/[id]         → Halaman Misi Individual
 ├── /runner           → Moklet Runner (Endless Run)

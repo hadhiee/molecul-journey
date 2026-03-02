@@ -870,6 +870,28 @@ export default async function Home() {
         )}
       </div>
 
+      {/* About App Banner */}
+      <div style={{ marginTop: 40 }}>
+        <Link href="/about" style={{ textDecoration: 'none' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #e11d48, #be123c)',
+            borderRadius: 24, padding: 24, color: 'white',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            boxShadow: '0 10px 25px -5px rgba(225,29,72,0.3)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Tentang MoLeCul</div>
+              <div style={{ fontSize: 13, opacity: 0.9, fontWeight: 500, maxWidth: 200 }}>
+                Pelajari filosofi, fitur, dan tim di balik aplikasi ini
+              </div>
+            </div>
+            <div style={{ fontSize: 48, zIndex: 1, filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))' }}>ℹ️</div>
+            <div style={{ position: 'absolute', right: -20, top: -20, width: 100, height: 100, background: 'radial-gradient(circle, #fca5a5 0%, transparent 70%)', opacity: 0.2, filter: 'blur(20px)' }} />
+          </div>
+        </Link>
+      </div>
+
       {/* Admin Panel Link */}
       {
         userEmail === "hadhiee@gmail.com" && (
