@@ -629,6 +629,39 @@ export default async function Home() {
           </div>
         </Link>
 
+        {/* Manajemen Sekolah */}
+        <Link href="/manajemen" style={{ textDecoration: 'none' }}>
+          <div className="game-card" style={{
+            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+            borderRadius: 24, padding: 24,
+            color: 'white',
+            display: 'flex', alignItems: 'center', gap: 20,
+            boxShadow: '0 10px 30px -10px rgba(217,119,6,0.3)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url(https://www.transparenttextures.com/patterns/black-scales.png)' }} />
+            <div style={{
+              width: 64, height: 64, borderRadius: 20,
+              background: '#fbbf24',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 32, flexShrink: 0,
+              boxShadow: '0 8px 16px rgba(245,158,11,0.3)'
+            }}>🤝</div>
+            <div style={{ flex: 1, zIndex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: '#fef3c7', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>Profil Sekolah</span>
+                <span style={{ fontSize: 8, fontWeight: 700, background: '#10b981', color: 'white', padding: '2px 8px', borderRadius: 20 }}>+XP</span>
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 800 }}>Manajemen Sekolah</div>
+              <div style={{ fontSize: 12, color: '#fef3c7', marginTop: 2 }}>Kenali struktur organisasi sekolah (Telkom Schools Malang)</div>
+            </div>
+            <div style={{
+              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
+            }}>→</div>
+          </div>
+        </Link>
+
         {/* Profil YPT - Full Width */}
         <Link href="/profil-ypt" style={{ textDecoration: 'none' }}>
           <div className="game-card" style={{
