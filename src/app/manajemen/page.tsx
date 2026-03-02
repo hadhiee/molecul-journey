@@ -122,6 +122,11 @@ export default function ManajemenPage() {
     const [xpEarned, setXpEarned] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    // New state for accordions and Personnel XP
+    const [expandedDepts, setExpandedDepts] = useState<number[]>([]);
+    const [personnelXpEarned, setPersonnelXpEarned] = useState(false);
+    const [loadingPersonnelXP, setLoadingPersonnelXP] = useState(false);
+
     // Auto-earn XP after exploring for 3 seconds
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -132,6 +137,20 @@ export default function ManajemenPage() {
         }
         return () => clearTimeout(timer);
     }, [xpEarned, userEmail]);
+
+    // Check if Personnel XP already claimed on mount
+    useEffect(() => {
+        if (!userEmail) return;
+        supabase
+            .from('user_progress')
+            .select('*')
+            .eq('user_email', userEmail)
+            .eq('mission_id', 'SYSTEM_EXPLORE_PERSONIL')
+            .single()
+            .then(({ data }) => {
+                if (data) setPersonnelXpEarned(true);
+            });
+    }, [userEmail]);
 
     const handleEarnXP = async () => {
         if (xpEarned || !userEmail) return;
@@ -160,6 +179,38 @@ export default function ManajemenPage() {
             console.error(e);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const toggleDept = async (idx: number) => {
+        setExpandedDepts(prev =>
+            prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
+        );
+
+        if (!personnelXpEarned && userEmail && !loadingPersonnelXP) {
+            setLoadingPersonnelXP(true);
+            try {
+                const { data: existing } = await supabase
+                    .from('user_progress')
+                    .select('*')
+                    .eq('user_email', userEmail)
+                    .eq('mission_id', 'SYSTEM_EXPLORE_PERSONIL')
+                    .single();
+
+                if (!existing) {
+                    await supabase.from("user_progress").insert({
+                        user_email: userEmail,
+                        mission_id: "SYSTEM_EXPLORE_PERSONIL",
+                        score: 20,
+                        created_at: new Date().toISOString()
+                    });
+                }
+                setPersonnelXpEarned(true);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                setLoadingPersonnelXP(false);
+            }
         }
     };
 
@@ -232,38 +283,76 @@ export default function ManajemenPage() {
                 background: 'white', borderRadius: 24, padding: '32px 24px', border: '1px solid #e2e8f0',
                 marginBottom: 32, boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)'
             }}>
-                <div style={{ marginBottom: 24 }}>
-                    <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1e293b' }}>Personil Unit Sekolah</h2>
-                    <p style={{ fontSize: 13, color: '#64748b' }}>Daftar personel lengkap berdasarkan divisi penugasan</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+                    <div>
+                        <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1e293b' }}>Personil Unit Sekolah</h2>
+                        <p style={{ fontSize: 13, color: '#64748b' }}>Daftar personel lengkap berdasarkan divisi penugasan</p>
+                    </div>
+                    {personnelXpEarned ? (
+                        <div style={{ background: '#dcfce7', color: '#16a34a', padding: '8px 16px', borderRadius: 99, fontSize: 13, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <span style={{ fontSize: 16 }}>🎉</span> +20 XP Diraih!
+                        </div>
+                    ) : (
+                        <div style={{ background: '#f1f5f9', color: '#64748b', padding: '8px 16px', borderRadius: 99, fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+                            {loadingPersonnelXP ? "Menyimpan XP..." : "Klik untuk membuka divisi (+20 XP)"}
+                        </div>
+                    )}
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                     {personnelData.map((dept, idx) => (
                         <div key={idx} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden' }}>
-                            <div style={{ background: dept.color, padding: '12px 20px', color: 'white' }}>
+                            <div
+                                onClick={() => toggleDept(idx)}
+                                style={{
+                                    background: dept.color,
+                                    padding: '16px 20px',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    userSelect: 'none',
+                                    transition: 'background 0.2s',
+                                }}
+                            >
                                 <h3 style={{ fontSize: 15, fontWeight: 800, margin: 0 }}>{dept.category}</h3>
+                                <div style={{
+                                    transform: expandedDepts.includes(idx) ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    transition: 'transform 0.3s ease',
+                                    fontSize: 14,
+                                    fontWeight: 800
+                                }}>▼</div>
                             </div>
-                            <div style={{ padding: 16, overflowX: 'auto' }}>
-                                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 600 }}>
-                                    <thead style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
-                                        <tr>
-                                            <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569', width: 60 }}>No.</th>
-                                            {/* <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569', width: 120 }}>NIP</th> */}
-                                            <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569' }}>Nama</th>
-                                            <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569' }}>Jabatan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {dept.members.map((member, mIdx) => (
-                                            <tr key={mIdx} style={{ borderBottom: '1px solid #e2e8f0', background: mIdx % 2 === 0 ? 'white' : '#f8fafc' }}>
-                                                <td style={{ padding: '12px 16px', fontSize: 13, color: '#64748b', fontWeight: 600 }}>{mIdx + 1}</td>
-                                                {/* <td style={{ padding: '12px 16px', fontSize: 13, color: '#64748b', fontFamily: 'monospace' }}>{member.nip}</td> */}
-                                                <td style={{ padding: '12px 16px', fontSize: 14, color: '#1e293b', fontWeight: 700 }}>{member.nama}</td>
-                                                <td style={{ padding: '12px 16px', fontSize: 13, color: '#475569' }}>{member.jabatan}</td>
+
+                            <div style={{
+                                overflow: 'hidden',
+                                height: expandedDepts.includes(idx) ? 'auto' : 0,
+                                opacity: expandedDepts.includes(idx) ? 1 : 0,
+                                transition: 'all 0.3s ease'
+                            }}>
+                                <div style={{ padding: 16, overflowX: 'auto' }}>
+                                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 600 }}>
+                                        <thead style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
+                                            <tr>
+                                                <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569', width: 60 }}>No.</th>
+                                                {/* <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569', width: 120 }}>NIP</th> */}
+                                                <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569' }}>Nama</th>
+                                                <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569' }}>Jabatan</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {dept.members.map((member, mIdx) => (
+                                                <tr key={mIdx} style={{ borderBottom: '1px solid #e2e8f0', background: mIdx % 2 === 0 ? 'white' : '#f8fafc' }}>
+                                                    <td style={{ padding: '12px 16px', fontSize: 13, color: '#64748b', fontWeight: 600 }}>{mIdx + 1}</td>
+                                                    {/* <td style={{ padding: '12px 16px', fontSize: 13, color: '#64748b', fontFamily: 'monospace' }}>{member.nip}</td> */}
+                                                    <td style={{ padding: '12px 16px', fontSize: 14, color: '#1e293b', fontWeight: 700 }}>{member.nama}</td>
+                                                    <td style={{ padding: '12px 16px', fontSize: 13, color: '#475569' }}>{member.jabatan}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     ))}
