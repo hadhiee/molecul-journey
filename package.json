@@ -21,6 +21,7 @@
     "next-auth": "^4.24.13",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-zoom-pan-pinch": "^3.7.0",
     "rss-parser": "^3.13.0",
     "three": "^0.182.0"
   },

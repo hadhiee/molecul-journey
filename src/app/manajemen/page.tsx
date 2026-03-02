@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { supabase } from "@/lib/supabase";
 import SignOutButton from "@/components/SignOutButton";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 const personnelData = [
     {
@@ -127,6 +128,11 @@ export default function ManajemenPage() {
     const [personnelXpEarned, setPersonnelXpEarned] = useState(false);
     const [loadingPersonnelXP, setLoadingPersonnelXP] = useState(false);
 
+    // Mini-game state
+    const [foundPeople, setFoundPeople] = useState<string[]>([]);
+    const [gameXpEarned, setGameXpEarned] = useState(false);
+    const [loadingGameXP, setLoadingGameXP] = useState(false);
+
     // Auto-earn XP after exploring for 3 seconds
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -141,6 +147,8 @@ export default function ManajemenPage() {
     // Check if Personnel XP already claimed on mount
     useEffect(() => {
         if (!userEmail) return;
+
+        // Personnel XP
         supabase
             .from('user_progress')
             .select('*')
@@ -149,6 +157,20 @@ export default function ManajemenPage() {
             .single()
             .then(({ data }) => {
                 if (data) setPersonnelXpEarned(true);
+            });
+
+        // Game XP
+        supabase
+            .from('user_progress')
+            .select('*')
+            .eq('user_email', userEmail)
+            .eq('mission_id', 'SYSTEM_MINIGAME_STRUKTUR')
+            .single()
+            .then(({ data }) => {
+                if (data) {
+                    setGameXpEarned(true);
+                    setFoundPeople(['direktur', 'kepsek', 'kkomite', 'admin']);
+                }
             });
     }, [userEmail]);
 
@@ -214,6 +236,42 @@ export default function ManajemenPage() {
         }
     };
 
+    const handleFindPerson = async (id: string, zoomToElement: any) => {
+        zoomToElement(id, 2.5, 800);
+
+        if (foundPeople.includes(id)) return;
+
+        const newFound = [...foundPeople, id];
+        setFoundPeople(newFound);
+
+        // Check if 4/4 found
+        if (newFound.length === 4 && !gameXpEarned && userEmail && !loadingGameXP) {
+            setLoadingGameXP(true);
+            try {
+                const { data: existing } = await supabase
+                    .from('user_progress')
+                    .select('*')
+                    .eq('user_email', userEmail)
+                    .eq('mission_id', 'SYSTEM_MINIGAME_STRUKTUR')
+                    .single();
+
+                if (!existing) {
+                    await supabase.from("user_progress").insert({
+                        user_email: userEmail,
+                        mission_id: "SYSTEM_MINIGAME_STRUKTUR",
+                        score: 40,
+                        created_at: new Date().toISOString()
+                    });
+                }
+                setGameXpEarned(true);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                setLoadingGameXP(false);
+            }
+        }
+    };
+
     return (
         <div style={{ maxWidth: 1000, margin: '0 auto', padding: '24px 16px 80px' }}>
             {/* Navigation */}
@@ -271,11 +329,90 @@ export default function ManajemenPage() {
                 </div>
 
                 <div style={{ width: '100%', borderRadius: 16, overflow: 'hidden', border: '1px solid #e2e8f0', background: '#f8fafc', padding: 24 }}>
-                    <img
-                        src="https://smktelkom-mlg.sch.id/assets/upload/images/Bagan-Telkom-2026.jpg"
-                        alt="Bagan Struktur Organisasi SMK Telkom Malang"
-                        style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                    />
+                    <TransformWrapper
+                        initialScale={1}
+                        minScale={0.8}
+                        maxScale={4}
+                        centerOnInit={true}
+                    >
+                        {({ zoomIn, zoomOut, resetTransform, zoomToElement }) => (
+                            <React.Fragment>
+                                {/* Game Panel Controls */}
+                                <div style={{ marginBottom: 20, padding: 16, background: gameXpEarned ? 'rgba(22, 163, 74, 0.05)' : 'rgba(239, 68, 68, 0.05)', border: `1px dashed ${gameXpEarned ? '#16a34a' : '#ef4444'}`, borderRadius: 12 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                                        <div style={{ fontSize: 13, fontWeight: 800, color: gameXpEarned ? '#16a34a' : '#ef4444' }}>🎮 Mini Game: Inspeksi Pimpinan!</div>
+                                        <div style={{ fontSize: 12, fontWeight: 700, background: gameXpEarned ? '#dcfce7' : '#fee2e2', color: gameXpEarned ? '#16a34a' : '#ef4444', padding: '4px 10px', borderRadius: 99 }}>
+                                            {gameXpEarned ? '🎉 Tuntas +40 XP' : `Progres: ${foundPeople.length}/4 (+40 XP)`}
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                                        {[
+                                            { id: 'direktur', label: 'Direktur Utama' },
+                                            { id: 'kepsek', label: 'Kepala Sekolah' },
+                                            { id: 'kkomite', label: 'Komite Sekolah' },
+                                            { id: 'admin', label: 'Kep. Administrasi' }
+                                        ].map(target => (
+                                            <button
+                                                key={target.id}
+                                                onClick={() => handleFindPerson(target.id, zoomToElement)}
+                                                style={{
+                                                    background: foundPeople.includes(target.id) ? '#dcfce7' : 'white',
+                                                    border: `1px solid ${foundPeople.includes(target.id) ? '#16a34a' : '#e2e8f0'}`,
+                                                    color: foundPeople.includes(target.id) ? '#16a34a' : '#475569',
+                                                    padding: '8px 14px', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                                                    transition: 'all 0.2s',
+                                                }}
+                                            >
+                                                {foundPeople.includes(target.id) ? '✅' : '🔍'} Cari {target.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div style={{ display: 'flex', gap: 6, marginTop: 16, borderTop: '1px solid #e2e8f0', paddingTop: 16 }}>
+                                        <button onClick={() => zoomIn()} style={{ padding: '6px 14px', background: 'white', border: '1px solid #cbd5e1', borderRadius: 8, cursor: 'pointer', fontSize: 16, color: '#475569' }}>+</button>
+                                        <button onClick={() => zoomOut()} style={{ padding: '6px 14px', background: 'white', border: '1px solid #cbd5e1', borderRadius: 8, cursor: 'pointer', fontSize: 16, color: '#475569' }}>-</button>
+                                        <button onClick={() => resetTransform()} style={{ padding: '6px 14px', background: 'white', border: '1px solid #cbd5e1', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#64748b' }}>Reset</button>
+                                    </div>
+                                </div>
+
+                                <div style={{ border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden', cursor: 'grab', touchAction: 'none' }}>
+                                    <TransformComponent wrapperStyle={{ width: '100%', height: 'auto', background: 'white' }}>
+                                        <div style={{ position: 'relative', width: '100%' }}>
+                                            <img
+                                                src="https://smktelkom-mlg.sch.id/assets/upload/images/Bagan-Telkom-2026.jpg"
+                                                alt="Bagan Struktur Organisasi SMK Telkom Malang"
+                                                style={{ width: '100%', height: 'auto', display: 'block' }}
+                                            />
+                                            {/* Invisible Targets mapped over image */}
+                                            {[
+                                                { id: 'direktur', top: '15%', left: '44%', w: '12%', h: '8%' },
+                                                { id: 'kepsek', top: '35%', left: '44%', w: '12%', h: '8%' },
+                                                { id: 'kkomite', top: '33%', left: '26%', w: '12%', h: '8%' },
+                                                { id: 'admin', top: '51%', left: '61%', w: '12%', h: '6%' }
+                                            ].map(target => (
+                                                <div
+                                                    key={`target-${target.id}`}
+                                                    id={target.id}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: target.top,
+                                                        left: target.left,
+                                                        width: target.w,
+                                                        height: target.h,
+                                                        border: foundPeople.includes(target.id) ? '3px solid #16a34a' : 'none',
+                                                        backgroundColor: foundPeople.includes(target.id) ? 'rgba(22, 163, 74, 0.2)' : 'transparent',
+                                                        borderRadius: 8,
+                                                        pointerEvents: 'none',
+                                                        transition: 'all 0.4s',
+                                                        boxShadow: foundPeople.includes(target.id) ? '0 0 20px rgba(22, 163, 74, 0.6)' : 'none',
+                                                    }}
+                                                />
+                                            ))}
+                                        </div>
+                                    </TransformComponent>
+                                </div>
+                            </React.Fragment>
+                        )}
+                    </TransformWrapper>
                 </div>
             </div>
 
