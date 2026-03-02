@@ -99,7 +99,8 @@ export default function AboutPage() {
                             <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b', marginBottom: 8 }}>KAPABILITAS:</div>
                             <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, color: '#475569', lineHeight: 1.8, display: 'flex', flexDirection: 'column', gap: 8 }}>
                                 <li><strong>Anti-Plagiasi:</strong> Membimbing proses belajar, bukan *copy-paste*.</li>
-                                <li><strong>Konselor Budaya:</strong> Memahami pedoman nilai sekolah.</li>
+                                <li><strong>Deep Conversation:</strong> Fokus ngobrol mendalam dan kritis guna memacu nalar demi pembelajaran yang bermakna dan asik.</li>
+                                <li><strong>Konselor Budaya:</strong> Memahami pedoman nilai pendidikan sekolah.</li>
                                 <li><strong>Tutor Kejuruan:</strong> Asisten belajar handal untuk anak RPL, TKJ, maupun PG.</li>
                             </ul>
                         </div>
