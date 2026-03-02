@@ -240,7 +240,7 @@ export default async function Home() {
             <div style={{ zIndex: 1, marginTop: 'auto' }}>
               <div style={{ fontSize: 13, fontWeight: 800, color: 'white', marginBottom: 4 }}>BOMBI 3D</div>
               <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.3 }}>
-                Bocah Moklet Bionic
+                Bocah Moklet Bionik
               </div>
             </div>
           </div>

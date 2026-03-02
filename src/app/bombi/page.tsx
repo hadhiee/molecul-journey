@@ -33,14 +33,14 @@ export default function BombiPage() {
                     <span className={styles.titleAccent}>BOMBI</span>
                 </h1>
                 <p className={styles.subtitle}>
-                    Bocah Moklet Bionic — Maskot Kebanggaan Moklet
+                    Bocah Moklet Bionik — Maskot Kebanggaan Moklet
                 </p>
             </div>
 
             {/* Name Banner */}
             <div className={styles.nameBanner}>
                 <h2 className={styles.nameTitle}>B · O · M · B · I</h2>
-                <p className={styles.nameExpand}>Bocah Moklet Bionic</p>
+                <p className={styles.nameExpand}>Bocah Moklet Bionik</p>
             </div>
 
             {/* 3D Viewer */}
@@ -85,7 +85,7 @@ export default function BombiPage() {
                     <div className={styles.infoCardBody}>
                         <ul>
                             <li>BOMBI adalah maskot kebanggaan SMK Telkom Malang (Moklet)</li>
-                            <li>Nama BOMBI singkatan dari <strong>Bocah Moklet Bionic</strong></li>
+                            <li>Nama BOMBI singkatan dari <strong>Bocah Moklet Bionik</strong></li>
                             <li>Melambangkan semangat inovasi dan teknologi siswa Moklet</li>
                             <li>Hadir di berbagai acara sekolah dan kompetisi</li>
                         </ul>
@@ -112,7 +112,7 @@ export default function BombiPage() {
                         <ul>
                             <li><strong>Bocah</strong> — Jiwa muda, kreatif, dan penuh semangat</li>
                             <li><strong>Moklet</strong> — Identitas dan kebanggaan sekolah</li>
-                            <li><strong>Bionic</strong> — Kekuatan teknologi dan inovasi tanpa batas</li>
+                            <li><strong>Bionik</strong> — Berakhlak, Imaginatif, Optimis, Nasionalis, Inspiratif, dan Kreatif</li>
                             <li>Inspirasi bagi seluruh Mokleter untuk terus berinovasi</li>
                         </ul>
                     </div>
