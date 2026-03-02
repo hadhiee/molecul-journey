@@ -695,6 +695,39 @@ export default async function Home() {
           </div>
         </Link>
 
+        {/* Ekstrakurikuler */}
+        <Link href="/ekskul" style={{ textDecoration: 'none' }}>
+          <div className="game-card" style={{
+            background: 'linear-gradient(135deg, #047857, #065f46)',
+            borderRadius: 24, padding: 24,
+            color: 'white',
+            display: 'flex', alignItems: 'center', gap: 20,
+            boxShadow: '0 10px 30px -10px rgba(4,120,87,0.3)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url(https://www.transparenttextures.com/patterns/cubes.png)' }} />
+            <div style={{
+              width: 64, height: 64, borderRadius: 20,
+              background: '#10b981',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 32, flexShrink: 0,
+              boxShadow: '0 8px 16px rgba(16,185,129,0.3)'
+            }}>⚽</div>
+            <div style={{ flex: 1, zIndex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: '#a7f3d0', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>Minat Bakat</span>
+                <span style={{ fontSize: 8, fontWeight: 700, background: '#10b981', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 800 }}>Ekstrakurikuler</div>
+              <div style={{ fontSize: 12, color: '#d1fae5', marginTop: 2 }}>Kenali wada ekskul krida, olahraga & keahlian!</div>
+            </div>
+            <div style={{
+              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
+            }}>→</div>
+          </div>
+        </Link>
+
         {/* Journey Map - Full Width */}
         <Link href="/journey" style={{ textDecoration: 'none' }}>
           <div className="game-card" style={{
