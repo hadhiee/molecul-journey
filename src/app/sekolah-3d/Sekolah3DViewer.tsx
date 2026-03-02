@@ -79,8 +79,8 @@ export default function Sekolah3DViewer({ userEmail }: { userEmail: string }) {
                 </div>
 
                 {/* 3D Embed */}
-                <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', minHeight: 400, background: 'linear-gradient(to bottom, #0f172a, #1e293b)', borderRadius: 16, overflow: 'hidden', cursor: 'grab' }}>
-                    <Canvas shadows camera={{ position: [0, 5, 10], fov: 50 }}>
+                <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', minHeight: 400, background: 'linear-gradient(to bottom, #0f172a, #1e293b)', borderRadius: 16, overflow: 'hidden', cursor: 'grab', touchAction: 'none' }}>
+                    <Canvas shadows camera={{ position: [0, 5, 10], fov: 50 }} style={{ touchAction: 'none' }}>
                         <Suspense fallback={
                             <Html center>
                                 <div style={{ color: 'white', fontWeight: 800, whiteSpace: 'nowrap' }}>Memuat Model 3D...</div>
@@ -90,7 +90,21 @@ export default function Sekolah3DViewer({ userEmail }: { userEmail: string }) {
                                 <Model />
                             </Stage>
                         </Suspense>
-                        <OrbitControls autoRotate autoRotateSpeed={0.5} makeDefault minDistance={2} maxDistance={25} maxPolarAngle={Math.PI / 2} />
+                        <OrbitControls
+                            autoRotate
+                            autoRotateSpeed={0.3}
+                            makeDefault
+                            minDistance={2}
+                            maxDistance={35}
+                            maxPolarAngle={Math.PI / 2 - 0.05}
+                            enablePan={true}
+                            enableZoom={true}
+                            zoomSpeed={1.5}
+                            panSpeed={1.5}
+                            rotateSpeed={0.8}
+                            enableDamping={true}
+                            dampingFactor={0.05}
+                        />
                     </Canvas>
                     <div style={{ position: 'absolute', bottom: 12, right: 12, display: 'flex', gap: 8, pointerEvents: 'none' }}>
                         <div style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', color: 'white', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 99 }}>
