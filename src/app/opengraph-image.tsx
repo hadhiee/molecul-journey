@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
 export const alt = 'MoLeCul - Moklet Learning Culture Journey';
 export const size = {
     width: 1200,
