@@ -132,6 +132,7 @@ export default function ManajemenPage() {
     const [foundPeople, setFoundPeople] = useState<string[]>([]);
     const [gameXpEarned, setGameXpEarned] = useState(false);
     const [loadingGameXP, setLoadingGameXP] = useState(false);
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
 
     // Auto-earn XP after exploring for 3 seconds
     useEffect(() => {
@@ -238,6 +239,19 @@ export default function ManajemenPage() {
 
     const handleFindPerson = async (id: string, zoomToElement: any) => {
         zoomToElement(id, 2.5, 800);
+
+        const targets = [
+            { id: 'direktur', label: 'Direktur Utama' },
+            { id: 'kepsek', label: 'Kepala Sekolah' },
+            { id: 'kkomite', label: 'Komite Sekolah' },
+            { id: 'admin', label: 'Kep. Administrasi' }
+        ];
+
+        const label = targets.find(t => t.id === id)?.label;
+        if (label) {
+            setToastMessage(`🔍 Berhasil menemukan ${label}!`);
+            setTimeout(() => setToastMessage(null), 3000);
+        }
 
         if (foundPeople.includes(id)) return;
 
@@ -382,16 +396,21 @@ export default function ManajemenPage() {
                                                 alt="Bagan Struktur Organisasi SMK Telkom Malang"
                                                 style={{ width: '100%', height: 'auto', display: 'block' }}
                                             />
-                                            {/* Invisible Targets mapped over image */}
+                                            {/* Targets mapped over image */}
                                             {[
-                                                { id: 'direktur', top: '15%', left: '44%', w: '12%', h: '8%' },
-                                                { id: 'kepsek', top: '35%', left: '44%', w: '12%', h: '8%' },
-                                                { id: 'kkomite', top: '33%', left: '26%', w: '12%', h: '8%' },
-                                                { id: 'admin', top: '51%', left: '61%', w: '12%', h: '6%' }
+                                                { id: 'direktur', top: '15%', left: '44%', w: '12%', h: '8%', label: 'Direktur Utama' },
+                                                { id: 'kepsek', top: '35%', left: '44%', w: '12%', h: '8%', label: 'Kepala Sekolah' },
+                                                { id: 'kkomite', top: '33%', left: '26%', w: '12%', h: '8%', label: 'Komite Sekolah' },
+                                                { id: 'admin', top: '51%', left: '61%', w: '12%', h: '6%', label: 'Kep. Administrasi' }
                                             ].map(target => (
                                                 <div
                                                     key={`target-${target.id}`}
                                                     id={target.id}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleFindPerson(target.id, zoomToElement);
+                                                    }}
+                                                    title={`Klik untuk inspeksi ${target.label}`}
                                                     style={{
                                                         position: 'absolute',
                                                         top: target.top,
@@ -401,7 +420,8 @@ export default function ManajemenPage() {
                                                         border: foundPeople.includes(target.id) ? '3px solid #16a34a' : 'none',
                                                         backgroundColor: foundPeople.includes(target.id) ? 'rgba(22, 163, 74, 0.2)' : 'transparent',
                                                         borderRadius: 8,
-                                                        pointerEvents: 'none',
+                                                        pointerEvents: 'auto',
+                                                        cursor: 'pointer',
                                                         transition: 'all 0.4s',
                                                         boxShadow: foundPeople.includes(target.id) ? '0 0 20px rgba(22, 163, 74, 0.6)' : 'none',
                                                     }}
@@ -415,6 +435,34 @@ export default function ManajemenPage() {
                     </TransformWrapper>
                 </div>
             </div>
+
+            {/* Custom Toast Notification for Mini-game */}
+            {toastMessage && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: 32,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: 'rgba(30, 41, 59, 0.95)',
+                    backdropFilter: 'blur(8px)',
+                    color: 'white',
+                    padding: '12px 24px',
+                    borderRadius: 99,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+                    zIndex: 9999,
+                    animation: 'slideUpFade 0.3s ease-out forwards',
+                }}>
+                    {toastMessage}
+                </div>
+            )}
+            <style>{`
+                @keyframes slideUpFade {
+                    from { opacity: 0; transform: translate(-50%, 20px); }
+                    to { opacity: 1; transform: translate(-50%, 0); }
+                }
+            `}</style>
 
             <div style={{
                 background: 'white', borderRadius: 24, padding: '32px 24px', border: '1px solid #e2e8f0',
