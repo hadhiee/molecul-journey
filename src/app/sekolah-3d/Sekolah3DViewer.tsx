@@ -1,23 +1,29 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { supabase } from "@/lib/supabase";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF, Stage, Html } from "@react-three/drei";
+
+function Model() {
+    const { scene } = useGLTF("/models/gedung-sekolah.glb");
+    return <primitive object={scene} />;
+}
 
 export default function Sekolah3DViewer({ userEmail }: { userEmail: string }) {
     const [xpEarned, setXpEarned] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [showIframe, setShowIframe] = useState(true);
 
     // Auto-earn XP after exploring for 5 seconds
     useEffect(() => {
         let timer: NodeJS.Timeout;
-        if (showIframe && !xpEarned) {
+        if (!xpEarned) {
             timer = setTimeout(() => {
                 handleEarnXP();
             }, 5000); // give points after 5s active viewing
         }
         return () => clearTimeout(timer);
-    }, [showIframe, xpEarned]);
+    }, [xpEarned]);
 
     const handleEarnXP = async () => {
         if (xpEarned || !userEmail) return;
@@ -49,10 +55,6 @@ export default function Sekolah3DViewer({ userEmail }: { userEmail: string }) {
         }
     };
 
-    const handleIframeError = () => {
-        setShowIframe(false);
-    };
-
     return (
         <>
             <div style={{
@@ -76,55 +78,29 @@ export default function Sekolah3DViewer({ userEmail }: { userEmail: string }) {
                     )}
                 </div>
 
-                {/* 3D Embed Iframe / Fallback */}
-                <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', minHeight: 400, background: '#0f172a', borderRadius: 16, overflow: 'hidden' }}>
-                    {showIframe ? (
-                        <iframe
-                            src="https://studio.tripo3d.ai/3d-model/e71a75ec-3026-43ea-85a1-9d30e65a1a12?invite_code=NYGP33"
-                            style={{ width: '100%', height: '100%', border: 'none' }}
-                            allow="fullscreen; xr-spatial-tracking"
-                            sandbox="allow-scripts allow-same-origin allow-popups"
-                            onError={handleIframeError}
-                        />
-                    ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', padding: 24, textAlign: 'center' }}>
-                            <div style={{ fontSize: 48, marginBottom: 16 }}>🏛️</div>
-                            <h3 style={{ fontSize: 20, fontWeight: 800, color: 'white', marginBottom: 8 }}>Penampil 3D Diblokir Oleh Tripo3D</h3>
-                            <p style={{ color: '#94a3b8', fontSize: 14, maxWidth: 400, marginBottom: 24 }}>
-                                Situs eksternal tidak mengizinkan disematkan secara langsung di halaman ini. Anda bisa langsung membukanya di tab baru.
-                            </p>
-                            <a
-                                href="https://studio.tripo3d.ai/3d-model/e71a75ec-3026-43ea-85a1-9d30e65a1a12?invite_code=NYGP33"
-                                target="_blank"
-                                rel="noreferrer"
-                                onClick={handleEarnXP}
-                                style={{
-                                    background: 'var(--theme-primary, #e11d48)', color: 'white', textDecoration: 'none',
-                                    padding: '14px 28px', borderRadius: 12, fontWeight: 800, fontSize: 15,
-                                    boxShadow: '0 8px 16px rgba(225,29,72,0.3)', transition: 'transform 0.2s', display: 'flex', alignItems: 'center', gap: 8
-                                }}
-                            >
-                                Buka di Tab Baru ↗
-                            </a>
+                {/* 3D Embed */}
+                <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', minHeight: 400, background: 'linear-gradient(to bottom, #0f172a, #1e293b)', borderRadius: 16, overflow: 'hidden', cursor: 'grab' }}>
+                    <Canvas shadows camera={{ position: [0, 5, 10], fov: 50 }}>
+                        <Suspense fallback={
+                            <Html center>
+                                <div style={{ color: 'white', fontWeight: 800, whiteSpace: 'nowrap' }}>Memuat Model 3D...</div>
+                            </Html>
+                        }>
+                            <Stage environment="city" intensity={0.5}>
+                                <Model />
+                            </Stage>
+                        </Suspense>
+                        <OrbitControls autoRotate autoRotateSpeed={0.5} makeDefault minDistance={2} maxDistance={25} maxPolarAngle={Math.PI / 2} />
+                    </Canvas>
+                    <div style={{ position: 'absolute', bottom: 12, right: 12, display: 'flex', gap: 8, pointerEvents: 'none' }}>
+                        <div style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', color: 'white', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 99 }}>
+                            ← Geser untuk memutar
                         </div>
-                    )}
-
-                    {/* Block Overlap Helper for Tripo UI if needed */}
-                    {showIframe && (
-                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: 12, display: 'flex', justifyContent: 'flex-end', pointerEvents: 'none' }}>
-                            <div style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', color: 'white', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 99 }}>
-                                Powered by Tripo3D
-                            </div>
+                        <div style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', color: 'white', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 99 }}>
+                            🔍 Scroll untuk zoom
                         </div>
-                    )}
-                </div>
-
-                {/* Help Text Fallback if iframe is blocked by X-Frame but ignores React onError */}
-                {showIframe && (
-                    <div style={{ marginTop: 16, fontSize: 12, color: '#94a3b8', textAlign: 'center' }}>
-                        Jika model 3D tidak muncul (layar putih/error), klik <a href="https://studio.tripo3d.ai/3d-model/e71a75ec-3026-43ea-85a1-9d30e65a1a12?invite_code=NYGP33" target="_blank" rel="noreferrer" onClick={handleEarnXP} style={{ color: '#e11d48', fontWeight: 800, textDecoration: 'underline' }}>di sini</a> untuk membuka langsung.
                     </div>
-                )}
+                </div>
             </div>
 
             {/* Facts Context Section */}
