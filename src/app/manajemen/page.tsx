@@ -6,6 +6,115 @@ import { useSession } from "next-auth/react";
 import { supabase } from "@/lib/supabase";
 import SignOutButton from "@/components/SignOutButton";
 
+const personnelData = [
+    {
+        category: "A. KURIKULUM",
+        color: "#e11d48",
+        members: [
+            { nip: "10860082", nama: "Ifa Choirunnisa, S. ST, M.Pd.", jabatan: "Waka. Bidang Kurikulum" },
+            { nip: "22890006", nama: "Larasati Chairun Nisa, S.Pd.", jabatan: "Kaur. Pembelajaran dan Perpustakaan" },
+            { nip: "24920002", nama: "Rendi Lusbiantoro, M.Pd.", jabatan: "Kaur. Kurikulum Silabus & Materi" },
+            { nip: "11720059", nama: "Tulus Andrianto, S.Pd.", jabatan: "PIC. Magang Luar Negeri" },
+            { nip: "25890013", nama: "Jevi Wenda Santi,S Pd.", jabatan: "PIC. Kelas Internasional" },
+            { nip: "26930005", nama: "Mohamad Munif, S.Pd.", jabatan: "PIC. Tahfidz dan Study Luar Negeri" },
+            { nip: "24000030", nama: "Ikrima Rahmatika Layyina, A.Md, Lib.", jabatan: "Staf Perpustakaan" },
+        ]
+    },
+    {
+        category: "B. KONSENTRASI KEAHLIAN",
+        color: "#2563eb",
+        members: [
+            { nip: "19940017", nama: "Firdausa, S.Pd.", jabatan: "Kepala Konsentrasi Keahlian RPL" },
+            { nip: "19920001", nama: "Roselina Febriati, S.ST.", jabatan: "Kepala Konsentrasi Keahlian TKJ" },
+            { nip: "25920023", nama: "Bias Damiasa, S.Pd.", jabatan: "Kepala Konsentrasi Keahlian PG" },
+            { nip: "26890005", nama: "Dafid Bayu Firmansyah, M.Kom.", jabatan: "Sekretaris Konsentrasi Keahlian RPL" },
+            { nip: "26960020", nama: "Joni Setiyawan Saputra, S.Pd.", jabatan: "Sekretaris Konsentrasi Keahlian TKJ dan COE Cyber Security" },
+            { nip: "25960025", nama: "Achmad Ilham Ramadhani, S. Pd.", jabatan: "Sekretaris Konsentrasi Keahlian PG" },
+        ]
+    },
+    {
+        category: "C. KESISWAAN DAN KARAKTER",
+        color: "#059669",
+        members: [
+            { nip: "92680019", nama: "Drs. Bambang Siswantoro", jabatan: "Waka. Bidang Kesiswaan & Karakter" },
+            { nip: "25840007", nama: "Adi Nurrachman, S.T., M.Kom.", jabatan: "Kaur. Ekstra Kurikuler dan Prestasi" },
+            { nip: "02740012", nama: "Ahmad Nasikin, M.Pd.", jabatan: "Kaur. Bimbingan Konseling dan Karakter" },
+            { nip: "23880015", nama: "Ana Wahyuning Sholikhatin S.Pd.", jabatan: "Sekretariat Kesiswaan" },
+            { nip: "25880016", nama: "Tenri Farizatul Warda, S.Pd.", jabatan: "PIC. Keuangan Kesiswaan" },
+            { nip: "18880132", nama: "Siana Norma Heny, M.Pd.", jabatan: "PIC. Prestasi" },
+            { nip: "25010037", nama: "Guntur Adi Putra, S.Pd.", jabatan: "PIC. Ekstra Kurikuler dan Portofolio" },
+            { nip: "25990011", nama: "Syafirah Aisyah, S.T.", jabatan: "PIC. Pembina OSIS" },
+            { nip: "25910032", nama: "Dimas Agung Prasetyawan, M.Pd.", jabatan: "PIC. JIWA dan Lomba" },
+            { nip: "11860083", nama: "Rofiqut Thoriq, S.Pd.", jabatan: "PIC. Tata Tertib" },
+            { nip: "26820005", nama: "Firman Hadi Amrullah Z., S.Kom.", jabatan: "PIC. Program 5R dan Penegakan Kedisiplinan" },
+            { nip: "26870007", nama: "M. Masyis Dzul Hilmi, M.Pd.", jabatan: "PIC. Kegiatan Kerohanian" },
+            { nip: "10830017", nama: "Emil Bakhtiar Zulkarnain, S.Psi.", jabatan: "Koordinator Guru BK" },
+            { nip: "25850009", nama: "Nurwidiasih Firstyana Winadi, S.Psi.", jabatan: "PIC. Pendidikan Keputrian dan Kegiatan Sosial" },
+            { nip: "26950012", nama: "Misfalah Thawafa, S.Psi.", jabatan: "PIC. Pendidikan Karakter" },
+            { nip: "25010035", nama: "Kheren Carollina Pamintarso, S.Pd.", jabatan: "PIC. Tim Pencegahan dan Penindakan Kekerasan (TPPK) dan Media Sosial" },
+            { nip: "-", nama: "Dwi Ajeng Ayu Rahmadani, S.Tr.Keb.", jabatan: "Tenaga Kesehatan Sekolah" },
+        ]
+    },
+    {
+        category: "D. HUBUNGAN INDUSTRI DAN KOMUNIKASI",
+        color: "#8b5cf6",
+        members: [
+            { nip: "25950024", nama: "Qodri Akbar Wajdi, S.Kom.", jabatan: "Waka. Bidang Hubin dan Komunikasi" },
+            { nip: "25930024", nama: "Kinanti Retnaning Widyani, M.Pd.", jabatan: "Kaur. PPDB dan Komunikasi" },
+            { nip: "25950026", nama: "Tito Tri Prabowo, M.Pd.", jabatan: "Kaur. Sinergi, Unit Produksi dan Alumni" },
+            { nip: "19910002", nama: "Hirga Ertama Putra, S.Kom.", jabatan: "PIC. UPJ" },
+            { nip: "25960007", nama: "Ina Indra Rustika, S.Pd.", jabatan: "PIC. Humas" },
+            { nip: "25990028", nama: "Feniliya Mayrini, S.Pd.", jabatan: "PIC. Admisi" },
+            { nip: "25950035", nama: "Rahardiyan Andzikriadi, S.S.", jabatan: "PIC. Marketing" },
+            { nip: "08890012", nama: "Yaniko Dimas Yogo Prasetyo, S.Kom.", jabatan: "PIC. Alumni dan CDC" },
+            { nip: "25900015", nama: "Ardhian Suseno, M.Pd.", jabatan: "Sekretariat Hubinkom" },
+            { nip: "26940004", nama: "Aulia Mas'adah, S.Kom.", jabatan: "PIC. Keuangan Hubinkom" }
+        ]
+    },
+    {
+        category: "E. IT, LABORATORIUM, DAN SARANA PRASARANA",
+        color: "#d97706",
+        members: [
+            { nip: "07860075", nama: "Mokhamad Hadi Wijaya, M.T.", jabatan: "Waka. Bidang IT, Lab., dan Sarpra" },
+            { nip: "25950025", nama: "Whyna Agustin, S.Pd.", jabatan: "Kaur IT (Information of Technology)" },
+            { nip: "22880006", nama: "Muhammad Chusni Agus, M.Pd.", jabatan: "Kaur. Laboratorium" },
+            { nip: "11820014", nama: "Ekon Anjar Poernomo, S.Kom.", jabatan: "Kaur Sarana dan Prasarana" },
+            { nip: "25940004", nama: "Amalia Ramadhanty, S.Kom.", jabatan: "PIC. Administrasi, Tata Kelola, dan Keuangan" },
+            { nip: "20820006", nama: "Zainul Abidin, S.Kom.", jabatan: "PIC. IT. Mobile Developer & Technical Support" },
+            { nip: "25960026", nama: "Zakaria, S.Pd.", jabatan: "PIC. IT. Backend & DevOps" },
+            { nip: "25980017", nama: "Chandra Wijaya Kristanto, S.Pd.", jabatan: "PIC. IT. UI/UX & Frontend Developer" },
+            { nip: "26960021", nama: "Muhammad Bagus Arifin, M.Pd.", jabatan: "PIC. IT. Technical Support" },
+            { nip: "26910009", nama: "Nico Rachmacandrana, S.ST.", jabatan: "PIC. IT. Infrastucture & Network" },
+            { nip: "25890012", nama: "Firmansyah Ayatullah, S.Kom.", jabatan: "PIC. Laboratorium Riset" },
+            { nip: "25900022", nama: "Rudi Mistriono, S.Kom.", jabatan: "PIC. Pengelola Dapodik & Inventaris Aset Sekolah" },
+            { nip: "95710035", nama: "Setdiyoko, S.E.", jabatan: "PIC. Sapra. Kebersihan, Keamanan dan Perlengkapan" }
+        ]
+    },
+    {
+        category: "F. ADMINISTRASI/TATA USAHA",
+        color: "#475569",
+        members: [
+            { nip: "22880005", nama: "Laili Agustin, S.T.", jabatan: "Kepala Administrasi" },
+            { nip: "17680052", nama: "Sri Chusnul Haniyah, S.Pd.", jabatan: "Kaur. Human Capital, Logistik & Sekretariat" },
+            { nip: "23950043", nama: "Anum Rosaliani Nur Mufida, S.E.", jabatan: "Kaur. Keuangan" },
+            { nip: "93730054", nama: "Lailatul Istiqomah, S.E.", jabatan: "PIC. Sekretariat" },
+            { nip: "08860007", nama: "Milutfiyana Devi Sulistiyowati, S.E.", jabatan: "PIC. Human Capital" },
+            { nip: "25870009", nama: "Diaur Rahman, S.Pd.", jabatan: "PIC. Logistik" },
+            { nip: "25010036", nama: "Lailla Anggriani, S.Ak.", jabatan: "PIC. Administrasi Keuangan" }
+        ]
+    },
+    {
+        category: "G. QUALITY DEVELOPMENT & PERFORMANCE MANAGEMENT (QDPM)",
+        color: "#ec4899",
+        members: [
+            { nip: "20910001", nama: "Muhamad Arifin, M.Pd.", jabatan: "Kaur. Quality Development Performance Management" },
+            { nip: "25850010", nama: "Agus Hari Purwanto, S.Pd.", jabatan: "Sekretaris QDPM dan Koor. Auditor Internal" },
+            { nip: "17890102", nama: "Pashatania Fitri Indah Lestari, S.Kom.", jabatan: "PIC. Pengelolaan Data" },
+            { nip: "24020001", nama: "Lyra Hertin, S.Pd.", jabatan: "PIC. Pengendali Dokumen" }
+        ]
+    }
+];
+
 export default function ManajemenPage() {
     const { data: session } = useSession();
     const userEmail = session?.user?.email || "";
@@ -116,6 +225,48 @@ export default function ManajemenPage() {
                         alt="Bagan Struktur Organisasi SMK Telkom Malang"
                         style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                     />
+                </div>
+            </div>
+
+            <div style={{
+                background: 'white', borderRadius: 24, padding: '32px 24px', border: '1px solid #e2e8f0',
+                marginBottom: 32, boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)'
+            }}>
+                <div style={{ marginBottom: 24 }}>
+                    <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1e293b' }}>Personil Unit Sekolah</h2>
+                    <p style={{ fontSize: 13, color: '#64748b' }}>Daftar personel lengkap berdasarkan divisi penugasan</p>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                    {personnelData.map((dept, idx) => (
+                        <div key={idx} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden' }}>
+                            <div style={{ background: dept.color, padding: '12px 20px', color: 'white' }}>
+                                <h3 style={{ fontSize: 15, fontWeight: 800, margin: 0 }}>{dept.category}</h3>
+                            </div>
+                            <div style={{ padding: 16, overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 600 }}>
+                                    <thead style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
+                                        <tr>
+                                            <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569', width: 60 }}>No.</th>
+                                            <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569', width: 120 }}>NIP</th>
+                                            <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569' }}>Nama</th>
+                                            <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569' }}>Jabatan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {dept.members.map((member, mIdx) => (
+                                            <tr key={mIdx} style={{ borderBottom: '1px solid #e2e8f0', background: mIdx % 2 === 0 ? 'white' : '#f8fafc' }}>
+                                                <td style={{ padding: '12px 16px', fontSize: 13, color: '#64748b', fontWeight: 600 }}>{mIdx + 1}</td>
+                                                <td style={{ padding: '12px 16px', fontSize: 13, color: '#64748b', fontFamily: 'monospace' }}>{member.nip}</td>
+                                                <td style={{ padding: '12px 16px', fontSize: 14, color: '#1e293b', fontWeight: 700 }}>{member.nama}</td>
+                                                <td style={{ padding: '12px 16px', fontSize: 13, color: '#475569' }}>{member.jabatan}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
