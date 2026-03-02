@@ -45,23 +45,51 @@ export default function FocusChatButton() {
                 background: '#ffffff',
                 color: '#e11d48',
                 borderRadius: 16,
-                padding: '12px 24px',
-                fontSize: 14,
-                fontWeight: 900,
+                padding: '12px 16px',
                 textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 8,
+                gap: 12,
                 boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                transform: clicked ? 'scale(0.95)' : 'scale(1)'
+                transform: clicked ? 'scale(0.95)' : 'scale(1)',
+                position: 'relative'
             }}
         >
-            <img src="/smk-logo.png" alt="SMK" style={{ width: 22, height: 22, objectFit: 'contain' }} />
-            {clicked ? "MENGALIHKAN... ⚡+25 XP" : "YUK FOKUS NGOBROL SAMA AI"}
+            <style>
+                {`
+                    @keyframes pulse-icon {
+                        0% { transform: scale(1); opacity: 0.8; }
+                        50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 5px rgba(225, 29, 72, 0.4)); }
+                        100% { transform: scale(1); opacity: 0.8; }
+                    }
+                    @keyframes spin-slow {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                `}
+            </style>
+
+            <div style={{ position: 'relative', width: 28, height: 28 }}>
+                <img src="/smk-logo.png" alt="SMK" style={{ width: '100%', height: '100%', objectFit: 'contain', zIndex: 2, position: 'relative' }} />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: 13, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight: 1.2 }}>
+                        {clicked ? "MENGALIHKAN... ⚡+25 XP" : "YUK FOKUS NGOBROL"}
+                    </span>
+                    {!clicked && (
+                        <span style={{ fontSize: 14, animation: 'pulse-icon 1.5s infinite ease-in-out', display: 'inline-block' }}>✨</span>
+                    )}
+                </div>
+                {!clicked && (
+                    <span style={{ fontSize: 10, fontWeight: 700, color: '#64748b', marginTop: 2 }}>
+                        Deep Conversation dg ChatGPT
+                    </span>
+                )}
+            </div>
         </a>
     );
 }
