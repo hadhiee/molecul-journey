@@ -13,32 +13,25 @@ export default async function CulturePage() {
 
     const pilarData = [
         {
-            title: "Character",
+            title: "Neuroplasticity (Otak yang Fleksibel)",
             color: "#e11d48",
             bg: "#fff1f2",
-            icon: "🛡️",
-            points: ["Disiplin, jujur, tanggung jawab, konsisten", "Menepati deadline, tidak plagiasi, berani mengakui salah"]
+            icon: "🧠",
+            points: ["Otak seperti otot: semakin dilatih kebiasaan positif (Character), koneksi sinapsis makin kuat.", "Kesalahan adalah data: saat kita gagal dan belajar, otak menciptakan jalur saraf baru."]
         },
         {
-            title: "Collaboration",
+            title: "Dopamine-Driven Learning",
             color: "#2563eb",
             bg: "#eff6ff",
-            icon: "🤝",
-            points: ["Bagi peran, komunikasi jelas, saling bantu", "Standar tim: notulen, kesepakatan tugas, update progres"]
+            icon: "🏆",
+            points: ["Menyelesaikan quest (Critical Thinking) memicu hormon dopamin yang membuat kita termotivasi.", "Membagi tugas besar menjadi langkah kecil membantu menjaga stamina kognitif (menghindari burnout)."]
         },
         {
-            title: "Communication",
+            title: "Social Brain (Hipotesis Otak Sosial)",
             color: "#059669",
             bg: "#ecfdf5",
-            icon: "📢",
-            points: ["Berani bertanya, jelaskan ide dengan runtut", "Biasakan: tujuan–kondisi–kendala–opsi solusi"]
-        },
-        {
-            title: "Critical Thinking",
-            color: "#d97706",
-            bg: "#fffbeb",
-            icon: "🧠",
-            points: ["Pakai data, cek fakta, cari akar masalah", "Berani mencoba pendekatan baru & belajar"]
+            icon: "🌐",
+            points: ["Otak kita dirancang untuk berkolaborasi (Collaboration) & berbagi informasi (Communication).", "Tutor sebaya mengaktifkan Mirror Neurons: belajar dari mengamati dan membantu teman."]
         }
     ];
 
@@ -251,7 +244,7 @@ export default async function CulturePage() {
 
             {/* D. Pilar Utama */}
             <div style={{ marginBottom: 64 }}>
-                <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 32 }}>4 Pilar Praktik di Moklet</h2>
+                <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 32 }}>3 Pilar Sains Kognitif di Balik Moklet Culture</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
                     {pilarData.map((pilar, i) => (
                         <div key={i} style={{ background: pilar.bg, padding: 32, borderRadius: 28, border: `1px solid ${pilar.color}20` }}>

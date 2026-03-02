@@ -123,7 +123,7 @@ export default async function Home() {
       <AutoRefresh />
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-         <ThemeSelector />
+        <ThemeSelector />
       </div>
 
       {/* 1. Banner User */}
@@ -186,7 +186,7 @@ export default async function Home() {
       {/* 2. Panel Hari Ini (Check-in/Bukti/Refleksi) */}
       <HomeActivityPanel userEmail={userEmail} />
 
-            {/* 🔔 FITUR UNGGULAN (TERBARU) */}
+      {/* 🔔 FITUR UNGGULAN (TERBARU) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 24 }}>
         {/* 3D Seragam */}
         <Link href="/seragam" style={{ textDecoration: 'none', display: 'block' }}>
@@ -216,7 +216,7 @@ export default async function Home() {
             </div>
           </div>
         </Link>
-        
+
         {/* BOMBI Mascot */}
         <Link href="/bombi" style={{ textDecoration: 'none', display: 'block' }}>
           <div style={{
@@ -597,6 +597,37 @@ export default async function Home() {
         <span style={{ fontSize: 10, fontWeight: 700, color: '#16a34a', background: '#dcfce7', padding: '4px 10px', borderRadius: 20 }}>PETUALANGAN</span>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 14, marginBottom: 56 }}>
+        <Link href="/sekolah-3d" style={{ textDecoration: 'none' }}>
+          <div className="game-card" style={{
+            background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
+            borderRadius: 24, padding: 24,
+            color: 'white',
+            display: 'flex', alignItems: 'center', gap: 20,
+            boxShadow: '0 10px 30px -10px rgba(59,130,246,0.3)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url(https://www.transparenttextures.com/patterns/cubes.png)' }} />
+            <div style={{
+              width: 64, height: 64, borderRadius: 20,
+              background: '#2563eb',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 32, flexShrink: 0,
+              boxShadow: '0 8px 16px rgba(37,99,235,0.3)'
+            }}>🏛️</div>
+            <div style={{ flex: 1, zIndex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: '#bfdbfe', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>Virtual Tour</span>
+                <span style={{ fontSize: 8, fontWeight: 700, background: '#e11d48', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 800 }}>Gedung Sekolah 3D</div>
+              <div style={{ fontSize: 12, color: '#dbeafe', marginTop: 2 }}>Jelajahi environment kampus dalam 3D!</div>
+            </div>
+            <div style={{
+              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
+            }}>→</div>
+          </div>
+        </Link>
 
         {/* Profil YPT - Full Width */}
         <Link href="/profil-ypt" style={{ textDecoration: 'none' }}>
@@ -807,13 +838,15 @@ export default async function Home() {
       </div>
 
       {/* Admin Panel Link */}
-      {userEmail === "hadhiee@gmail.com" && (
-        <div style={{ marginTop: 40, borderTop: '1px solid #f1f5f9', paddingTop: 24, textAlign: 'center' }}>
-          <Link href="/admin/logs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1a1a2e', color: 'white', padding: '12px 24px', borderRadius: 99, textDecoration: 'none', fontSize: 13, fontWeight: 800 }}>
-            <span>🔒</span> Control Center (Admin Status)
-          </Link>
-        </div>
-      )}
+      {
+        userEmail === "hadhiee@gmail.com" && (
+          <div style={{ marginTop: 40, borderTop: '1px solid #f1f5f9', paddingTop: 24, textAlign: 'center' }}>
+            <Link href="/admin/logs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1a1a2e', color: 'white', padding: '12px 24px', borderRadius: 99, textDecoration: 'none', fontSize: 13, fontWeight: 800 }}>
+              <span>🔒</span> Control Center (Admin Status)
+            </Link>
+          </div>
+        )
+      }
 
       {/* ===== FIXED BOTTOM NAVIGATION BAR ===== */}
       <nav style={{
@@ -903,6 +936,6 @@ export default async function Home() {
           <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Lomba</span>
         </Link>
       </nav>
-    </div>
+    </div >
   );
 }
