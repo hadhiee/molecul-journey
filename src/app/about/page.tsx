@@ -100,7 +100,7 @@ export default function AboutPage() {
                             <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, color: '#475569', lineHeight: 1.8, display: 'flex', flexDirection: 'column', gap: 8 }}>
                                 <li><strong>Anti-Plagiasi:</strong> Membimbing proses belajar, bukan *copy-paste*.</li>
                                 <li><strong>Konselor Budaya:</strong> Memahami pedoman nilai sekolah.</li>
-                                <li><strong>Tutor Code/Jaringan:</strong> Asisten handal anak TJKT & PPLG.</li>
+                                <li><strong>Tutor Kejuruan:</strong> Asisten belajar handal untuk anak RPL, TKJ, maupun PG.</li>
                             </ul>
                         </div>
                     </div>
