@@ -109,37 +109,47 @@ export default function AboutPage() {
                     <div style={{ background: 'linear-gradient(to right, #ffffff, #f8fafc)', padding: 32, borderRadius: 24, border: '1px solid #e2e8f0', display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'center' }}>
                         <div style={{ flex: '1 1 300px' }}>
                             <div style={{ fontSize: 40, marginBottom: 16 }}>🎮</div>
-                            <h3 style={{ fontSize: 24, fontWeight: 800, color: '#1e293b', marginBottom: 12 }}>Arcade & Simulasi Keputusan</h3>
+                            <h3 style={{ fontSize: 24, fontWeight: 800, color: '#1e293b', marginBottom: 12 }}>Arcade & Simulasi Edukatif</h3>
                             <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6, marginBottom: 16 }}>
-                                Dari simulasi aktivitas keseharian dari rumah sampai sekolah, hingga pertarungan aksi 2D/3D membasmi godaan indisipliner. Belajar dan menumbuhkan <em>muscle memory</em> nilai kebaikan lewat game.
+                                Dari simulasi aktivitas keseharian dari rumah sampai sekolah, hingga pertarungan aksi 2D/3D membasmi godaan indisipliner. Belajar dan menumbuhkan <em>muscle memory</em> nilai kebaikan lewat game seru sebagai sarana mendapat <strong>skor nilai (XP)</strong>.
                             </p>
                         </div>
                         <div style={{ flex: '1 1 300px', display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                            <span style={{ fontSize: 13, fontWeight: 700, background: '#f1f5f9', padding: '8px 16px', borderRadius: 12, border: '1px solid #e2e8f0', color: '#475569' }}>Moklet Tetris</span>
-                            <span style={{ fontSize: 13, fontWeight: 700, background: '#f1f5f9', padding: '8px 16px', borderRadius: 12, border: '1px solid #e2e8f0', color: '#475569' }}>Attitude Fighter</span>
-                            <span style={{ fontSize: 13, fontWeight: 700, background: '#f1f5f9', padding: '8px 16px', borderRadius: 12, border: '1px solid #e2e8f0', color: '#475569' }}>Space Shooter 3D</span>
-                            <span style={{ fontSize: 13, fontWeight: 700, background: '#f1f5f9', padding: '8px 16px', borderRadius: 12, border: '1px solid #e2e8f0', color: '#475569' }}>Journey Map Simulasi</span>
-                            <span style={{ fontSize: 13, fontWeight: 700, background: '#f1f5f9', padding: '8px 16px', borderRadius: 12, border: '1px solid #e2e8f0', color: '#475569' }}>Tantangan Kilat</span>
+                            {[
+                                'Journey Map Simulasi', 'Moklet Tetris', 'Attitude Fighter', 'Space Shooter 3D',
+                                'Tantangan Kilat', 'Moklet Runner', 'Crystal Discovery 3D', 'Integrity Tower 3D',
+                                'Culture Connect', 'Arsitek Masa Depan'
+                            ].map(game => (
+                                <span key={game} style={{ fontSize: 13, fontWeight: 700, background: '#f1f5f9', padding: '8px 16px', borderRadius: 12, border: '1px solid #e2e8f0', color: '#475569' }}>{game}</span>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Feature 3 */}
+                    {/* Feature 3: Eksplorasi 3D & Profil */}
                     <div style={{ background: 'linear-gradient(to right, #ffffff, #f8fafc)', padding: 32, borderRadius: 24, border: '1px solid #e2e8f0', display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'center' }}>
                         <div style={{ flex: '1 1 300px' }}>
-                            <div style={{ fontSize: 40, marginBottom: 16 }}>🏢</div>
-                            <h3 style={{ fontSize: 24, fontWeight: 800, color: '#1e293b', marginBottom: 12 }}>Petualangan Spasial Lintas Dimensi</h3>
+                            <div style={{ fontSize: 40, marginBottom: 16 }}>🏫</div>
+                            <h3 style={{ fontSize: 24, fontWeight: 800, color: '#1e293b', marginBottom: 12 }}>Eksplorasi Lingkungan & Profil</h3>
                             <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6, marginBottom: 16 }}>
-                                Mengeksplorasi kebanggaan secara virtual. Pengguna bisa mengakses langsung fitur manipulasi struktur sekolah di dunia web digital interaktif.
+                                Sarana interaktif untuk mengenal ekosistem Moklet lebih dekat. Semua aktivitas penjelajahan di sini akan menghadiahimu <strong>tambahan XP!</strong>
                             </p>
                         </div>
                         <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                            <div style={{ background: '#f8fafc', padding: 16, borderRadius: 12, border: '1px dashed #cbd5e1' }}>
-                                <div style={{ fontSize: 14, fontWeight: 800, color: '#1e293b', marginBottom: 4 }}>🏫 3D Gedung Sekolah</div>
-                                <div style={{ fontSize: 13, color: '#64748b' }}>Simulasi maket lingkungan kampus interaktif penuh.</div>
+                            <div style={{ background: '#white', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: '#1e293b', marginBottom: 4 }}>👥 Manajemen & Profil</div>
+                                <div style={{ fontSize: 13, color: '#64748b' }}>Mengenal Profil Yayasan Pendidikan Telkom (YPT), personil unit setiap konsentrasi keahlian, hingga Mini Game interaktif inspeksi Pimpinan di Struktur Organisasi.</div>
                             </div>
-                            <div style={{ background: '#f8fafc', padding: 16, borderRadius: 12, border: '1px dashed #cbd5e1' }}>
-                                <div style={{ fontSize: 14, fontWeight: 800, color: '#1e293b', marginBottom: 4 }}>🕵️‍♂️ Org Chart Inspector</div>
-                                <div style={{ fontSize: 13, color: '#64748b' }}>Permainan pan-n-zoom pencarian pimpinan sekolah dalam panel manajemen.</div>
+                            <div style={{ background: '#white', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: '#1e293b', marginBottom: 4 }}>🏢 3D Maket & Seragam</div>
+                                <div style={{ fontSize: 13, color: '#64748b' }}>Jelajahi bangunan gedung sekolah lengkap dan desain seragam siswa Moklet dalam pandangan kanvas 360 derajat.</div>
+                            </div>
+                            <div style={{ background: '#white', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: '#1e293b', marginBottom: 4 }}>🤖 BOMBI (Maskot Moklet)</div>
+                                <div style={{ fontSize: 13, color: '#64748b' }}>Berinteraksi dengan model 3D maskot BOMBI sesungguhnya dan resapi filosofi B.I.O.N.I.K.</div>
+                            </div>
+                            <div style={{ background: '#white', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: '#1e293b', marginBottom: 4 }}>🏅 Puspresnas Arena</div>
+                                <div style={{ fontSize: 13, color: '#64748b' }}>Katalog seluruh lomba & event talenta bergengsi yang dapat dan sering diikuti oleh siswa Moklet.</div>
                             </div>
                         </div>
                     </div>
@@ -148,9 +158,9 @@ export default function AboutPage() {
                     <div style={{ background: 'linear-gradient(to right, #ffffff, #f8fafc)', padding: 32, borderRadius: 24, border: '1px solid #e2e8f0', display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'center' }}>
                         <div style={{ flex: '1 1 300px' }}>
                             <div style={{ fontSize: 40, marginBottom: 16 }}>🏆</div>
-                            <h3 style={{ fontSize: 24, fontWeight: 800, color: '#1e293b', marginBottom: 12 }}>Integrasi Gamifikasi Global</h3>
+                            <h3 style={{ fontSize: 24, fontWeight: 800, color: '#1e293b', marginBottom: 12 }}>Sistem Progresi XP Global</h3>
                             <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6, marginBottom: 16 }}>
-                                Setiap sentuhan, bacaan, dan kelulusan memberikan XP progresif untuk mendaki <strong>Leaderboard</strong>. Disempurnakan fitur "Tech Radar" berjalan yang melatih wawasan industri.
+                                Seluruh aktivitas (games, 3D, chat AI, dan bacaan) dirancang tak hanya sebagai media informasi, melainkan sebagai <strong>ajang mengumpulkan Poin (XP)</strong> untuk mendaki posisi teratas di Leaderboard angkatan secara seru!
                             </p>
                         </div>
                     </div>
