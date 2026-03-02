@@ -248,7 +248,7 @@ export default function ManajemenPage() {
                                     <thead style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
                                         <tr>
                                             <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569', width: 60 }}>No.</th>
-                                            <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569', width: 120 }}>NIP</th>
+                                            {/* <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569', width: 120 }}>NIP</th> */}
                                             <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569' }}>Nama</th>
                                             <th style={{ padding: '12px 16px', fontSize: 13, fontWeight: 800, color: '#475569' }}>Jabatan</th>
                                         </tr>
@@ -257,7 +257,7 @@ export default function ManajemenPage() {
                                         {dept.members.map((member, mIdx) => (
                                             <tr key={mIdx} style={{ borderBottom: '1px solid #e2e8f0', background: mIdx % 2 === 0 ? 'white' : '#f8fafc' }}>
                                                 <td style={{ padding: '12px 16px', fontSize: 13, color: '#64748b', fontWeight: 600 }}>{mIdx + 1}</td>
-                                                <td style={{ padding: '12px 16px', fontSize: 13, color: '#64748b', fontFamily: 'monospace' }}>{member.nip}</td>
+                                                {/* <td style={{ padding: '12px 16px', fontSize: 13, color: '#64748b', fontFamily: 'monospace' }}>{member.nip}</td> */}
                                                 <td style={{ padding: '12px 16px', fontSize: 14, color: '#1e293b', fontWeight: 700 }}>{member.nama}</td>
                                                 <td style={{ padding: '12px 16px', fontSize: 13, color: '#475569' }}>{member.jabatan}</td>
                                             </tr>
