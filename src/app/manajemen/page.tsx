@@ -298,12 +298,12 @@ export default function ManajemenPage() {
 
             <div style={{
                 background: 'linear-gradient(135deg, #0f172a, #1e293b)',
-                borderRadius: 32, padding: '48px 32px', color: 'white', marginBottom: 48,
+                borderRadius: 24, padding: '32px 24px', color: 'white', marginBottom: 32,
                 position: 'relative', overflow: 'hidden',
                 boxShadow: '0 20px 50px -12px rgba(15,23,42,0.3)',
             }}>
                 <div style={{ position: 'relative', zIndex: 1 }}>
-                    <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+                    <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
                         <span style={{ fontSize: 10, fontWeight: 800, background: 'var(--theme-primary, #e11d48)', padding: '6px 12px', borderRadius: 99, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                             Tentang Kami
                         </span>
@@ -311,10 +311,10 @@ export default function ManajemenPage() {
                             Profil
                         </span>
                     </div>
-                    <h1 style={{ fontSize: 42, fontWeight: 800, marginBottom: 16, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
+                    <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 8, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
                         Manajemen Sekolah
                     </h1>
-                    <p style={{ fontSize: 18, opacity: 0.9, fontWeight: 500, marginBottom: 24, maxWidth: 600, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: 15, opacity: 0.9, fontWeight: 500, marginBottom: 16, maxWidth: 600, lineHeight: 1.5 }}>
                         Kenali dewan pimpinan dan struktur organisasi yang ada di SMK Telkom Malang.
                     </p>
                 </div>

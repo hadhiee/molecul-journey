@@ -140,22 +140,22 @@ export default async function CulturePage() {
             {/* A. Hero Section */}
             <div style={{
                 background: 'linear-gradient(135deg, #1e293b, #0f172a)',
-                borderRadius: 32, padding: '48px 32px', color: 'white', marginBottom: 48,
+                borderRadius: 24, padding: '32px 24px', color: 'white', marginBottom: 32,
                 position: 'relative', overflow: 'hidden',
                 boxShadow: '0 20px 50px -12px rgba(15,23,42,0.3)',
             }}>
                 <div style={{ position: 'relative', zIndex: 1 }}>
-                    <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+                    <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
                         {['Character', 'Collaboration', 'Ready for Industry'].map((tag) => (
                             <span key={tag} style={{ fontSize: 10, fontWeight: 800, background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: 99, border: '1px solid rgba(255,255,255,0.2)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                 {tag}
                             </span>
                         ))}
                     </div>
-                    <h1 style={{ fontSize: 42, fontWeight: 800, marginBottom: 16, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
+                    <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 8, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
                         Moklet Learning Culture
                     </h1>
-                    <p style={{ fontSize: 18, opacity: 0.9, fontWeight: 500, marginBottom: 24, maxWidth: 600, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: 15, opacity: 0.9, fontWeight: 500, marginBottom: 16, maxWidth: 600, lineHeight: 1.5 }}>
                         Cara kita belajar dan bekerja di Moklet supaya siap industri: berkarakter, kolaboratif, adaptif, dan berorientasi hasil.
                     </p>
                     <div style={{
