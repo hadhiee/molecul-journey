@@ -61,18 +61,33 @@ export default function Sekolah3DViewer({ userEmail }: { userEmail: string }) {
     const [loading, setLoading] = useState(false);
     const [autoRotate, setAutoRotate] = useState(true);
     const [zoom, setZoom] = useState(1);
+    const [progress, setProgress] = useState(0);
     const controlsRef = useRef<any>(null);
 
     // Auto-earn XP after exploring for 5 seconds
     useEffect(() => {
         let timer: NodeJS.Timeout;
-        if (!xpEarned) {
-            timer = setTimeout(() => {
-                handleEarnXP();
-            }, 5000); // give points after 5s active viewing
+        let interval: NodeJS.Timeout;
+
+        if (!xpEarned && userEmail) {
+            const startTime = Date.now();
+            const duration = 5000;
+
+            interval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const newProgress = Math.min((elapsed / duration) * 100, 100);
+                setProgress(newProgress);
+
+                if (newProgress >= 100) {
+                    clearInterval(interval);
+                    handleEarnXP();
+                }
+            }, 100);
         }
-        return () => clearTimeout(timer);
-    }, [xpEarned]);
+        return () => {
+            clearInterval(interval);
+        };
+    }, [xpEarned, userEmail]);
 
     const handleEarnXP = async () => {
         if (xpEarned || !userEmail) return;
@@ -131,12 +146,17 @@ export default function Sekolah3DViewer({ userEmail }: { userEmail: string }) {
                         <p style={{ fontSize: 13, color: '#64748b' }}>Putar dan perbesar model Gedung SMK Telkom Malang</p>
                     </div>
                     {xpEarned ? (
-                        <div style={{ background: '#dcfce7', color: '#16a34a', padding: '8px 16px', borderRadius: 99, fontSize: 13, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div style={{ background: '#dcfce7', color: '#16a34a', padding: '8px 16px', borderRadius: 99, fontSize: 13, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6, border: '1px solid #bbf7d0' }}>
                             <span style={{ fontSize: 16 }}>🎉</span> +25 XP Diraih!
                         </div>
                     ) : (
-                        <div style={{ background: '#f1f5f9', color: '#64748b', padding: '8px 16px', borderRadius: 99, fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
-                            {loading ? "Menyimpan XP..." : "Jelajahi minimal 5 detik (+25 XP)"}
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+                            <div style={{ background: '#f1f5f9', color: '#1e293b', padding: '8px 16px', borderRadius: 99, fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, border: '1px solid #e2e8f0' }}>
+                                {loading ? "🔄 Menyimpan..." : `⌛ Jelajahi ${Math.ceil((100 - progress) / 20)}s lagi (+25 XP)`}
+                            </div>
+                            <div style={{ width: 140, height: 4, background: '#e2e8f0', borderRadius: 99, overflow: 'hidden' }}>
+                                <div style={{ width: `${progress}%`, height: '100%', background: '#3b82f6', transition: 'width 0.1s linear' }} />
+                            </div>
                         </div>
                     )}
                 </div>

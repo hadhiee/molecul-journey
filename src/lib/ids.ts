@@ -43,6 +43,8 @@ export const SYSTEM_IDS = {
     CHECKIN: stringToUUID("SYSTEM_CHECKIN"),
     EVIDENCE: stringToUUID("SYSTEM_EVIDENCE"),
     JOURNEY_MAP: stringToUUID("JOURNEY_MAP"),
+    EXPLORE_BOMBI_3D: "SYSTEM_EXPLORE_BOMBI_3D",
+    EXPLORE_SEKOLAH_3D: "SYSTEM_EXPLORE_SEKOLAH_3D",
 };
 
 // Helper to check if a UUID matches a specific SYSTEM ID or game ID

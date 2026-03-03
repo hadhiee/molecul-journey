@@ -1,7 +1,8 @@
-"use client";
-
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
 import styles from "./page.module.css";
 
 const UniformViewer = dynamic(() => import("@/components/UniformViewer"), {
@@ -15,6 +16,65 @@ const UniformViewer = dynamic(() => import("@/components/UniformViewer"), {
 });
 
 export default function BombiPage() {
+    const { data: session } = useSession();
+    const [xpEarned, setXpEarned] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const userEmail = session?.user?.email?.toLowerCase();
+
+    // Auto-earn XP after exploring for 5 seconds
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        let interval: NodeJS.Timeout;
+
+        if (!xpEarned && userEmail) {
+            const startTime = Date.now();
+            const duration = 5000;
+
+            interval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const newProgress = Math.min((elapsed / duration) * 100, 100);
+                setProgress(newProgress);
+
+                if (newProgress >= 100) {
+                    clearInterval(interval);
+                    handleEarnXP();
+                }
+            }, 100);
+        }
+        return () => {
+            clearInterval(interval);
+        };
+    }, [xpEarned, userEmail]);
+
+    const handleEarnXP = async () => {
+        if (xpEarned || !userEmail) return;
+        setLoading(true);
+
+        try {
+            const { data: existing } = await supabase
+                .from('user_progress')
+                .select('*')
+                .eq('user_email', userEmail)
+                .eq('mission_id', 'SYSTEM_EXPLORE_BOMBI_3D')
+                .single();
+
+            if (!existing) {
+                await supabase.from("user_progress").insert({
+                    user_email: userEmail,
+                    mission_id: "SYSTEM_EXPLORE_BOMBI_3D",
+                    score: 25,
+                    created_at: new Date().toISOString()
+                });
+            }
+            setXpEarned(true);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className={styles.container}>
             {/* Header */}
@@ -22,6 +82,24 @@ export default function BombiPage() {
                 <Link href="/" className={styles.backButton}>
                     ← Kembali
                 </Link>
+
+                {/* XP Reward Status */}
+                <div className={styles.xpStatus}>
+                    {xpEarned ? (
+                        <div className={styles.xpBadgeEarned}>
+                            <span>🎉</span> +25 XP Diraih!
+                        </div>
+                    ) : (
+                        <div className={styles.xpContainer}>
+                            <div className={styles.xpBadgePending}>
+                                {loading ? "🔄 Menyimpan..." : `⌛ ${Math.ceil((100 - progress) / 20)}s (+25 XP)`}
+                            </div>
+                            <div className={styles.xpProgressOuter}>
+                                <div className={styles.xpProgressInner} style={{ width: `${progress}%` }} />
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Title */}
