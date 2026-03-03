@@ -12,6 +12,7 @@ import AutoRefresh from '@/components/AutoRefresh';
 import { Suspense } from "react";
 import FocusChatButton from "@/components/FocusChatButton";
 import ThemeSelector from "@/components/ThemeSelector";
+import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -140,34 +141,34 @@ export default async function Home() {
                 src={userImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"}
                 alt={userName}
                 style={{
-                  width: 56, height: 56, borderRadius: 20,
+                  width: 64, height: 64, borderRadius: 24,
                   border: '2px solid rgba(255,255,255,0.4)',
-                  boxShadow: '0 8px 16px rgba(0,0,0,0.15)'
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
                 }}
               />
               <div>
-                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase' as const, opacity: 0.8, marginBottom: 4 }}>
+                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', opacity: 0.8, marginBottom: 4 }}>
                   Moklet Learning Culture
                 </div>
-                <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.02em' }}>
+                <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: '-0.03em' }}>
                   Hai, {userName.split(" ")[0]}! 👋
                 </div>
               </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
               <SignOutButton />
               <FocusChatButton />
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
-            <div style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)', borderRadius: 20, padding: '16px 20px', flex: 1, border: '1px solid rgba(255,255,255,0.2)' }}>
-              <div style={{ fontSize: 26, fontWeight: 800, lineHeight: 1, marginBottom: 4 }}>{totalXP.toLocaleString()}</div>
-              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase' as const, opacity: 0.7 }}>Total XP</div>
+          <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+            <div className={styles.glassStat}>
+              <div style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, marginBottom: 4 }}>{totalXP.toLocaleString()}</div>
+              <div style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', opacity: 0.7, letterSpacing: '0.05em' }}>Total XP</div>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)', borderRadius: 20, padding: '16px 20px', flex: 1, border: '1px solid rgba(255,255,255,0.2)' }}>
-              <div style={{ fontSize: 26, fontWeight: 800, lineHeight: 1, marginBottom: 4 }}>{missionCount}</div>
-              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase' as const, opacity: 0.7 }}>Misi Selesai</div>
+            <div className={styles.glassStat}>
+              <div style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, marginBottom: 4 }}>{missionCount}</div>
+              <div style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', opacity: 0.7, letterSpacing: '0.05em' }}>Misi Selesai</div>
             </div>
           </div>
 
@@ -187,130 +188,115 @@ export default async function Home() {
       <HomeActivityPanel userEmail={userEmail} />
 
       {/* 🔔 FITUR UNGGULAN (TERBARU) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 32 }}>
         {/* 3D Seragam */}
-        <Link href="/seragam" style={{ textDecoration: 'none', display: 'block' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #0f172a, #1e1b4b)',
-            borderRadius: 20, padding: '16px',
-            display: 'flex', flexDirection: 'column', gap: 12,
-            border: '1px solid rgba(225,29,72,0.3)',
-            boxShadow: '0 4px 20px -4px rgba(225,29,72,0.15)',
-            position: 'relative', overflow: 'hidden', height: '100%',
-          }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(circle at top right, rgba(225,29,72,0.5), transparent 70%)' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 1 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: 12,
-                background: 'linear-gradient(135deg, #e11d48, #be123c)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 18, boxShadow: '0 4px 12px rgba(225,29,72,0.3)',
-              }}>👔</div>
-              <span style={{ fontSize: 8, fontWeight: 700, background: 'var(--theme-primary)', color: 'white', padding: '2px 8px', borderRadius: 20 }}>BARU</span>
-            </div>
-            <div style={{ zIndex: 1, marginTop: 'auto' }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: 'white', marginBottom: 4 }}>3D Seragam</div>
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.3 }}>
-                Model 3D seragam
-              </div>
+        <Link href="/seragam" className={styles.featureCard} style={{
+          background: 'linear-gradient(135deg, #0f172a, #1e1b4b)',
+          border: '1px solid rgba(225,29,72,0.3)',
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, background: 'radial-gradient(circle at top right, rgba(225,29,72,0.6), transparent 70%)' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 2, marginBottom: 24 }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 16,
+              background: 'linear-gradient(135deg, #e11d48, #be123c)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 22, boxShadow: '0 8px 20px rgba(225,29,72,0.4)',
+            }}>👔</div>
+            <span style={{ fontSize: 9, fontWeight: 900, background: 'rgba(225,29,72,0.2)', color: '#fda4af', padding: '4px 10px', borderRadius: 20, border: '1px solid rgba(225,29,72,0.3)' }}>NEW</span>
+          </div>
+          <div style={{ zIndex: 2 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: 'white', marginBottom: 4 }}>3D Seragam</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.4 }}>
+              Review model 3D seragam
             </div>
           </div>
         </Link>
 
         {/* BOMBI Mascot */}
-        <Link href="/bombi" style={{ textDecoration: 'none', display: 'block' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #0c1929, #1e1b4b)',
-            borderRadius: 20, padding: '16px',
-            display: 'flex', flexDirection: 'column', gap: 12,
-            border: '1px solid rgba(59,130,246,0.3)',
-            boxShadow: '0 4px 20px -4px rgba(59,130,246,0.15)',
-            position: 'relative', overflow: 'hidden', height: '100%',
-          }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(circle at top right, rgba(59,130,246,0.5), transparent 70%)' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 1 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: 12,
-                background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 18, boxShadow: '0 4px 12px rgba(59,130,246,0.3)',
-              }}>🤖</div>
-              <span style={{ fontSize: 8, fontWeight: 700, background: '#3b82f6', color: 'white', padding: '2px 8px', borderRadius: 20 }}>3D</span>
-            </div>
-            <div style={{ zIndex: 1, marginTop: 'auto' }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: 'white', marginBottom: 4 }}>BOMBI 3D</div>
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.3 }}>
-                Bocah Moklet Bionik
-              </div>
+        <Link href="/bombi" className={styles.featureCard} style={{
+          background: 'linear-gradient(135deg, #0c1929, #1e1b4b)',
+          border: '1px solid rgba(59,130,246,0.3)',
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, background: 'radial-gradient(circle at top right, rgba(59,130,246,0.6), transparent 70%)' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 2, marginBottom: 24 }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 16,
+              background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 22, boxShadow: '0 8px 20px rgba(59,130,246,0.4)',
+            }}>🤖</div>
+            <span style={{ fontSize: 9, fontWeight: 900, background: 'rgba(59,130,246,0.2)', color: '#93c5fd', padding: '4px 10px', borderRadius: 20, border: '1px solid rgba(59,130,246,0.3)' }}>3D</span>
+          </div>
+          <div style={{ zIndex: 2 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: 'white', marginBottom: 4 }}>BOMBI 3D</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.4 }}>
+              Bocah Moklet Bionik
             </div>
           </div>
         </Link>
 
         {/* MoDy - AI Moklet Buddy Card (Spans full width) */}
-        <Link href="/ai-tutor" style={{ textDecoration: 'none', display: 'block', gridColumn: '1 / -1' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #312e81, #4c1d95, #6d28d9)',
-            borderRadius: 20, padding: 20, color: 'white',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            border: '1px solid rgba(139,92,246,0.3)',
-            boxShadow: '0 8px 24px -8px rgba(109,40,217,0.4)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.15, background: 'radial-gradient(circle at 80% 20%, rgba(167,139,250,0.6), transparent 60%)' }} />
-            <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                <span style={{ fontSize: 10, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase' }}>
+        <Link href="/ai-tutor" className={styles.featureCard} style={{
+          background: 'linear-gradient(135deg, #312e81, #4c1d95, #6d28d9)',
+          border: '1px solid rgba(139,92,246,0.4)',
+          gridColumn: '1 / -1'
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, background: 'radial-gradient(circle at 80% 20%, rgba(167,139,250,0.6), transparent 60%)' }} />
+          <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 900, color: '#c4b5fd', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   MoDy AI Tutor
                 </span>
-                <span style={{ fontSize: 8, fontWeight: 700, background: '#22c55e', color: 'white', padding: '2px 8px', borderRadius: 20 }}>BARU</span>
+                <span style={{ fontSize: 9, fontWeight: 900, background: '#22c55e', color: 'white', padding: '2px 10px', borderRadius: 20 }}>READY</span>
               </div>
-              <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 2, letterSpacing: '-0.02em' }}>
+              <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 4, letterSpacing: '-0.02em', color: 'white' }}>
                 Chat dengan Gemini AI
               </div>
-              <div style={{ fontSize: 11, color: '#c4b5fd', fontWeight: 500 }}>
-                Tanya pelajaran atau lomba
+              <div style={{ fontSize: 13, color: '#c4b5fd', fontWeight: 500 }}>
+                Tanya pelajaran, info lomba, atau tips belajar 🎓
               </div>
             </div>
             <div style={{
-              width: 44, height: 44, borderRadius: 16,
+              width: 64, height: 64, borderRadius: 24,
               background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 22, flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)'
+              fontSize: 32, flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)',
+              boxShadow: '0 12px 24px rgba(0,0,0,0.2)'
             }}>
-              <span className="animate-float">🎓</span>
+              <span className="animate-float">✨</span>
             </div>
           </div>
         </Link>
       </div>
 
       {/* 3. Culture Hub Card */}
-      <Link href="/culture" style={{ textDecoration: 'none', display: 'block', marginBottom: 40 }}>
-        <div style={{
-          background: 'linear-gradient(135deg, #0f172a, #1e293b)',
-          borderRadius: 24, padding: 24, color: 'white',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          border: '1px solid rgba(255,255,255,0.1)',
-          boxShadow: '0 12px 24px -8px rgba(0,0,0,0.2)',
-          position: 'relative', overflow: 'hidden'
-        }}>
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', textTransform: 'uppercase' as const, letterSpacing: '0.15em', marginBottom: 6 }}>
+      <Link href="/culture" className={styles.featureCard} style={{
+        background: 'linear-gradient(135deg, #0f172a, #111827, #1f2937)',
+        marginBottom: 32,
+        padding: 24,
+      }}>
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")' }} />
+        <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 900, color: 'var(--theme-primary)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: 10 }}>
               Culture Hub
             </div>
-            <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4, letterSpacing: '-0.02em' }}>
-              Pengenalan Moklet Learning Culture
+            <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 6, letterSpacing: '-0.03em', color: 'white' }}>
+              Pengenalan Moklet Culture
             </div>
-            <div style={{ fontSize: 12, color: '#94a3b8', fontWeight: 500 }}>
-              Pusat pembelajaran budaya & karakter ATTITUDE
+            <div style={{ fontSize: 13, color: '#94a3b8', fontWeight: 500 }}>
+              Pusat pembelajaran karakter & nilai ATTITUDE
             </div>
           </div>
           <div style={{
-            width: 52, height: 52, borderRadius: 16,
+            width: 56, height: 56, borderRadius: 20,
             background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 24, flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)'
+            fontSize: 28, flexShrink: 0, border: '1px solid rgba(255,255,255,0.15)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
           }}>
-            <span className="animate-float">📖</span>
+            <span className="animate-float">📘</span>
           </div>
         </div>
       </Link>
@@ -333,150 +319,65 @@ export default async function Home() {
         <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Action Arena</h2>
         <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '4px 10px', borderRadius: 20 }}>KETANGKASAN</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 40 }}>
-
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 12, marginBottom: 48 }}>
         {/* Moklet Runner */}
-        <Link href="/runner" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #2e1065, #4c1d95)',
-            borderRadius: 24, padding: '20px 16px',
-            color: 'white', height: '100%',
-            position: 'relative', overflow: 'hidden',
-            boxShadow: '0 10px 20px -5px rgba(76,29,149,0.4)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-          }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)' }} />
-            <div style={{
-              width: 56, height: 56, borderRadius: 20,
-              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 28, marginBottom: 12,
-              boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>🏃</div>
-            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Moklet Runner</div>
-            <div style={{ fontSize: 10, opacity: 0.7, fontWeight: 600 }}>Endless Run</div>
+        <Link href="/runner" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#4c1d95' }}>🏃</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Moklet Runner</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Endless escape training</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
         {/* 3D Attitude Fighter */}
-        <Link href="/fighter-3d" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #7f1d1d, #991b1b)',
-            borderRadius: 24, padding: '20px 16px',
-            color: 'white', height: '100%',
-            position: 'relative', overflow: 'hidden',
-            boxShadow: '0 10px 20px -5px rgba(153,27,27,0.4)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-          }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)' }} />
-            <div style={{
-              width: 56, height: 56, borderRadius: 20,
-              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 28, marginBottom: 12,
-              boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>🥊</div>
-            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Attitude Fighter</div>
-            <div style={{ fontSize: 10, opacity: 0.7, fontWeight: 600 }}>Combat Arena</div>
+        <Link href="/fighter-3d" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#991b1b' }}>🥊</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Attitude Fighter</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Combat arena for discipline</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
         {/* Space Shooter */}
-        <Link href="/space-shooter" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #1e3a8a, #1e40af)',
-            borderRadius: 24, padding: '20px 16px',
-            color: 'white', height: '100%',
-            position: 'relative', overflow: 'hidden',
-            boxShadow: '0 10px 20px -5px rgba(30,64,175,0.4)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-          }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)' }} />
-            <div style={{
-              width: 56, height: 56, borderRadius: 20,
-              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 28, marginBottom: 12,
-              boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>🚀</div>
-            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Space Culture</div>
-            <div style={{ fontSize: 10, opacity: 0.7, fontWeight: 600 }}>Galactic Shooter</div>
+        <Link href="/space-shooter" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#1e40af' }}>🚀</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Space Culture</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Protect the galaxy values</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
         {/* Culture Tetris */}
-        <Link href="/tetris" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #4338ca, #5b21b6)',
-            borderRadius: 24, padding: '20px 16px',
-            color: 'white', height: '100%',
-            position: 'relative', overflow: 'hidden',
-            boxShadow: '0 10px 20px -5px rgba(91,33,182,0.4)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-          }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)' }} />
-            <div style={{
-              width: 56, height: 56, borderRadius: 20,
-              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 28, marginBottom: 12,
-              boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>🧩</div>
-            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Moklet Tetris</div>
-            <div style={{ fontSize: 10, opacity: 0.7, fontWeight: 600 }}>Puzzle Logic</div>
+        <Link href="/tetris" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#4338ca' }}>🧩</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Moklet Tetris</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Puzzle logic mission</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
         {/* Culture Connect */}
-        <Link href="/culture-connect" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #059669, #047857)',
-            borderRadius: 24, padding: '20px 16px',
-            color: 'white', height: '100%',
-            position: 'relative', overflow: 'hidden',
-            boxShadow: '0 10px 20px -5px rgba(5,150,105,0.4)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-          }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)' }} />
-            <div style={{
-              width: 56, height: 56, borderRadius: 20,
-              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 28, marginBottom: 12,
-              boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>🔗</div>
-            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Culture Connect</div>
-            <div style={{ fontSize: 10, opacity: 0.7, fontWeight: 600 }}>Matching Logic</div>
+        <Link href="/culture-connect" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#059669' }}>🔗</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Culture Connect</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Matching logic challenge</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
         {/* Focus Guard */}
-        <Link href="/focus-guard" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #b45309, #d97706)',
-            borderRadius: 24, padding: '20px 16px',
-            color: 'white', height: '100%',
-            position: 'relative', overflow: 'hidden',
-            boxShadow: '0 10px 20px -5px rgba(217,119,6,0.4)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-          }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)' }} />
-            <div style={{
-              width: 56, height: 56, borderRadius: 20,
-              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 28, marginBottom: 12,
-              boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>🛡️</div>
-            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Focus Guard</div>
-            <div style={{ fontSize: 10, opacity: 0.7, fontWeight: 600 }}>Action Smasher</div>
+        <Link href="/focus-guard" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#d97706' }}>🛡️</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Focus Guard</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Action smasher challenge</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
       </div>
 
@@ -486,83 +387,33 @@ export default async function Home() {
         <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Strategy Lab</h2>
         <span style={{ fontSize: 10, fontWeight: 700, color: '#0ea5e9', background: '#e0f2fe', padding: '4px 10px', borderRadius: 20 }}>BERPIKIR KRITIS</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 14, marginBottom: 40 }}>
-
-        {/* Culture Simulation - Full Width */}
-        <Link href="/simulation" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #ffffff, #eff6ff)',
-            borderRadius: 24, padding: 24,
-            color: '#1e3a8a',
-            display: 'flex', alignItems: 'center', gap: 20,
-            border: '2px solid #dbeafe',
-            boxShadow: '0 10px 30px -10px rgba(59,130,246,0.15)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{
-              width: 64, height: 64, borderRadius: 20,
-              background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 32, flexShrink: 0,
-              color: 'white',
-              boxShadow: '0 8px 16px rgba(59,130,246,0.3)'
-            }}>🔮</div>
-            <div style={{ flex: 1, zIndex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase' as const, marginBottom: 4 }}>Decision Game</div>
-              <div style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Moklet Culture Simulation</div>
-              <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>Asah kemampuan pengambilan keputusanmu</div>
-            </div>
-            <div style={{
-              width: 40, height: 40, borderRadius: 20, background: '#f1f5f9',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: '#3b82f6'
-            }}>→</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 12, marginBottom: 48 }}>
+        <Link href="/simulation" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#3b82f6' }}>🔮</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Moklet Culture Simulation</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Interactive decision laboratory</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
-        {/* 2 Column sub-grid for smaller strategy games */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
-          {/* Future Architect */}
-          <Link href="/future" style={{ textDecoration: 'none' }}>
-            <div className="game-card" style={{
-              background: 'linear-gradient(135deg, #0f172a, #334155)',
-              borderRadius: 24, padding: '20px 16px',
-              color: 'white', height: '100%',
-              position: 'relative', overflow: 'hidden',
-              boxShadow: '0 10px 20px -5px rgba(15,23,42,0.3)',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-            }}>
-              <div style={{
-                width: 50, height: 50, borderRadius: 18,
-                background: '#0ea5e9',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 24, marginBottom: 12,
-                boxShadow: '0 4px 12px rgba(14,165,233,0.3)'
-              }}>🏗️</div>
-              <div style={{ fontSize: 13, fontWeight: 800 }}>Arsitek Masa Depan</div>
-            </div>
-          </Link>
+        <Link href="/future" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#0ea5e9' }}>🏗️</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Arsitek Masa Depan</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Mastering school life strategy</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
 
-          {/* Lightning Challenge */}
-          <Link href="/challenge" style={{ textDecoration: 'none' }}>
-            <div className="game-card" style={{
-              background: 'linear-gradient(135deg, #4c0519, #831843)',
-              borderRadius: 24, padding: '20px 16px',
-              color: 'white', height: '100%',
-              position: 'relative', overflow: 'hidden',
-              boxShadow: '0 10px 20px -5px rgba(131,24,67,0.3)',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-            }}>
-              <div style={{
-                width: 50, height: 50, borderRadius: 18,
-                background: '#e879f9',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 24, marginBottom: 12,
-                boxShadow: '0 4px 12px rgba(232,121,249,0.3)'
-              }}>⚡</div>
-              <div style={{ fontSize: 13, fontWeight: 800 }}>Tantangan Kilat</div>
-            </div>
-          </Link>
-        </div>
+        <Link href="/challenge" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#be123c' }}>⚡</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Tantangan Kilat</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Quick thinking & values quiz</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
       </div>
 
       {/* --- CATEGORY: PUSPRESNAS ARENA --- */}
@@ -596,251 +447,74 @@ export default async function Home() {
         <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Exploration Zone</h2>
         <span style={{ fontSize: 10, fontWeight: 700, color: '#16a34a', background: '#dcfce7', padding: '4px 10px', borderRadius: 20 }}>PETUALANGAN</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 14, marginBottom: 56 }}>
-        <Link href="/sekolah-3d" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
-            borderRadius: 24, padding: 24,
-            color: 'white',
-            display: 'flex', alignItems: 'center', gap: 20,
-            boxShadow: '0 10px 30px -10px rgba(59,130,246,0.3)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url(https://www.transparenttextures.com/patterns/cubes.png)' }} />
-            <div style={{
-              width: 64, height: 64, borderRadius: 20,
-              background: '#2563eb',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 32, flexShrink: 0,
-              boxShadow: '0 8px 16px rgba(37,99,235,0.3)'
-            }}>🏛️</div>
-            <div style={{ flex: 1, zIndex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#bfdbfe', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>Virtual Tour</span>
-                <span style={{ fontSize: 8, fontWeight: 700, background: '#e11d48', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
-              </div>
-              <div style={{ fontSize: 18, fontWeight: 800 }}>Gedung Sekolah 3D</div>
-              <div style={{ fontSize: 12, color: '#dbeafe', marginTop: 2 }}>Jelajahi environment kampus dalam 3D!</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 12, marginBottom: 56 }}>
+        <Link href="/sekolah-3d" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#2563eb' }}>🏛️</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+              <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Gedung Sekolah 3D</div>
+              <span style={{ fontSize: 8, fontWeight: 800, background: '#e11d48', color: 'white', padding: '1px 6px', borderRadius: 4 }}>NEW</span>
             </div>
-            <div style={{
-              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
-            }}>→</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Tour kampus virtual interaktif</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
         {/* Manajemen Sekolah */}
-        <Link href="/manajemen" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-            borderRadius: 24, padding: 24,
-            color: 'white',
-            display: 'flex', alignItems: 'center', gap: 20,
-            boxShadow: '0 10px 30px -10px rgba(217,119,6,0.3)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url(https://www.transparenttextures.com/patterns/black-scales.png)' }} />
-            <div style={{
-              width: 64, height: 64, borderRadius: 20,
-              background: '#fbbf24',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 32, flexShrink: 0,
-              boxShadow: '0 8px 16px rgba(245,158,11,0.3)'
-            }}>🤝</div>
-            <div style={{ flex: 1, zIndex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#fef3c7', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>Profil Sekolah</span>
-                <span style={{ fontSize: 8, fontWeight: 700, background: '#10b981', color: 'white', padding: '2px 8px', borderRadius: 20 }}>+XP</span>
-              </div>
-              <div style={{ fontSize: 18, fontWeight: 800 }}>Manajemen Sekolah</div>
-              <div style={{ fontSize: 12, color: '#fef3c7', marginTop: 2 }}>Kenali struktur organisasi sekolah (Telkom Schools Malang)</div>
-            </div>
-            <div style={{
-              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
-            }}>→</div>
+        <Link href="/manajemen" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#d97706' }}>🤝</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Manajemen Sekolah</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Kenali struktur organisasi sekolah</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
-        {/* Profil YPT - Full Width */}
-        <Link href="/profil-ypt" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #b91c1c, #991b1b)',
-            borderRadius: 24, padding: 24,
-            color: 'white',
-            display: 'flex', alignItems: 'center', gap: 20,
-            boxShadow: '0 10px 30px -10px rgba(185,28,28,0.3)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url(https://www.transparenttextures.com/patterns/cubes.png)' }} />
-            <div style={{
-              width: 64, height: 64, borderRadius: 20,
-              background: '#ef4444',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 32, flexShrink: 0,
-              boxShadow: '0 8px 16px rgba(239,68,68,0.3)'
-            }}>🏢</div>
-            <div style={{ flex: 1, zIndex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#fca5a5', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>Company Profile</span>
-                <span style={{ fontSize: 8, fontWeight: 700, background: '#ef4444', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
-              </div>
-              <div style={{ fontSize: 18, fontWeight: 800 }}>Profil YPT</div>
-              <div style={{ fontSize: 12, color: '#fecaca', marginTop: 2 }}>Mengenal Yayasan Pendidikan Telkom</div>
-            </div>
-            <div style={{
-              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
-            }}>→</div>
+        {/* Profil YPT */}
+        <Link href="/profil-ypt" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#ef4444' }}>🏢</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Profil YPT</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Mengenal Yayasan Pendidikan Telkom</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
         {/* Ekstrakurikuler */}
-        <Link href="/ekskul" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #047857, #065f46)',
-            borderRadius: 24, padding: 24,
-            color: 'white',
-            display: 'flex', alignItems: 'center', gap: 20,
-            boxShadow: '0 10px 30px -10px rgba(4,120,87,0.3)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url(https://www.transparenttextures.com/patterns/cubes.png)' }} />
-            <div style={{
-              width: 64, height: 64, borderRadius: 20,
-              background: '#10b981',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 32, flexShrink: 0,
-              boxShadow: '0 8px 16px rgba(16,185,129,0.3)'
-            }}>⚽</div>
-            <div style={{ flex: 1, zIndex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#a7f3d0', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>Minat Bakat</span>
-                <span style={{ fontSize: 8, fontWeight: 700, background: '#10b981', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
-              </div>
-              <div style={{ fontSize: 18, fontWeight: 800 }}>Ekstrakurikuler</div>
-              <div style={{ fontSize: 12, color: '#d1fae5', marginTop: 2 }}>Kenali wada ekskul krida, olahraga & keahlian!</div>
-            </div>
-            <div style={{
-              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
-            }}>→</div>
+        <Link href="/ekskul" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#10b981' }}>⚽</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Ekstrakurikuler</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Wadah minat bakat siswa</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
-        {/* Journey Map - Full Width */}
-        <Link href="/journey" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #14532d, #14532d)',
-            borderRadius: 24, padding: 24,
-            color: 'white',
-            display: 'flex', alignItems: 'center', gap: 20,
-            boxShadow: '0 10px 30px -10px rgba(22,163,74,0.3)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.2, backgroundImage: 'url(https://www.transparenttextures.com/patterns/cubes.png)' }} />
-            <div style={{
-              width: 64, height: 64, borderRadius: 20,
-              background: '#22c55e',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 32, flexShrink: 0,
-              boxShadow: '0 8px 16px rgba(34,197,94,0.3)'
-            }}>🗺️</div>
-            <div style={{ flex: 1, zIndex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: '#86efac', textTransform: 'uppercase' as const, marginBottom: 4 }}>Adventure Map</div>
-              <div style={{ fontSize: 18, fontWeight: 800 }}>Journey Map Sekolah</div>
-              <div style={{ fontSize: 12, color: '#bbf7d0', marginTop: 2 }}>Jelajahi setiap sudut budaya sekolah</div>
-            </div>
-            <div style={{
-              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
-            }}>→</div>
+        {/* Journey Map */}
+        <Link href="/journey" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#22c55e' }}>🗺️</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Journey Map Sekolah</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Peta petualangan budaya sekolah</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
 
-        {/* Seragam 3D Viewer - Full Width */}
-        <Link href="/seragam" style={{ textDecoration: 'none' }}>
-          <div className="game-card" style={{
-            background: 'linear-gradient(135deg, #1a1145, #2d1b69)',
-            borderRadius: 24, padding: 24,
-            color: 'white',
-            display: 'flex', alignItems: 'center', gap: 20,
-            boxShadow: '0 10px 30px -10px rgba(109,40,217,0.3)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.15, background: 'radial-gradient(circle at 80% 20%, rgba(225,29,72,0.4), transparent 60%)' }} />
-            <div style={{
-              width: 64, height: 64, borderRadius: 20,
-              background: 'linear-gradient(135deg, #e11d48, #be123c)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 32, flexShrink: 0,
-              boxShadow: '0 8px 16px rgba(225,29,72,0.3)'
-            }}>👔</div>
-            <div style={{ flex: 1, zIndex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase' as const, letterSpacing: '0.1em' }}>3D Model Viewer</span>
-                <span style={{ fontSize: 8, fontWeight: 700, background: 'var(--theme-primary)', color: 'white', padding: '2px 8px', borderRadius: 20 }}>NEW</span>
-              </div>
-              <div style={{ fontSize: 18, fontWeight: 800 }}>Seragam Mokleter</div>
-              <div style={{ fontSize: 12, color: '#c4b5fd', marginTop: 2 }}>Lihat model 3D seragam siswa Moklet</div>
-            </div>
-            <div style={{
-              width: 40, height: 40, borderRadius: 20, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'white'
-            }}>→</div>
+        {/* Discovery 3D */}
+        <Link href="/discovery-3d" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#8b5cf6' }}>💎</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Discovery 3D</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Crystal self discovery lab</div>
           </div>
+          <div className={styles.arrowBtn}>→</div>
         </Link>
-
-        {/* 3D Explorations */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
-          {/* Self Discovery 3D */}
-          <Link href="/discovery-3d" style={{ textDecoration: 'none' }}>
-            <div className="game-card" style={{
-              background: 'linear-gradient(135deg, #0f172a, #1e293b)',
-              borderRadius: 24, padding: '20px 16px',
-              color: 'white', height: '100%',
-              position: 'relative', overflow: 'hidden',
-              boxShadow: '0 10px 20px -5px rgba(15,23,42,0.3)',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-            }}>
-              <div style={{
-                width: 50, height: 50, borderRadius: 18,
-                background: '#3b82f6',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 24, marginBottom: 12,
-                boxShadow: '0 4px 12px rgba(59,130,246,0.3)'
-              }}>💎</div>
-              <div style={{ fontSize: 13, fontWeight: 800 }}>Crystal Discovery</div>
-            </div>
-          </Link>
-
-          {/* Integrity Tower */}
-          <Link href="/integrity-3d" style={{ textDecoration: 'none' }}>
-            <div className="game-card" style={{
-              background: 'linear-gradient(135deg, #312e81, #3730a3)',
-              borderRadius: 24, padding: '20px 16px',
-              color: 'white', height: '100%',
-              position: 'relative', overflow: 'hidden',
-              boxShadow: '0 10px 20px -5px rgba(49,46,129,0.3)',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
-            }}>
-              <div style={{
-                width: 50, height: 50, borderRadius: 18,
-                background: '#6366f1',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 24, marginBottom: 12,
-                boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
-              }}>🧱</div>
-              <div style={{ fontSize: 13, fontWeight: 800 }}>Integrity Tower</div>
-            </div>
-          </Link>
-        </div>
       </div>
 
       {/* 5. Pilih Chapter (Skill Tree) */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Skill Tree: Pilih Chapter</h2>
-        <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' as const }}>4 Sectors</span>
+        <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' }}>4 Sectors</span>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 56 }}>
@@ -848,13 +522,13 @@ export default async function Home() {
           <Link key={i} href={`/chapter/${i + 1}`} style={{
             background: 'white', borderRadius: 24, overflow: 'hidden',
             border: '1px solid #e5e7eb', textDecoration: 'none',
-            display: 'flex', flexDirection: 'column' as const,
+            display: 'flex', flexDirection: 'column',
             boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
           }}>
             <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, background: ch.bg, position: 'relative' }}>
               <span className="animate-float" style={{ position: 'relative', zIndex: 1, animationDelay: `${i * 0.2}s` }}>{ch.emoji}</span>
             </div>
-            <div style={{ padding: 16, flex: 1, display: 'flex', flexDirection: 'column' as const }}>
+            <div style={{ padding: 16, flex: 1, display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, fontWeight: 800, marginBottom: 8 }}>
                 <span style={{ color: ch.color }}>CH {i + 1}</span>
                 <span style={{ color: '#94a3b8' }}>{ch.completed}/{ch.nodes} NODE</span>
@@ -865,7 +539,7 @@ export default async function Home() {
               <div style={{ height: 4, background: '#f1f5f9', borderRadius: 2, marginBottom: 12, overflow: 'hidden' }}>
                 <div style={{ width: `${(ch.completed / ch.nodes) * 100}%`, height: '100%', background: ch.color }} />
               </div>
-              <div style={{ fontSize: 10, fontWeight: 800, color: ch.completed > 0 ? ch.color : '#94a3b8', textAlign: 'center' as const }}>
+              <div style={{ fontSize: 10, fontWeight: 800, color: ch.completed > 0 ? ch.color : '#94a3b8', textAlign: 'center' }}>
                 {ch.completed > 0 ? 'RESUME ⚡' : 'START →'}
               </div>
             </div>
@@ -876,9 +550,9 @@ export default async function Home() {
       {/* Bottom: Leaderboard */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Leaderboard</h2>
-        <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' as const }}>Top {leaderboard.length || '-'}</span>
+        <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' }}>Top {leaderboard.length || '-'}</span>
       </div>
-      <div style={{ background: 'white', borderRadius: 20, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+      <div style={{ background: 'white', borderRadius: 20, border: '1px solid #e5e7eb', overflow: 'hidden', marginBottom: 40 }}>
         {leaderboard.length > 0 ? leaderboard.map((player, i) => (
           <div key={i} style={{
             display: 'flex', alignItems: 'center', padding: '16px 20px',
@@ -891,57 +565,52 @@ export default async function Home() {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a2e' }}>{player.name}</div>
             </div>
-            <div style={{ textAlign: 'right' as const }}>
+            <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: 16, fontWeight: 800, color: '#1a1a2e' }}>{player.score.toLocaleString()}</div>
               <div style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600 }}>XP</div>
             </div>
           </div>
         )) : (
-          <div style={{ padding: '32px 20px', textAlign: 'center' as const, color: '#94a3b8', fontSize: 13, fontWeight: 600 }}>
+          <div style={{ padding: '32px 20px', textAlign: 'center', color: '#94a3b8', fontSize: 13, fontWeight: 600 }}>
             Belum ada data.
           </div>
         )}
       </div>
 
       {/* About App Banner */}
-      <div style={{ marginTop: 40 }}>
-        <Link href="/about" style={{ textDecoration: 'none' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #e11d48, #be123c)',
-            borderRadius: 24, padding: 24, color: 'white',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            boxShadow: '0 10px 25px -5px rgba(225,29,72,0.3)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Tentang MoLeCul</div>
-              <div style={{ fontSize: 13, opacity: 0.9, fontWeight: 500, maxWidth: 200 }}>
-                Pelajari filosofi, fitur, dan tim di balik aplikasi ini
-              </div>
+      <Link href="/about" style={{ textDecoration: 'none' }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #e11d48, #be123c)',
+          borderRadius: 24, padding: 24, color: 'white',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          boxShadow: '0 10px 25px -5px rgba(225,29,72,0.3)',
+          position: 'relative', overflow: 'hidden',
+          marginBottom: 40
+        }}>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Tentang MoLeCul</div>
+            <div style={{ fontSize: 13, opacity: 0.9, fontWeight: 500, maxWidth: 200 }}>
+              Pelajari filosofi, fitur, dan tim di balik aplikasi ini
             </div>
-            <div style={{ fontSize: 48, zIndex: 1, filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))' }}>ℹ️</div>
-            <div style={{ position: 'absolute', right: -20, top: -20, width: 100, height: 100, background: 'radial-gradient(circle, #fca5a5 0%, transparent 70%)', opacity: 0.2, filter: 'blur(20px)' }} />
           </div>
-        </Link>
-      </div>
+          <div style={{ fontSize: 48, zIndex: 1, filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))' }}>ℹ️</div>
+        </div>
+      </Link>
 
       {/* Admin Panel Link */}
-      {
-        userEmail === "hadhiee@gmail.com" && (
-          <div style={{ marginTop: 40, borderTop: '1px solid #f1f5f9', paddingTop: 24, textAlign: 'center' }}>
-            <Link href="/admin/logs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1a1a2e', color: 'white', padding: '12px 24px', borderRadius: 99, textDecoration: 'none', fontSize: 13, fontWeight: 800 }}>
-              <span>🔒</span> Control Center (Admin Status)
-            </Link>
-          </div>
-        )
-      }
+      {userEmail === "hadhiee@gmail.com" && (
+        <div style={{ marginBottom: 120, borderTop: '1px solid #f1f5f9', paddingTop: 24, textAlign: 'center' }}>
+          <Link href="/admin/logs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1a1a2e', color: 'white', padding: '12px 24px', borderRadius: 99, textDecoration: 'none', fontSize: 13, fontWeight: 800 }}>
+            <span>🔒</span> Control Center (Admin Status)
+          </Link>
+        </div>
+      )}
 
       {/* ===== FIXED BOTTOM NAVIGATION BAR ===== */}
       <nav style={{
-        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 99999,
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999,
         background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
         borderTop: '1px solid rgba(0,0,0,0.06)',
-        boxShadow: '0 -4px 24px -4px rgba(0,0,0,0.08)',
         padding: '6px 8px env(safe-area-inset-bottom, 8px)',
         display: 'flex', justifyContent: 'space-around', alignItems: 'center',
       }}>
@@ -968,7 +637,7 @@ export default async function Home() {
           <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Journey</span>
         </Link>
 
-        {/* MoDy - AI Moklet Buddy — CENTER PROMINENT */}
+        {/* MoDy - AI Moklet Buddy */}
         <Link href="/ai-tutor" style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           textDecoration: 'none', marginTop: -22, position: 'relative',
@@ -1024,6 +693,6 @@ export default async function Home() {
           <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Lomba</span>
         </Link>
       </nav>
-    </div >
+    </div>
   );
 }
