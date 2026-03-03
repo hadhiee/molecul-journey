@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
 interface NewsItem {
     id: number;
-    category: 'Cyber Security' | 'DevOps' | 'Cloud Computing';
+    category: 'ID' | 'INT';
     title: string;
     description: string;
     source: string;
+    url: string;
     icon: string;
     color: string;
 }
@@ -15,189 +16,244 @@ interface NewsItem {
 const NEWS_DATA: NewsItem[] = [
     {
         id: 1,
-        category: 'Cyber Security',
-        title: 'New Ransomware Variant Targeted at Cloud Infrastructure',
-        description: 'Researchers have discovered a sophisticated ransomware strain that specifically targets misconfigured bucket storage.',
-        source: 'Cyber Defense Mag',
-        icon: '🛡️',
+        category: 'ID',
+        title: 'Indosat & 5G AI-RAN Pertama di ASEAN',
+        description: 'Kolaborasi dengan Nokia & NVIDIA pamerkan jaringan 5G berbasis AI yang lebih cerdas dan responsif di MWC 2026.',
+        source: 'VOI ID',
+        url: 'https://voi.id',
+        icon: '📡',
         color: '#e11d48'
     },
     {
         id: 2,
-        category: 'DevOps',
-        title: 'AI-Driven CI/CD Pipelines: The New Industry Standard',
-        description: 'Automated code review and predictive deployment models are significantly reducing lead time for changes.',
-        source: 'DevOps Trends',
-        icon: '🚀',
-        color: '#0ea5e9'
+        category: 'ID',
+        title: 'BI Luncurkan Digital Innovation Hub',
+        description: 'Memperkuat talenta digital muda Indonesia melalui program Digdaya dan Hackathon 2026 untuk ekonomi digital.',
+        source: 'Fintech News',
+        url: 'https://fintechnews.id',
+        icon: '🏦',
+        color: '#3b82f6'
     },
     {
         id: 3,
-        category: 'Cloud Computing',
-        title: 'Quantum Computing as a Service (QaaS) Enters Beta',
-        description: 'Major cloud providers are now offering early access to quantum processors for complex cryptographic simulations.',
-        source: 'Cloud Edge',
-        icon: '☁️',
-        color: '#8b5cf6'
-    },
-    {
-        id: 4,
-        category: 'Cyber Security',
-        title: 'Zero-Trust Architecture: Moving Beyond the Perimeter',
-        description: 'Companies are accelerating Shift-Left security practices to protect distributed workforces.',
-        source: 'Security Focus',
-        icon: '🔐',
-        color: '#f43f5e'
-    },
-    {
-        id: 5,
-        category: 'DevOps',
-        title: 'Platform Engineering vs Traditional DevOps',
-        description: 'The rise of Internal Developer Platforms (IDP) is changing how teams manage infrastructure as code.',
-        source: 'SysAdmin Daily',
-        icon: '🏗️',
+        category: 'ID',
+        title: 'Regulasi Perlindungan Anak Daring',
+        description: 'Pemerintah terapkan aturan ketat perlindungan anak di platform digital mulai Maret 2026.',
+        source: 'Antara News',
+        url: 'https://antaranews.com',
+        icon: '🛡️',
         color: '#10b981'
     },
     {
-        id: 6,
-        category: 'Cloud Computing',
-        title: 'Multi-Cloud Strategy for Enterprise Resilience',
-        description: 'Hybrid cloud adoption grows by 35% as organizations seek to avoid single-vendor lock-in.',
-        source: 'Tech Infrastructure',
-        icon: '🌐',
+        id: 4,
+        category: 'ID',
+        title: 'Roadmap Etika AI Nasional 2026',
+        description: 'Kementerian Komunikasi segera terbitkan peta jalan dan panduan etika AI untuk industri nasional.',
+        source: 'Tech in Asia',
+        url: 'https://techinasia.com',
+        icon: '🤖',
+        color: '#8b5cf6'
+    },
+    {
+        id: 5,
+        category: 'INT',
+        title: 'Xiaomi 17 Series Global Launch',
+        description: 'Xiaomi resmi luncurkan flagship 17 Ultra dan Wear OS Watch 5 di ajang MWC 2026 Barcelona.',
+        source: 'Tech Global',
+        url: 'https://www.mi.com',
+        icon: '📱',
         color: '#f59e0b'
+    },
+    {
+        id: 6,
+        category: 'INT',
+        title: 'Lenovo Pamer Laptop Yoga Book Pro 3D',
+        description: 'Laptop konsep dengan layar 3D tanpa kacamata dan fitur AI terintegrasi mencuri perhatian dunia.',
+        source: 'Lenovo Press',
+        url: 'https://lenovo.com',
+        icon: '💻',
+        color: '#ef4444'
+    },
+    {
+        id: 7,
+        category: 'INT',
+        title: 'Strategi Samsung AI Factory 2030',
+        description: 'Samsung targetkan seluruh operasi manufaktur global berbasis kecerdasan buatan penuh pada 2030.',
+        source: 'Samsung News',
+        url: 'https://samsung.com',
+        icon: '🏭',
+        color: '#2563eb'
+    },
+    {
+        id: 8,
+        category: 'INT',
+        title: 'Huawei Forum Ekonomi Digital Ke-4',
+        description: 'Huawei tegaskan pentingnya infrastruktur digital dalam mempercepat adopsi AI di sektor publik.',
+        source: 'Huawei Forum',
+        url: 'https://huawei.com',
+        icon: '🌐',
+        color: '#dc2626'
+    },
+    {
+        id: 9,
+        category: 'INT',
+        title: 'iPad Air M4 Resmi Diperkenalkan',
+        description: 'Apple tingkatkan performa iPad Air dengan chip M4 untuk kemampuan AI yang jauh lebih cepat.',
+        source: 'Apple News',
+        url: 'https://apple.com',
+        icon: '🍎',
+        color: '#000000'
+    },
+    {
+        id: 10,
+        category: 'ID',
+        title: 'Pertumbuhan 17M Pasar Digital Travel',
+        description: 'AI diprediksi dorong pasar travel online Indonesia melesat tajam pada akhir dekade ini.',
+        source: 'Phocuswire',
+        url: 'https://phocuswire.com',
+        icon: '✈️',
+        color: '#065f46'
     }
 ];
 
 export default function TechNewsPanel() {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [isVisible, setIsVisible] = useState(true);
-
-    // Update news every hour logic: 
-    // We can cycle/rotate through news automatically, but "updates 1 jam" usually suggests
-    // the user wants fresh content every hour or just a rotation.
-    // I'll implement an automatic rotation every 10 seconds for user engagement, 
-    // but I'll also use the "Hour" to determine the starting item.
-
-    useEffect(() => {
-        // Set initial index based on current hour to satisfy "different news every hour" feel
-        const currentHour = new Date().getHours();
-        setCurrentIndex(currentHour % NEWS_DATA.length);
-
-        const interval = setInterval(() => {
-            setIsVisible(false);
-            setTimeout(() => {
-                setCurrentIndex((prev) => (prev + 1) % NEWS_DATA.length);
-                setIsVisible(true);
-            }, 500);
-        }, 15000); // Rotate every 15s for visual dynamic
-
-        return () => clearInterval(interval);
-    }, []);
-
-    const currentNews = NEWS_DATA[currentIndex];
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     return (
         <div style={{
             background: 'white',
             borderRadius: 32,
-            padding: 24,
+            padding: '24px 0',
             boxShadow: '0 10px 30px -10px rgba(0,0,0,0.05)',
             border: '1px solid #f1f5f9',
-            height: '100%',
+            overflow: 'hidden',
             display: 'flex',
-            flexDirection: 'column',
-            position: 'relative',
-            overflow: 'hidden'
+            flexDirection: 'column'
         }}>
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, padding: '0 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{
                         width: 32, height: 32, borderRadius: 10, backgroundColor: '#f8fafc',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16
                     }}>📡</div>
-                    <h2 style={{ fontSize: 16, fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>Tech Radar</h2>
+                    <h2 style={{ fontSize: 16, fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>Tech Radar News</h2>
                 </div>
-                <div style={{ fontSize: 10, fontWeight: 800, color: '#94a3b8', background: '#f1f5f9', padding: '4px 8px', borderRadius: 99 }}>
-                    UPDATING HOURLY
+                <div style={{ fontSize: 10, fontWeight: 800, color: '#3b82f6', background: '#eff6ff', padding: '4px 12px', borderRadius: 99 }}>
+                    LIVE: INDO & GLOBAL
                 </div>
             </div>
 
-            {/* Content Area */}
-            <div style={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'all 0.5s ease-in-out',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(10px)'
-            }}>
-                {/* Category Tag */}
-                <div style={{
-                    display: 'inline-block',
-                    backgroundColor: `${currentNews.color}15`,
-                    color: currentNews.color,
-                    fontSize: 10,
-                    fontWeight: 800,
-                    padding: '4px 10px',
-                    borderRadius: 8,
-                    marginBottom: 12,
-                    alignSelf: 'flex-start',
-                    textTransform: 'uppercase'
-                }}>
-                    {currentNews.category}
-                </div>
-
-                {/* Title */}
-                <h3 style={{
-                    fontSize: 18,
-                    fontWeight: 800,
-                    color: '#1e293b',
-                    lineHeight: 1.3,
-                    marginBottom: 8
-                }}>
-                    {currentNews.title}
-                </h3>
-
-                {/* Description */}
-                <p style={{
-                    fontSize: 13,
-                    color: '#64748b',
-                    lineHeight: 1.5,
-                    marginBottom: 16,
-                    flex: 1
-                }}>
-                    {currentNews.description}
-                </p>
-
-                {/* Footer info */}
-                <div style={{
+            {/* Horizontal Scroll Container */}
+            <div
+                ref={scrollRef}
+                className="hide-scrollbar"
+                style={{
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    paddingTop: 16,
-                    borderTop: '1px solid #f1f5f9'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: 18 }}>{currentNews.icon}</span>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#475569' }}>{currentNews.source}</span>
-                    </div>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8' }}>Live Update</span>
-                </div>
+                    gap: 16,
+                    overflowX: 'auto',
+                    padding: '0 24px 12px',
+                    scrollSnapType: 'x mandatory',
+                    scrollBehavior: 'smooth'
+                }}
+            >
+                {NEWS_DATA.map((news) => (
+                    <a
+                        key={news.id}
+                        href={news.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            minWidth: 280,
+                            maxWidth: 280,
+                            background: '#f8fafc',
+                            borderRadius: 24,
+                            padding: 20,
+                            textDecoration: 'none',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 12,
+                            border: '1px solid #f1f5f9',
+                            transition: 'all 0.3s ease',
+                            scrollSnapAlign: 'start',
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}
+                    >
+                        {/* Category Tag */}
+                        <div style={{
+                            display: 'inline-block',
+                            backgroundColor: `${news.color}15`,
+                            color: news.color,
+                            fontSize: 9,
+                            fontWeight: 800,
+                            padding: '4px 10px',
+                            borderRadius: 8,
+                            alignSelf: 'flex-start',
+                            textTransform: 'uppercase'
+                        }}>
+                            {news.category === 'ID' ? '🇮🇩 Indonesia' : '🌍 International'}
+                        </div>
+
+                        {/* Title */}
+                        <h3 style={{
+                            fontSize: 15,
+                            fontWeight: 800,
+                            color: '#1e293b',
+                            lineHeight: 1.4,
+                            margin: 0,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            height: 42
+                        }}>
+                            {news.title}
+                        </h3>
+
+                        {/* Description */}
+                        <p style={{
+                            fontSize: 12,
+                            color: '#64748b',
+                            lineHeight: 1.5,
+                            margin: 0,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            flex: 1
+                        }}>
+                            {news.description}
+                        </p>
+
+                        {/* Footer */}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            marginTop: 4,
+                            paddingTop: 12,
+                            borderTop: '1px dashed #e2e8f0'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                <span style={{ fontSize: 16 }}>{news.icon}</span>
+                                <span style={{ fontSize: 11, fontWeight: 700, color: '#475569' }}>{news.source}</span>
+                            </div>
+                            <span style={{ fontSize: 14, color: '#94a3b8' }}>→</span>
+                        </div>
+                    </a>
+                ))}
             </div>
 
-            {/* Progress Bar (Rotation Timer) */}
-            <div style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                height: 3,
-                backgroundColor: currentNews.color,
-                width: isVisible ? '100%' : '0%',
-                transition: isVisible ? 'width 15s linear' : 'none',
-                opacity: 0.3
-            }} />
+            <style jsx global>{`
+                .hide-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+                .hide-scrollbar {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+            `}</style>
         </div>
     );
 }
