@@ -336,6 +336,41 @@ export default async function Home() {
         </div>
       </Link>
 
+      {/* Career Explorer Card */}
+      <Link href="/karier" className={styles.featureCard} style={{
+        background: 'linear-gradient(135deg, #0c4a6e, #0369a1, #0ea5e9)',
+        marginBottom: 32,
+        padding: 24,
+      }}>
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.12, background: 'radial-gradient(circle at 85% 15%, rgba(245,158,11,0.6), transparent 60%)' }} />
+        <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <span style={{ fontSize: 9, fontWeight: 900, background: '#f59e0b', color: '#1e293b', padding: '3px 10px', borderRadius: 20, letterSpacing: '0.1em' }}>CAREER</span>
+              <span style={{ fontSize: 9, fontWeight: 900, background: 'rgba(255,255,255,0.15)', color: '#bae6fd', padding: '3px 10px', borderRadius: 20 }}>+XP TIAP EXPLORE</span>
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 6, letterSpacing: '-0.03em', color: 'white' }}>
+              Career Explorer
+            </div>
+            <div style={{ fontSize: 13, color: '#bae6fd', fontWeight: 500, lineHeight: 1.5 }}>
+              Jelajahi potensi karier IT masa depan & fakta teknologi menarik
+            </div>
+            <div style={{ fontSize: 11, color: '#7dd3fc', fontWeight: 500, marginTop: 4 }}>
+              RPL · TKJ · PG · Emerging Tech 🚀
+            </div>
+          </div>
+          <div style={{
+            width: 56, height: 56, borderRadius: 20,
+            background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 28, flexShrink: 0, border: '1px solid rgba(255,255,255,0.15)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+          }}>
+            <span className="animate-float">🚀</span>
+          </div>
+        </div>
+      </Link>
+
       {/* 3.b Tech News Tracker */}
       <Suspense fallback={<div style={{ height: 200, background: '#f8fafc', borderRadius: 24, marginBottom: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#cbd5e1', fontSize: 12, fontWeight: 700 }}>Memuat Berita...</div>}>
         <TechNewsPanel />
