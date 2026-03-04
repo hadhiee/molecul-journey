@@ -75,7 +75,8 @@ export default async function Home() {
     { name: "Kelas Tangguh: Fondasi ATTITUDE", emoji: "🛡️", bg: "#fff1f2", color: "#e11d48", nodes: 0, completed: 0 },
     { name: "Lab Inovasi: Use Tech Wisely", emoji: "💻", bg: "#eff6ff", color: "#3b82f6", nodes: 0, completed: 0 },
     { name: "Simulasi Industri: BISA di Dunia Kerja", emoji: "🏭", bg: "#f0fdf4", color: "#22c55e", nodes: 0, completed: 0 },
-    { name: "Dampak Sosial: AKHLAK untuk Masyarakat", emoji: "🌍", bg: "#fefce8", color: "#f59e0b", nodes: 0, completed: 0 }
+    { name: "Dampak Sosial: AKHLAK untuk Masyarakat", emoji: "🌍", bg: "#fefce8", color: "#f59e0b", nodes: 0, completed: 0 },
+    { name: "Moklet Leadership: Pilar MOLESH", emoji: "🧠", bg: "#f1f1ff", color: "#6366f1", nodes: 5, completed: 0 }
   ];
 
   try {
@@ -90,21 +91,31 @@ export default async function Home() {
       });
     }
 
-    if (userEmail && allScenarios) {
+    if (userEmail) {
       const { data: userProg } = await supabase
         .from("user_progress")
         .select("mission_id")
-        .eq("user_email", userEmail)
-        .in("mission_id", allScenarios.map(s => s.id));
+        .eq("user_email", userEmail);
 
       if (userProg) {
         const completedSet = new Set(userProg.map(p => p.mission_id));
-        allScenarios.forEach(s => {
-          if (completedSet.has(s.id)) {
-            const chIdx = (s.chapter || 1) - 1;
-            if (chapterData[chIdx]) {
-              chapterData[chIdx].completed++;
+
+        // Count for first 4 chapters (scenarios based)
+        if (allScenarios) {
+          allScenarios.forEach(s => {
+            if (completedSet.has(s.id)) {
+              const chIdx = (s.chapter || 1) - 1;
+              if (chapterData[chIdx]) {
+                chapterData[chIdx].completed++;
+              }
             }
+          });
+        }
+
+        // Count for Chapter 5 (MOLESH based)
+        ["S2", "S3", "S4", "S5", "S6"].forEach(s => {
+          if (completedSet.has(`MOLESH_${s}`)) {
+            chapterData[4].completed++;
           }
         });
       }
@@ -235,36 +246,57 @@ export default async function Home() {
           </div>
         </Link>
 
-        {/* MoDy - AI Moklet Buddy Card (Spans full width) */}
+        {/* MoDy - AI Moklet Buddy Card */}
         <Link href="/ai-tutor" className={styles.featureCard} style={{
-          background: 'linear-gradient(135deg, #312e81, #4c1d95, #6d28d9)',
-          border: '1px solid rgba(139,92,246,0.4)',
+          background: 'linear-gradient(135deg, #312e81, #4c1d95)',
+          border: '1px solid rgba(139,92,241,0.3)',
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, background: 'radial-gradient(circle at top right, rgba(167,139,250,0.6), transparent 70%)' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 2, marginBottom: 24 }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 16,
+              background: 'linear-gradient(135deg, #6366f1, #7c3aed)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 22, boxShadow: '0 8px 20px rgba(99,102,241,0.4)',
+            }}>✨</div>
+            <span style={{ fontSize: 9, fontWeight: 900, background: '#22c55e', color: 'white', padding: '4px 10px', borderRadius: 20 }}>READY</span>
+          </div>
+          <div style={{ zIndex: 2 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: 'white', marginBottom: 4 }}>MoDy AI Buddy</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.4 }}>
+              Chat asisten cerdas
+            </div>
+          </div>
+        </Link>
+
+        {/* 🆕 MOLESH Leadership Card (Featured) */}
+        <Link href="/molesh" className={styles.featureCard} style={{
+          background: 'linear-gradient(135deg, #1e1b4b, #312e81)',
+          border: '1px solid rgba(255,255,255,0.1)',
           gridColumn: '1 / -1'
         }}>
-          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, background: 'radial-gradient(circle at 80% 20%, rgba(167,139,250,0.6), transparent 60%)' }} />
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, background: 'radial-gradient(circle at 80% 20%, rgba(248,250,252,0.4), transparent 60%)' }} />
           <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                <span style={{ fontSize: 11, fontWeight: 900, color: '#c4b5fd', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  MoDy AI Tutor
+                <span style={{ fontSize: 11, fontWeight: 900, color: '#f8fafc', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                  Leadership Curriculum
                 </span>
-                <span style={{ fontSize: 9, fontWeight: 900, background: '#22c55e', color: 'white', padding: '2px 10px', borderRadius: 20 }}>READY</span>
+                <span style={{ fontSize: 9, fontWeight: 900, background: 'var(--theme-primary)', color: 'white', padding: '2px 10px', borderRadius: 20 }}>NEW</span>
               </div>
-              <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 4, letterSpacing: '-0.02em', color: 'white' }}>
-                Chat dengan Gemini AI
+              <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 4, letterSpacing: '-0.03em', color: 'white' }}>
+                Moklet Leadership (MOLESH)
               </div>
-              <div style={{ fontSize: 13, color: '#c4b5fd', fontWeight: 500 }}>
-                Tanya pelajaran, info lomba, atau tips belajar 🎓
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', fontWeight: 500 }}>
+                Sadari, Peduli, Berani: Persiapan Karier IT Internasional 🛡️
               </div>
             </div>
             <div style={{
-              width: 64, height: 64, borderRadius: 24,
-              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)',
+              width: 64, height: 64, borderRadius: 24, background: 'rgba(255,255,255,0.1)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 32, flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)',
-              boxShadow: '0 12px 24px rgba(0,0,0,0.2)'
+              fontSize: 32, flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)'
             }}>
-              <span className="animate-float">✨</span>
+              🧠
             </div>
           </div>
         </Link>
@@ -519,7 +551,7 @@ export default async function Home() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 56 }}>
         {chapterData.map((ch, i) => (
-          <Link key={i} href={`/chapter/${i + 1}`} style={{
+          <Link key={i} href={i === 4 ? "/molesh" : `/chapter/${i + 1}`} style={{
             background: 'white', borderRadius: 24, overflow: 'hidden',
             border: '1px solid #e5e7eb', textDecoration: 'none',
             display: 'flex', flexDirection: 'column',
