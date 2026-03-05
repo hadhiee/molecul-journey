@@ -157,7 +157,6 @@ export default async function Home() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
               <SignOutButton />
-              <FocusChatButton />
             </div>
           </div>
 
@@ -707,34 +706,39 @@ export default async function Home() {
           <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Journey</span>
         </Link>
 
-        {/* MoDy - AI Moklet Buddy */}
-        <Link href="/ai-tutor" style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          textDecoration: 'none', marginTop: -22, position: 'relative',
-        }}>
-          <div style={{
-            width: 52, height: 52, borderRadius: 18,
-            background: 'linear-gradient(135deg, #6366f1, #7c3aed)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 6px 20px -4px rgba(99,102,241,0.5)',
-            border: '3px solid white',
-            position: 'relative',
+        {/* Center: MoDy + Fokus Ngobrol */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, marginTop: -18, position: 'relative' }}>
+          {/* Fokus Ngobrol */}
+          <FocusChatButton />
+          {/* MoDy */}
+          <Link href="/ai-tutor" style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            textDecoration: 'none',
           }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" />
-              <path d="M2 14h2" /><path d="M20 14h2" />
-              <path d="M15 13v2" /><path d="M9 13v2" />
-            </svg>
-            <span style={{
-              position: 'absolute', top: -4, right: -4,
-              width: 16, height: 16, borderRadius: 8,
-              background: '#22c55e', border: '2px solid white',
-              fontSize: 7, fontWeight: 900, color: 'white',
+            <div style={{
+              width: 52, height: 52, borderRadius: 18,
+              background: 'linear-gradient(135deg, #6366f1, #7c3aed)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>AI</span>
-          </div>
-          <span style={{ fontSize: 9, fontWeight: 800, color: '#6366f1', marginTop: 2, letterSpacing: '0.02em' }}>MoDy</span>
-        </Link>
+              boxShadow: '0 6px 20px -4px rgba(99,102,241,0.5)',
+              border: '3px solid white',
+              position: 'relative',
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" />
+                <path d="M2 14h2" /><path d="M20 14h2" />
+                <path d="M15 13v2" /><path d="M9 13v2" />
+              </svg>
+              <span style={{
+                position: 'absolute', top: -4, right: -4,
+                width: 16, height: 16, borderRadius: 8,
+                background: '#22c55e', border: '2px solid white',
+                fontSize: 7, fontWeight: 900, color: 'white',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>AI</span>
+            </div>
+            <span style={{ fontSize: 9, fontWeight: 800, color: '#6366f1', marginTop: 2, letterSpacing: '0.02em' }}>MoDy</span>
+          </Link>
+        </div>
 
         {/* Culture */}
         <Link href="/culture" style={{
