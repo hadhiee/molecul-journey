@@ -28,34 +28,21 @@ export default async function Home() {
   const userName = session.user?.name || "Agent";
   const userImage = session.user?.image || "";
 
-  // Fetch real XP & mission count from Supabase
+  // Fetch real XP, mission count, and leaderboard from Supabase
   let totalXP = 0;
   let missionCount = 0;
+  let leaderboard: { name: string; score: number }[] = [];
 
   try {
     const { SYSTEM_IDS } = await import("@/lib/ids"); // Import dynamically for Server Component
-    const { data: progress } = await supabase
-      .from("user_progress")
-      .select("score, mission_id, user_email")
-      .eq("user_email", userEmail);
 
-    if (progress && progress.length > 0) {
-      const systemValues = new Set([...Object.values(SYSTEM_IDS), "SYSTEM_LOGIN", "SYSTEM_HEARTBEAT", "SYSTEM_REFLECTION", "SYSTEM_CHECKIN", "SYSTEM_EVIDENCE", "JOURNEY_MAP"]);
-      const actualMissions = progress.filter((p: any) => p.mission_id && !systemValues.has(p.mission_id) && !systemValues.has(p.mission_id?.toUpperCase()));
-
-      totalXP = progress.reduce((sum: number, p: any) => sum + (p.score || 0), 0);
-      missionCount = actualMissions.length;
-    }
-  } catch (e) { }
-
-  // Fetch leaderboard
-  let leaderboard: { name: string; score: number }[] = [];
-  try {
+    // Fetch ALL progress data once — used for both totalXP AND leaderboard
     const { data: allProgress } = await supabase
       .from("user_progress")
-      .select("user_email, score");
+      .select("score, mission_id, user_email");
 
     if (allProgress && allProgress.length > 0) {
+      // --- Build leaderboard scoreMap (case-insensitive) ---
       const scoreMap: Record<string, number> = {};
       allProgress.forEach((p: any) => {
         if (p.user_email) {
@@ -63,10 +50,22 @@ export default async function Home() {
           scoreMap[email] = (scoreMap[email] || 0) + (p.score || 0);
         }
       });
+
       leaderboard = Object.entries(scoreMap)
         .map(([email, score]) => ({ name: email.split("@")[0], score }))
         .sort((a, b) => b.score - a.score)
         .slice(0, 5);
+
+      // --- Get totalXP for current user from the SAME scoreMap ---
+      totalXP = scoreMap[userEmail] || 0;
+
+      // --- Mission count (filter by current user, case-insensitive) ---
+      const systemValues = new Set([...Object.values(SYSTEM_IDS), "SYSTEM_LOGIN", "SYSTEM_HEARTBEAT", "SYSTEM_REFLECTION", "SYSTEM_CHECKIN", "SYSTEM_EVIDENCE", "JOURNEY_MAP"]);
+      const userProgress = allProgress.filter((p: any) =>
+        p.user_email && p.user_email.toLowerCase().trim() === userEmail
+      );
+      const actualMissions = userProgress.filter((p: any) => p.mission_id && !systemValues.has(p.mission_id) && !systemValues.has(p.mission_id?.toUpperCase()));
+      missionCount = actualMissions.length;
     }
   } catch (e) { }
 
