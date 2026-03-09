@@ -429,6 +429,19 @@ export default async function Home() {
           <div className={styles.arrowBtn}>→</div>
         </Link>
 
+        {/* Moklet Snake */}
+        <Link href="/snake" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#16a34a' }}>🐍</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+              <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Moklet Snake</div>
+              <span style={{ fontSize: 8, fontWeight: 800, background: '#e11d48', color: 'white', padding: '1px 6px', borderRadius: 4 }}>NEW</span>
+            </div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Collect ATTITUDE values</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
         {/* Culture Connect */}
         <Link href="/culture-connect" className={styles.gameCardNew}>
           <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#059669' }}>🔗</div>
