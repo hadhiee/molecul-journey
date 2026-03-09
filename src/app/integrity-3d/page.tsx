@@ -315,7 +315,13 @@ export default function Integrity3DGame() {
                     </div>
                     <div style={{ display: "flex", gap: 16 }}>
                         <button
-                            onClick={() => { setScore(0); setGameState("PLAYING"); setActiveValue(null); }}
+                            onClick={async () => {
+                                // Save unsaved XP before resetting
+                                const diff = scoreRef.current - savedScoreRef.current;
+                                if (diff > 0 && session?.user?.email) await saveScore(diff);
+                                savedScoreRef.current = 0;
+                                setScore(0); setGameState("PLAYING"); setActiveValue(null);
+                            }}
                             style={{ background: "white", color: "#e11d48", border: "none", padding: "18px 32px", borderRadius: 16, fontSize: 16, fontWeight: 800, cursor: "pointer" }}
                         >
                             Coba Lagi

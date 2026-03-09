@@ -331,7 +331,13 @@ export default function FighterPage() {
 
                     <div className="result-buttons">
                         <button
-                            onClick={() => { setGameState("AVATAR"); }}
+                            onClick={async () => {
+                                // Save unsaved XP before resetting
+                                const diff = scoreRef.current - savedScoreRef.current;
+                                if (diff > 0 && session?.user?.email) await saveScore(diff);
+                                savedScoreRef.current = 0;
+                                setGameState("AVATAR");
+                            }}
                             className="btn-replay"
                         >
                             MAIN LAGI

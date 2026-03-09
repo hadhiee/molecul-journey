@@ -62,7 +62,14 @@ export default function TetrisPage() {
         if (!session) return;
     }, [session]);
 
-    const resetGame = () => {
+    const resetGame = async () => {
+        // Save any unsaved XP from previous game before resetting
+        const prevDiff = scoreRef.current - savedScoreRef.current;
+        if (prevDiff > 0 && session?.user?.email) {
+            await saveScore(prevDiff);
+        }
+        savedScoreRef.current = 0;
+
         setGrid(createGrid());
         setScore(0);
         setGameOver(false);

@@ -138,7 +138,14 @@ export default function MokletRunner() {
         }
     }, []);
 
-    const startGame = useCallback(() => {
+    const startGame = useCallback(async () => {
+        // Save any unsaved XP from previous game before resetting
+        const prevDiff = gameRef.current.score - savedScoreRef.current;
+        if (prevDiff > 0 && session?.user?.email) {
+            await saveScore(prevDiff);
+        }
+        savedScoreRef.current = 0;
+
         const g = gameRef.current;
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -162,7 +169,7 @@ export default function MokletRunner() {
         setGameState("playing");
         setScore(0);
         setCollected(0);
-    }, [selectedAvatar]);
+    }, [selectedAvatar, session]);
 
     const savedScoreRef = useRef(0);
 
@@ -180,10 +187,11 @@ export default function MokletRunner() {
     };
 
     const handleExit = async () => {
-        const diff = score - savedScoreRef.current;
+        const currentScore = gameRef.current.score || score;
+        const diff = currentScore - savedScoreRef.current;
         if (diff > 0) {
             await saveScore(diff);
-            savedScoreRef.current = score;
+            savedScoreRef.current = currentScore;
         }
         window.location.href = "/";
     };

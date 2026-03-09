@@ -293,7 +293,13 @@ export default function LightningChallenge() {
 
                     {/* Buttons */}
                     <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 10, animation: 'slideUp 0.5s ease 0.5s both' }}>
-                        <button onClick={() => { loadScenarios(); setPhase("intro"); }} style={{
+                        <button onClick={async () => {
+                            // Save unsaved XP before resetting
+                            const diff = scoreRef.current - savedScoreRef.current;
+                            if (diff > 0 && session?.user?.email) await saveScore(diff);
+                            savedScoreRef.current = 0;
+                            loadScenarios(); setPhase("intro");
+                        }} style={{
                             width: '100%', padding: 18, border: 'none', borderRadius: 16,
                             background: 'linear-gradient(135deg, #e11d48, #f43f5e)', color: 'white',
                             fontSize: 13, fontWeight: 800, textTransform: 'uppercase' as const, letterSpacing: '0.15em',

@@ -33,7 +33,14 @@ export default function FocusGuardGame() {
     const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
     const idCounter = useRef(0);
 
-    const startGame = () => {
+    const startGame = async () => {
+        // Save any unsaved XP from previous game before resetting
+        const prevDiff = scoreRef.current - savedScoreRef.current;
+        if (prevDiff > 0 && session?.user?.email) {
+            await saveScore(prevDiff);
+        }
+        savedScoreRef.current = 0;
+
         setScore(0);
         setTimeLeft(GAME_DURATION);
         setStrikes(0);

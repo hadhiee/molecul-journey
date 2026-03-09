@@ -248,7 +248,13 @@ export default function SnakePage() {
         setSnake(newSnake);
     }, []);
 
-    const startGame = useCallback(() => {
+    const startGame = useCallback(async () => {
+        // Save any unsaved XP from previous game before resetting
+        const prevDiff = scoreRef.current - savedScoreRef.current;
+        if (prevDiff > 0 && session?.user?.email) {
+            await saveScore(prevDiff);
+        }
+
         const initialSnake = [
             { x: 12, y: 10 },
             { x: 11, y: 10 },
@@ -281,7 +287,7 @@ export default function SnakePage() {
 
         if (tickRef.current) clearInterval(tickRef.current);
         tickRef.current = setInterval(gameTick, INITIAL_SPEED);
-    }, [gameTick]);
+    }, [gameTick, session]);
 
     // Cleanup
     useEffect(() => {

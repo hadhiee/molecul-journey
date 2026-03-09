@@ -431,7 +431,13 @@ export default function CultureConnectPage() {
                     <div style={{ color: "white", fontSize: 24, marginBottom: 32 }}>Total XP: <span style={{ color: "#22c55e", fontWeight: 800 }}>+{score}</span></div>
 
                     <button
-                        onClick={() => { setScore(0); setCurrentRound(0); setGameOver(false); }}
+                        onClick={async () => {
+                            // Save unsaved XP before resetting
+                            const diff = scoreRef.current - savedScoreRef.current;
+                            if (diff > 0 && session?.user?.email) await saveScore(diff);
+                            savedScoreRef.current = 0;
+                            setScore(0); setCurrentRound(0); setGameOver(false);
+                        }}
                         style={{
                             background: "white", color: "#0f172a", border: "none", padding: "16px 40px",
                             borderRadius: 99, fontSize: 16, fontWeight: 800, cursor: "pointer", marginBottom: 16

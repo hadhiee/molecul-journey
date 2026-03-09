@@ -679,7 +679,13 @@ export default function SpaceShooterPage() {
                         <div style={{ fontSize: 48, fontWeight: 900, color: "#0ea5e9", lineHeight: 1 }}>{score}</div>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                        <button onClick={() => { setScore(0); setGameOver(false); setIsPlaying(true); }} style={{
+                        <button onClick={async () => {
+                            // Save any unsaved XP from this game first
+                            const diff = scoreRef.current - savedScoreRef.current;
+                            if (diff > 0 && session?.user?.email) await saveScore(diff);
+                            savedScoreRef.current = 0;
+                            setScore(0); setGameOver(false); setIsPlaying(true);
+                        }} style={{
                             background: "#0ea5e9", color: "white", border: "none", padding: "16px 32px",
                             borderRadius: 16, fontSize: 16, fontWeight: 800, cursor: "pointer",
                             boxShadow: "0 0 20px rgba(14, 165, 233, 0.4)"
