@@ -36,12 +36,29 @@ export default async function Home() {
   try {
     const { SYSTEM_IDS } = await import("@/lib/ids"); // Import dynamically for Server Component
 
-    // Fetch ALL progress data once — used for both totalXP AND leaderboard
-    const { data: allProgress } = await supabase
-      .from("user_progress")
-      .select("score, mission_id, user_email");
+    // Fetch ALL progress data — Supabase default limit is 1000!
+    // We must paginate to get everything.
+    let allProgress: any[] = [];
+    const PAGE_SIZE = 1000;
+    let from = 0;
+    let hasMore = true;
 
-    if (allProgress && allProgress.length > 0) {
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from("user_progress")
+        .select("score, mission_id, user_email")
+        .range(from, from + PAGE_SIZE - 1);
+
+      if (error || !data || data.length === 0) {
+        hasMore = false;
+      } else {
+        allProgress = allProgress.concat(data);
+        from += PAGE_SIZE;
+        if (data.length < PAGE_SIZE) hasMore = false;
+      }
+    }
+
+    if (allProgress.length > 0) {
       // --- Build leaderboard scoreMap (case-insensitive) ---
       const scoreMap: Record<string, number> = {};
       allProgress.forEach((p: any) => {

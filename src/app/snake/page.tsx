@@ -353,13 +353,18 @@ export default function SnakePage() {
     const saveScore = async (amount: number) => {
         if (amount > 0 && session?.user?.email) {
             try {
-                await supabase.from("user_progress").insert({
+                const { error } = await supabase.from("user_progress").insert({
                     user_email: session.user.email.toLowerCase(),
                     mission_id: null,
                     score: amount,
                     choice_label: "SNAKE_GAME"
                 });
-            } catch (e) { }
+                if (error) {
+                    console.error("[Snake] saveScore error:", error.message, error);
+                }
+            } catch (e) {
+                console.error("[Snake] saveScore exception:", e);
+            }
         }
     };
 
