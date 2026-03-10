@@ -153,7 +153,7 @@ export default async function Home() {
         <div style={{ position: 'relative', zIndex: 1 }}>
           {/* Brand Logos Top Center */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-            <img src="/brand-logos.png" alt="Brand Logos" style={{ height: 32, opacity: 0.9, filter: 'brightness(0) invert(1)' }} />
+            <img src="/brand-logos.png" alt="Brand Logos" style={{ height: 40, opacity: 1, borderRadius: 8 }} />
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
