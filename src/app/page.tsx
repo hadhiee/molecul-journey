@@ -36,8 +36,33 @@ export default async function Home() {
   try {
     const { SYSTEM_IDS } = await import("@/lib/ids"); // Import dynamically for Server Component
 
+    // --- Define Core Missions to track (Unique IDs) ---
+    const CORE_MISSIONS = [
+      // Major Games
+      "RUNNER", "FIGHTER", "SPACE_SHOOTER", "TETRIS", "SNAKE_GAME", "FOCUS_GAME",
+      "CONNECT_GAME", "SIMULATION", "FUTURE", "CHALLENGE",
+
+      // 3D & Interactive
+      "DISCOVERY_3D", "INTEGRITY_3D_STACK", "SYSTEM_EXPLORE_SEKOLAH_3D", "SYSTEM_EXPLORE_BOMBI_3D",
+
+      // Training & Culture
+      "SYSTEM_EXPLORE_MANAJEMEN", "SYSTEM_EXPLORE_PERSONIL", "SYSTEM_MINIGAME_STRUKTUR",
+      "SYSTEM_EXPLORE_EKSKUL", "NONTON YPT", // Match substring
+
+      // MOLESH (Leadership)
+      "MOLESH_SESI_1", "MOLESH_SESI_2", "MOLESH_SESI_3", "MOLESH_SESI_4", "MOLESH_SESI_5", "MOLESH_SESI_6",
+
+      // Career Explorer
+      "CAREER_EXPLORE_FRONTEND", "CAREER_EXPLORE_BACKEND", "CAREER_EXPLORE_DEVOPS",
+      "CAREER_EXPLORE_MOBDEV", "CAREER_EXPLORE_CYBERSEC", "CAREER_EXPLORE_NETENG",
+      "CAREER_EXPLORE_GAMEDEV", "CAREER_EXPLORE_GAMEART",
+
+      // 3D Uniforms
+      "SERAGAM_3D_SENIN-UPACARA", "SERAGAM_3D_SENIN", "SERAGAM_3D_SELASA",
+      "SERAGAM_3D_RABU", "SERAGAM_3D_KAMIS", "SERAGAM_3D_KAMIS-PUTRA", "SERAGAM_3D_JUMAT"
+    ];
+
     // Fetch ALL progress data — Supabase default limit is 1000!
-    // We must paginate to get everything.
     let allProgress: any[] = [];
     const PAGE_SIZE = 1000;
     let from = 0;
@@ -46,7 +71,7 @@ export default async function Home() {
     while (hasMore) {
       const { data, error } = await supabase
         .from("user_progress")
-        .select("score, mission_id, user_email")
+        .select("score, mission_id, choice_label, user_email")
         .range(from, from + PAGE_SIZE - 1);
 
       if (error || !data || data.length === 0) {
@@ -76,13 +101,23 @@ export default async function Home() {
       // --- Get totalXP for current user from the SAME scoreMap ---
       totalXP = scoreMap[userEmail] || 0;
 
-      // --- Mission count (filter by current user, case-insensitive) ---
-      const systemValues = new Set([...Object.values(SYSTEM_IDS), "SYSTEM_LOGIN", "SYSTEM_HEARTBEAT", "SYSTEM_REFLECTION", "SYSTEM_CHECKIN", "SYSTEM_EVIDENCE", "JOURNEY_MAP"]);
+      // --- Mission Countdown Logic ---
       const userProgress = allProgress.filter((p: any) =>
         p.user_email && p.user_email.toLowerCase().trim() === userEmail
       );
-      const actualMissions = userProgress.filter((p: any) => p.mission_id && !systemValues.has(p.mission_id) && !systemValues.has(p.mission_id?.toUpperCase()));
-      missionCount = actualMissions.length;
+
+      const userCompletedIds = new Set(userProgress.map(p =>
+        ((p.mission_id || p.choice_label || "") as string).toUpperCase()
+      ));
+
+      const completedCount = CORE_MISSIONS.filter(mId => {
+        const target = mId.toUpperCase();
+        return Array.from(userCompletedIds).some(uid => uid.includes(target));
+      }).length;
+
+      missionCount = Math.max(0, CORE_MISSIONS.length - completedCount);
+    } else {
+      missionCount = CORE_MISSIONS.length; // Default all missions remaining
     }
   } catch (e) { }
 
@@ -188,7 +223,7 @@ export default async function Home() {
             </div>
             <div className={styles.glassStat}>
               <div style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, marginBottom: 4 }}>{missionCount}</div>
-              <div style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', opacity: 0.7, letterSpacing: '0.05em' }}>Misi Selesai</div>
+              <div style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', opacity: 0.7, letterSpacing: '0.05em' }}>Misi Tersisa</div>
             </div>
           </div>
 
