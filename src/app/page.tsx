@@ -702,12 +702,35 @@ export default async function Home() {
 
       {/* Admin Panel Link */}
       {userEmail === "hadhiee@gmail.com" && (
-        <div style={{ marginBottom: 120, borderTop: '1px solid #f1f5f9', paddingTop: 24, textAlign: 'center' }}>
+        <div style={{ marginBottom: 40, borderTop: '1px solid #f1f5f9', paddingTop: 24, textAlign: 'center' }}>
           <Link href="/admin/logs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1a1a2e', color: 'white', padding: '12px 24px', borderRadius: 99, textDecoration: 'none', fontSize: 13, fontWeight: 800 }}>
             <span>🔒</span> Control Center (Admin Status)
           </Link>
         </div>
       )}
+
+      {/* Footer Tagline */}
+      <div style={{
+        marginTop: 60,
+        marginBottom: 140,
+        textAlign: 'center',
+        opacity: 0.4,
+        padding: '0 20px'
+      }}>
+        <div style={{
+          fontSize: 14,
+          fontWeight: 900,
+          letterSpacing: '0.4em',
+          color: '#1e293b',
+          textTransform: 'uppercase',
+          marginBottom: 8
+        }}>
+          ATTITUDE IS EVERYTHING
+        </div>
+        <div style={{ fontSize: 10, fontWeight: 700, color: '#64748b' }}>
+          SMK TELKOM MALANG &copy; 2026
+        </div>
+      </div>
 
       {/* ===== FIXED BOTTOM NAVIGATION BAR ===== */}
       <nav style={{
