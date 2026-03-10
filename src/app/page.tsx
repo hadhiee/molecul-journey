@@ -151,6 +151,11 @@ export default async function Home() {
         boxShadow: '0 20px 48px -12px var(--theme-shadow)',
       }}>
         <div style={{ position: 'relative', zIndex: 1 }}>
+          {/* Brand Logos Top Center */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+            <img src="/brand-logos.png" alt="Brand Logos" style={{ height: 32, opacity: 0.9, filter: 'brightness(0) invert(1)' }} />
+          </div>
+
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <img
@@ -163,9 +168,6 @@ export default async function Home() {
                 }}
               />
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <img src="/brand-logos.png" alt="Brand Logos" style={{ height: 28, opacity: 0.9, filter: 'brightness(0) invert(1)' }} />
-                </div>
                 <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', opacity: 0.8, marginBottom: 4 }}>
                   Moklet Learning Culture
                 </div>
