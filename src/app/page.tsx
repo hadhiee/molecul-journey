@@ -1,215 +1,21 @@
-import type { CSSProperties } from "react";
-import { Suspense } from "react";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import AutoRefresh from "@/components/AutoRefresh";
-import EventCard from "@/components/EventCard";
-import FocusChatButton from "@/components/FocusChatButton";
-import HomeActivityPanel from "@/components/HomeActivityPanel";
 import SignOutButton from "@/components/SignOutButton";
+import HomeActivityPanel from "@/components/HomeActivityPanel";
 import TechNewsPanel from "@/components/TechNewsPanel";
+import { EVENTS } from '@/data/events';
+import EventCard from '@/components/EventCard';
+import AutoRefresh from '@/components/AutoRefresh';
+import { Suspense } from "react";
+import FocusChatButton from "@/components/FocusChatButton";
 import ThemeSelector from "@/components/ThemeSelector";
-import { EVENTS } from "@/data/events";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-type SpotlightCard = {
-  title: string;
-  description: string;
-  href: string;
-  badge: string;
-  icon: string;
-  background: string;
-  borderColor: string;
-  glow: string;
-  size?: "wide";
-};
-
-type ModuleCard = {
-  title: string;
-  description: string;
-  href: string;
-  icon: string;
-  iconBackground: string;
-  badge?: string;
-};
-
-type ModuleSection = {
-  title: string;
-  label: string;
-  description: string;
-  accent: string;
-  softAccent: string;
-  items: ModuleCard[];
-};
-
-const spotlightCards: SpotlightCard[] = [
-  {
-    title: "MoDy AI Tutor",
-    description: "Asisten belajar cepat untuk tanya materi, kultur, dan strategi belajar harian.",
-    href: "/ai-tutor",
-    badge: "AI Assistant",
-    icon: "✨",
-    background: "linear-gradient(135deg, #312e81 0%, #5b21b6 55%, #7c3aed 100%)",
-    borderColor: "rgba(196, 181, 253, 0.34)",
-    glow: "rgba(91, 33, 182, 0.34)",
-    size: "wide",
-  },
-  {
-    title: "Culture Hub",
-    description: "Ruang utama untuk kenal nilai ATTITUDE, budaya belajar, dan ritme Moklet.",
-    href: "/culture",
-    badge: "Core",
-    icon: "📘",
-    background: "linear-gradient(135deg, #0f172a 0%, #111827 55%, #1f2937 100%)",
-    borderColor: "rgba(148, 163, 184, 0.28)",
-    glow: "rgba(15, 23, 42, 0.28)",
-  },
-  {
-    title: "MOLESH Leadership",
-    description: "Masuk ke kurikulum Sadari, Peduli, dan Berani dengan alur belajar yang terstruktur.",
-    href: "/molesh",
-    badge: "Leadership",
-    icon: "👑",
-    background: "linear-gradient(135deg, #1f1147 0%, #312e81 55%, #4c1d95 100%)",
-    borderColor: "rgba(167, 139, 250, 0.32)",
-    glow: "rgba(76, 29, 149, 0.34)",
-  },
-  {
-    title: "Career Explorer",
-    description: "Jelajahi peta karier IT dan lihat peluang belajar yang nyambung dengan jurusanmu.",
-    href: "/karier",
-    badge: "Future Skills",
-    icon: "🚀",
-    background: "linear-gradient(135deg, #0c4a6e 0%, #0369a1 55%, #0ea5e9 100%)",
-    borderColor: "rgba(125, 211, 252, 0.3)",
-    glow: "rgba(14, 165, 233, 0.3)",
-  },
-  {
-    title: "3D Seragam",
-    description: "Cek referensi visual seragam sekolah dalam mode 3D yang gampang dipahami.",
-    href: "/seragam",
-    badge: "3D Preview",
-    icon: "👔",
-    background: "linear-gradient(135deg, #10172a 0%, #1e1b4b 55%, #4c1d95 100%)",
-    borderColor: "rgba(244, 114, 182, 0.3)",
-    glow: "rgba(30, 27, 75, 0.32)",
-  },
-];
-
-const quickActions = [
-  { label: "Mulai Journey", href: "/journey" },
-  { label: "Buka AI Tutor", href: "/ai-tutor" },
-  { label: "Lihat Event", href: "/events" },
-];
-
-const moduleSections: ModuleSection[] = [
-  {
-    title: "Training Grounds",
-    label: "Action Arena",
-    description: "Mini game cepat untuk fokus, disiplin, dan respons saat menghadapi distraksi.",
-    accent: "#e11d48",
-    softAccent: "#fff1f2",
-    items: [
-      { title: "Moklet Runner", description: "Endless escape training", href: "/runner", icon: "🏃", iconBackground: "#4c1d95" },
-      { title: "Attitude Fighter", description: "Combat arena for discipline", href: "/fighter-3d", icon: "🥊", iconBackground: "#991b1b" },
-      { title: "Space Culture", description: "Protect the galaxy values", href: "/space-shooter", icon: "🚀", iconBackground: "#1e40af" },
-      { title: "Moklet Tetris", description: "Puzzle logic mission", href: "/tetris", icon: "🧩", iconBackground: "#4338ca" },
-      { title: "Moklet Snake", description: "Collect ATTITUDE values", href: "/snake", icon: "🐍", iconBackground: "#16a34a", badge: "New" },
-      { title: "Culture Connect", description: "Matching logic challenge", href: "/culture-connect", icon: "🔗", iconBackground: "#059669" },
-      { title: "Focus Guard", description: "Action smasher challenge", href: "/focus-guard", icon: "🛡️", iconBackground: "#d97706" },
-    ],
-  },
-  {
-    title: "Simulation Lab",
-    label: "Strategy Lab",
-    description: "Latihan berpikir kritis dan pengambilan keputusan lewat skenario yang lebih realistis.",
-    accent: "#0ea5e9",
-    softAccent: "#e0f2fe",
-    items: [
-      { title: "Culture Simulation", description: "Interactive decision laboratory", href: "/simulation", icon: "🔮", iconBackground: "#3b82f6" },
-      { title: "Arsitek Masa Depan", description: "Mastering school life strategy", href: "/future", icon: "🏗️", iconBackground: "#0ea5e9" },
-      { title: "Tantangan Kilat", description: "Quick thinking and values quiz", href: "/challenge", icon: "⚡", iconBackground: "#be123c" },
-    ],
-  },
-  {
-    title: "Exploration Zone",
-    label: "Campus & Identity",
-    description: "Kenali ruang, identitas, dan ekosistem Moklet lewat pengalaman yang lebih interaktif.",
-    accent: "#16a34a",
-    softAccent: "#dcfce7",
-    items: [
-      { title: "Gedung Sekolah 3D", description: "Tour kampus virtual interaktif", href: "/sekolah-3d", icon: "🏛️", iconBackground: "#2563eb", badge: "New" },
-      { title: "Manajemen Sekolah", description: "Kenali struktur organisasi sekolah", href: "/manajemen", icon: "🤝", iconBackground: "#d97706" },
-      { title: "Profil YPT", description: "Mengenal Yayasan Pendidikan Telkom", href: "/profil-ypt", icon: "🏢", iconBackground: "#ef4444" },
-      { title: "Ekstrakurikuler", description: "Wadah minat bakat siswa", href: "/ekskul", icon: "⚽", iconBackground: "#10b981" },
-      { title: "Journey Map Sekolah", description: "Peta petualangan budaya sekolah", href: "/journey", icon: "🗺️", iconBackground: "#22c55e" },
-      { title: "Discovery 3D", description: "Crystal self discovery lab", href: "/discovery-3d", icon: "💎", iconBackground: "#8b5cf6" },
-    ],
-  },
-];
-
-const navItems = [
-  {
-    href: "/",
-    label: "Home",
-    active: true,
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 12L12 4l9 8" />
-        <path d="M5 10v10a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1V10" />
-      </svg>
-    ),
-  },
-  {
-    href: "/journey",
-    label: "Journey",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
-        <line x1="9" y1="3" x2="9" y2="18" />
-        <line x1="15" y1="6" x2="15" y2="21" />
-      </svg>
-    ),
-  },
-  {
-    href: "/culture",
-    label: "Culture",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-      </svg>
-    ),
-  },
-  {
-    href: "/events",
-    label: "Lomba",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7" />
-        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7" />
-        <path d="M4 22h16" />
-        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22" />
-        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22" />
-        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-      </svg>
-    ),
-  },
-];
-
-const rankColors = [
-  { bg: "#fef3c7", text: "#d97706" },
-  { bg: "#f1f5f9", text: "#64748b" },
-  { bg: "#fed7aa", text: "#c2410c" },
-  { bg: "#f1f5f9", text: "#64748b" },
-  { bg: "#f1f5f9", text: "#64748b" },
-];
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -221,30 +27,44 @@ export default async function Home() {
   const userEmail = (session.user?.email || "").toLowerCase();
   const userName = session.user?.name || "Agent";
   const userImage = session.user?.image || "";
-  const firstName = userName.split(" ")[0] || "Agent";
 
+  // Fetch real XP, mission count, and leaderboard from Supabase
   let totalXP = 0;
   let missionCount = 0;
-  let userRank = 0;
   let leaderboard: { name: string; score: number }[] = [];
 
   try {
+    const { SYSTEM_IDS } = await import("@/lib/ids"); // Import dynamically for Server Component
+
+    // --- Define Core Missions to track (Unique IDs) ---
     const CORE_MISSIONS = [
+      // Major Games
       "RUNNER", "FIGHTER", "SPACE_SHOOTER", "TETRIS", "SNAKE_GAME", "FOCUS_GAME",
       "CONNECT_GAME", "SIMULATION", "FUTURE", "CHALLENGE",
+
+      // 3D & Interactive
       "DISCOVERY_3D", "INTEGRITY_3D_STACK", "SYSTEM_EXPLORE_SEKOLAH_3D", "SYSTEM_EXPLORE_BOMBI_3D",
+
+      // Training & Culture
       "SYSTEM_EXPLORE_MANAJEMEN", "SYSTEM_EXPLORE_PERSONIL", "SYSTEM_MINIGAME_STRUKTUR",
-      "SYSTEM_EXPLORE_EKSKUL", "NONTON YPT",
+      "SYSTEM_EXPLORE_EKSKUL", "NONTON YPT", // Match substring
+
+      // MOLESH (Leadership)
       "MOLESH_SESI_1", "MOLESH_SESI_2", "MOLESH_SESI_3", "MOLESH_SESI_4", "MOLESH_SESI_5", "MOLESH_SESI_6",
+
+      // Career Explorer
       "CAREER_EXPLORE_FRONTEND", "CAREER_EXPLORE_BACKEND", "CAREER_EXPLORE_DEVOPS",
       "CAREER_EXPLORE_MOBDEV", "CAREER_EXPLORE_CYBERSEC", "CAREER_EXPLORE_NETENG",
       "CAREER_EXPLORE_GAMEDEV", "CAREER_EXPLORE_GAMEART",
+
+      // 3D Uniforms
       "SERAGAM_3D_SENIN-UPACARA", "SERAGAM_3D_SENIN", "SERAGAM_3D_SELASA",
-      "SERAGAM_3D_RABU", "SERAGAM_3D_KAMIS", "SERAGAM_3D_KAMIS-PUTRA", "SERAGAM_3D_JUMAT",
+      "SERAGAM_3D_RABU", "SERAGAM_3D_KAMIS", "SERAGAM_3D_KAMIS-PUTRA", "SERAGAM_3D_JUMAT"
     ];
 
+    // Fetch ALL progress data — Supabase default limit is 1000!
     let allProgress: any[] = [];
-    const pageSize = 1000;
+    const PAGE_SIZE = 1000;
     let from = 0;
     let hasMore = true;
 
@@ -252,466 +72,792 @@ export default async function Home() {
       const { data, error } = await supabase
         .from("user_progress")
         .select("score, mission_id, choice_label, user_email")
-        .range(from, from + pageSize - 1);
+        .range(from, from + PAGE_SIZE - 1);
 
       if (error || !data || data.length === 0) {
         hasMore = false;
       } else {
         allProgress = allProgress.concat(data);
-        from += pageSize;
-        if (data.length < pageSize) {
-          hasMore = false;
-        }
+        from += PAGE_SIZE;
+        if (data.length < PAGE_SIZE) hasMore = false;
       }
     }
 
     if (allProgress.length > 0) {
+      // --- Build leaderboard scoreMap (case-insensitive) ---
       const scoreMap: Record<string, number> = {};
-      allProgress.forEach((progress: any) => {
-        if (progress.user_email) {
-          const normalizedEmail = progress.user_email.toLowerCase().trim();
-          scoreMap[normalizedEmail] = (scoreMap[normalizedEmail] || 0) + (progress.score || 0);
+      allProgress.forEach((p: any) => {
+        if (p.user_email) {
+          const email = p.user_email.toLowerCase().trim();
+          scoreMap[email] = (scoreMap[email] || 0) + (p.score || 0);
         }
       });
 
-      const rankedUsers = Object.entries(scoreMap)
-        .map(([email, score]) => ({ email, name: email.split("@")[0], score }))
-        .sort((a, b) => b.score - a.score);
+      leaderboard = Object.entries(scoreMap)
+        .map(([email, score]) => ({ name: email.split("@")[0], score }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
 
-      leaderboard = rankedUsers.slice(0, 5).map(({ name, score }) => ({ name, score }));
+      // --- Get totalXP for current user from the SAME scoreMap ---
       totalXP = scoreMap[userEmail] || 0;
-      userRank = rankedUsers.findIndex((player) => player.email === userEmail) + 1;
 
-      const userProgress = allProgress.filter(
-        (progress: any) => progress.user_email && progress.user_email.toLowerCase().trim() === userEmail,
+      // --- Mission Countdown Logic ---
+      const userProgress = allProgress.filter((p: any) =>
+        p.user_email && p.user_email.toLowerCase().trim() === userEmail
       );
 
-      const userCompletedIds = new Set(
-        userProgress.map((progress) => ((progress.mission_id || progress.choice_label || "") as string).toUpperCase()),
-      );
+      const userCompletedIds = new Set(userProgress.map(p =>
+        ((p.mission_id || p.choice_label || "") as string).toUpperCase()
+      ));
 
-      const completedCount = CORE_MISSIONS.filter((missionId) => {
-        const target = missionId.toUpperCase();
-        return Array.from(userCompletedIds).some((userMissionId) => userMissionId.includes(target));
+      const completedCount = CORE_MISSIONS.filter(mId => {
+        const target = mId.toUpperCase();
+        return Array.from(userCompletedIds).some(uid => uid.includes(target));
       }).length;
 
       missionCount = Math.max(0, CORE_MISSIONS.length - completedCount);
     } else {
-      missionCount = CORE_MISSIONS.length;
+      missionCount = CORE_MISSIONS.length; // Default all missions remaining
     }
-  } catch (error) {
-    console.error("Home progress sync error", error);
-  }
+  } catch (e) { }
 
+  // Fetch chapter progress
   const chapterData = [
     { name: "Kelas Tangguh: Fondasi ATTITUDE", emoji: "🛡️", bg: "#fff1f2", color: "#e11d48", nodes: 0, completed: 0 },
     { name: "Lab Inovasi: Use Tech Wisely", emoji: "💻", bg: "#eff6ff", color: "#3b82f6", nodes: 0, completed: 0 },
     { name: "Simulasi Industri: BISA di Dunia Kerja", emoji: "🏭", bg: "#f0fdf4", color: "#22c55e", nodes: 0, completed: 0 },
-    { name: "Dampak Sosial: AKHLAK untuk Masyarakat", emoji: "🌍", bg: "#fefce8", color: "#f59e0b", nodes: 0, completed: 0 },
+    { name: "Dampak Sosial: AKHLAK untuk Masyarakat", emoji: "🌍", bg: "#fefce8", color: "#f59e0b", nodes: 0, completed: 0 }
   ];
 
   try {
     const { data: allScenarios } = await supabase.from("scenarios").select("id, chapter");
 
     if (allScenarios) {
-      allScenarios.forEach((scenario) => {
-        const chapterIndex = (scenario.chapter || 1) - 1;
-        if (chapterData[chapterIndex]) {
-          chapterData[chapterIndex].nodes++;
+      allScenarios.forEach(s => {
+        const chIdx = (s.chapter || 1) - 1;
+        if (chapterData[chIdx]) {
+          chapterData[chIdx].nodes++;
         }
       });
     }
 
     if (userEmail && allScenarios) {
-      const { data: userProgress } = await supabase
+      const { data: userProg } = await supabase
         .from("user_progress")
         .select("mission_id")
         .eq("user_email", userEmail)
-        .in("mission_id", allScenarios.map((scenario) => scenario.id));
+        .in("mission_id", allScenarios.map(s => s.id));
 
-      if (userProgress) {
-        const completedSet = new Set(userProgress.map((progress) => progress.mission_id));
-        allScenarios.forEach((scenario) => {
-          if (completedSet.has(scenario.id)) {
-            const chapterIndex = (scenario.chapter || 1) - 1;
-            if (chapterData[chapterIndex]) {
-              chapterData[chapterIndex].completed++;
+      if (userProg) {
+        const completedSet = new Set(userProg.map(p => p.mission_id));
+        allScenarios.forEach(s => {
+          if (completedSet.has(s.id)) {
+            const chIdx = (s.chapter || 1) - 1;
+            if (chapterData[chIdx]) {
+              chapterData[chIdx].completed++;
             }
           }
         });
       }
     }
-  } catch (error) {
-    console.error("Chapter sync error", error);
-  }
+  } catch (e) { console.error("Chapter sync error", e); }
 
-  const totalNodes = chapterData.reduce((sum, chapter) => sum + chapter.nodes, 0);
-  const completedNodes = chapterData.reduce((sum, chapter) => sum + chapter.completed, 0);
-  const completionPercent = totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0;
-  const activeChapters = chapterData.filter((chapter) => chapter.completed > 0).length;
+  const rankColors = [
+    { bg: '#fef3c7', text: '#d97706' },
+    { bg: '#f1f5f9', text: '#64748b' },
+    { bg: '#fed7aa', text: '#c2410c' },
+    { bg: '#f1f5f9', text: '#64748b' },
+    { bg: '#f1f5f9', text: '#64748b' },
+  ];
 
   return (
-    <div className={styles.page}>
+    <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 16px 80px' }}>
       <AutoRefresh />
 
-      <div className={styles.backgroundOrbOne} />
-      <div className={styles.backgroundOrbTwo} />
-      <div className={styles.backgroundOrbThree} />
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <ThemeSelector />
+      </div>
 
-      <header className={styles.topbar}>
-        <div className={styles.brandBlock}>
-          <div className={styles.brandLogo}>
-            <img src="/smk-logo.png" alt="SMK Telkom Malang" />
-          </div>
-          <div>
-            <p className={styles.brandEyebrow}>Moklet Learning Culture Journey</p>
-            <h1 className={styles.brandTitle}>MoLeCul Home</h1>
-          </div>
-        </div>
-
-        <div className={styles.topbarTools}>
-          <div className={styles.brandStrip}>
-            <img src="/brand-logos.png" alt="Brand Logos" />
-          </div>
-          <ThemeSelector />
-        </div>
-      </header>
-
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <div className={styles.heroCopy}>
-            <span className={styles.heroEyebrow}>Dashboard yang lebih fokus</span>
-            <h2 className={styles.heroTitle}>Hai, {firstName}. Semua hal penting ada di satu home yang lebih rapi.</h2>
-            <p className={styles.heroDescription}>
-              Lanjutkan progress budaya belajar, masuk ke modul utama, dan cek update harian tanpa perlu lompat-lompat menu.
-            </p>
+      {/* 1. Banner User */}
+      <div style={{
+        background: 'var(--theme-bg)',
+        borderRadius: 28, padding: 28, color: 'white', marginBottom: 20,
+        position: 'relative', overflow: 'hidden',
+        boxShadow: '0 20px 48px -12px var(--theme-shadow)',
+      }}>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {/* Brand Logos Top Center */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+            <img src="/brand-logos.png" alt="Brand Logos" style={{ height: 40, opacity: 1, borderRadius: 8 }} />
           </div>
 
-          <div className={styles.heroActions}>
-            {quickActions.map((action, index) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                className={index === 0 ? styles.primaryAction : styles.secondaryAction}
-              >
-                {action.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className={styles.heroMetaRow}>
-            <span className={styles.heroMetaChip}>Progress chapter {completedNodes}/{totalNodes || 0} node</span>
-            <span className={styles.heroMetaChip}>Aktif di {activeChapters || 0} dari 4 chapter</span>
-            <span className={styles.heroMetaChip}>Theme siap diganti langsung</span>
-          </div>
-        </div>
-
-        <div className={styles.heroAside}>
-          <div className={styles.profileCard}>
-            <div className={styles.profileHeader}>
-              <div className={styles.profileIdentity}>
-                <img
-                  src={userImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"}
-                  alt={userName}
-                  className={styles.profileAvatar}
-                />
-                <div>
-                  <p className={styles.profileLabel}>Akun aktif</p>
-                  <h3 className={styles.profileName}>{userName}</h3>
-                  <p className={styles.profileEmail}>{userEmail}</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <img
+                src={userImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"}
+                alt={userName}
+                style={{
+                  width: 64, height: 64, borderRadius: 24,
+                  border: '2px solid rgba(255,255,255,0.4)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+                }}
+              />
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', opacity: 0.8, marginBottom: 4 }}>
+                  Moklet Learning Culture
+                </div>
+                <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: '-0.03em' }}>
+                  Hai, {userName.split(" ")[0]}! 👋
                 </div>
               </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
               <SignOutButton />
             </div>
+          </div>
 
-            <div className={styles.metricGrid}>
-              <div className={styles.metricCard}>
-                <span className={styles.metricValue}>{totalXP.toLocaleString()}</span>
-                <span className={styles.metricLabel}>Total XP</span>
-              </div>
-              <div className={styles.metricCard}>
-                <span className={styles.metricValue}>{missionCount}</span>
-                <span className={styles.metricLabel}>Misi Tersisa</span>
-              </div>
-              <div className={styles.metricCard}>
-                <span className={styles.metricValue}>{userRank > 0 ? `#${userRank}` : "-"}</span>
-                <span className={styles.metricLabel}>Peringkatmu</span>
-              </div>
-              <div className={styles.metricCard}>
-                <span className={styles.metricValue}>{completionPercent}%</span>
-                <span className={styles.metricLabel}>Progress Chapter</span>
-              </div>
+          <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+            <div className={styles.glassStat}>
+              <div style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, marginBottom: 4 }}>{totalXP.toLocaleString()}</div>
+              <div style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', opacity: 0.7, letterSpacing: '0.05em' }}>Total XP</div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <div>
-            <p className={styles.sectionEyebrow}>Daily Hub</p>
-            <h2 className={styles.sectionTitle}>Aktivitas hari ini</h2>
-            <p className={styles.sectionDescription}>Check-in, bukti aktivitas, dan refleksi ada di satu blok yang gampang diakses.</p>
-          </div>
-        </div>
-        <HomeActivityPanel userEmail={userEmail} />
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <div>
-            <p className={styles.sectionEyebrow}>Highlights</p>
-            <h2 className={styles.sectionTitle}>Akses cepat ke fitur utama</h2>
-            <p className={styles.sectionDescription}>Disusun seperti landing modern: jelas, kontras, dan langsung menunjukkan area yang paling sering dipakai.</p>
-          </div>
-        </div>
-
-        <div className={styles.spotlightGrid}>
-          {spotlightCards.map((card) => {
-            const featureStyle: CSSProperties = {
-              background: card.background,
-              borderColor: card.borderColor,
-              boxShadow: `0 28px 80px -36px ${card.glow}`,
-            };
-
-            return (
-              <Link
-                key={card.href}
-                href={card.href}
-                className={`${styles.spotlightCard} ${card.size === "wide" ? styles.spotlightCardWide : ""}`}
-                style={featureStyle}
-              >
-                <div className={styles.spotlightHeader}>
-                  <div className={styles.spotlightIcon}>{card.icon}</div>
-                  <span className={styles.spotlightBadge}>{card.badge}</span>
-                </div>
-                <div>
-                  <h3 className={styles.spotlightTitle}>{card.title}</h3>
-                  <p className={styles.spotlightDescription}>{card.description}</p>
-                </div>
-                <span className={styles.spotlightLink}>Buka modul</span>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <div>
-            <p className={styles.sectionEyebrow}>Live Feed</p>
-            <h2 className={styles.sectionTitle}>Tech Radar</h2>
-            <p className={styles.sectionDescription}>Update topik RPL, TKJ, dan PG tetap tampil sebagai bagian dari ritme belajar harian.</p>
-          </div>
-        </div>
-
-        <Suspense fallback={<div className={styles.loadingPanel}>Memuat berita terbaru...</div>}>
-          <TechNewsPanel />
-        </Suspense>
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <div>
-            <p className={styles.sectionEyebrow}>Learning Tracks</p>
-            <h2 className={styles.sectionTitle}>Modul dan area eksplorasi</h2>
-            <p className={styles.sectionDescription}>Dikelompokkan per tujuan supaya home terasa seperti gateway produk yang lebih jelas.</p>
-          </div>
-        </div>
-
-        <div className={styles.moduleGrid}>
-          {moduleSections.map((section) => (
-            <div key={section.label} className={styles.moduleSectionCard}>
-              <div className={styles.moduleSectionHeader}>
-                <div>
-                  <span
-                    className={styles.moduleSectionLabel}
-                    style={{ color: section.accent, background: section.softAccent }}
-                  >
-                    {section.label}
-                  </span>
-                  <h3 className={styles.moduleSectionTitle}>{section.title}</h3>
-                  <p className={styles.moduleSectionDescription}>{section.description}</p>
-                </div>
-              </div>
-
-              <div className={styles.moduleItemList}>
-                {section.items.map((item) => (
-                  <Link key={item.href} href={item.href} className={styles.moduleItem}>
-                    <div className={styles.moduleIcon} style={{ background: item.iconBackground }}>
-                      {item.icon}
-                    </div>
-                    <div className={styles.moduleItemCopy}>
-                      <div className={styles.moduleItemTitleRow}>
-                        <h4 className={styles.moduleItemTitle}>{item.title}</h4>
-                        {item.badge ? <span className={styles.moduleItemBadge}>{item.badge}</span> : null}
-                      </div>
-                      <p className={styles.moduleItemDescription}>{item.description}</p>
-                    </div>
-                    <span className={styles.moduleArrow}>→</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <div>
-            <p className={styles.sectionEyebrow}>Competition Hub</p>
-            <h2 className={styles.sectionTitle}>Puspresnas Arena</h2>
-            <p className={styles.sectionDescription}>Event card tetap ditonjolkan, tapi sekarang masuk dalam section yang lebih konsisten dengan keseluruhan home.</p>
-          </div>
-          <Link href="/events" className={styles.inlineLink}>Lihat semua</Link>
-        </div>
-
-        <div className={`${styles.eventsStrip} hide-scrollbar`}>
-          {EVENTS.map((event) => (
-            <div key={event.id} className={styles.eventCardWrap}>
-              <EventCard event={event} />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className={`${styles.section} ${styles.statsSection}`}>
-        <div className={styles.statsGrid}>
-          <div className={styles.sectionPanel}>
-            <div className={styles.sectionHeader}>
-              <div>
-                <p className={styles.sectionEyebrow}>Progress Map</p>
-                <h2 className={styles.sectionTitle}>Skill tree chapter</h2>
-                <p className={styles.sectionDescription}>Tampilan chapter dibuat lebih clean dan mudah dibaca sebagai progress cards.</p>
-              </div>
-            </div>
-
-            <div className={styles.chapterGrid}>
-              {chapterData.map((chapter, index) => {
-                const [title, subtitle] = chapter.name.split(":");
-                const width = chapter.nodes > 0 ? `${(chapter.completed / chapter.nodes) * 100}%` : "0%";
-
-                return (
-                  <Link key={chapter.name} href={`/chapter/${index + 1}`} className={styles.chapterCard}>
-                    <div className={styles.chapterVisual} style={{ background: chapter.bg }}>
-                      <span className={styles.chapterEmoji}>{chapter.emoji}</span>
-                      <span className={styles.chapterIndex}>CH {index + 1}</span>
-                    </div>
-
-                    <div className={styles.chapterBody}>
-                      <div className={styles.chapterMeta}>
-                        <span style={{ color: chapter.color }}>Chapter {index + 1}</span>
-                        <span>{chapter.completed}/{chapter.nodes} node</span>
-                      </div>
-                      <h3 className={styles.chapterTitle}>{title}</h3>
-                      <p className={styles.chapterSubtitle}>{subtitle || "Progress pembelajaran aktif"}</p>
-                      <div className={styles.chapterProgressBar}>
-                        <div className={styles.chapterProgressFill} style={{ width, background: chapter.color }} />
-                      </div>
-                      <span className={styles.chapterAction}>{chapter.completed > 0 ? "Lanjutkan chapter" : "Mulai chapter"}</span>
-                    </div>
-                  </Link>
-                );
-              })}
+            <div className={styles.glassStat}>
+              <div style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, marginBottom: 4 }}>{missionCount}</div>
+              <div style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', opacity: 0.7, letterSpacing: '0.05em' }}>Misi Tersisa</div>
             </div>
           </div>
 
-          <div className={styles.sectionPanel}>
-            <div className={styles.sectionHeader}>
-              <div>
-                <p className={styles.sectionEyebrow}>Top Players</p>
-                <h2 className={styles.sectionTitle}>Leaderboard</h2>
-                <p className={styles.sectionDescription}>Lebih ringkas, lebih rapi, dan tetap menonjolkan ranking secara cepat.</p>
-              </div>
+          {/* Mini Indicators */}
+          <div style={{ display: 'flex', gap: 16, fontSize: 13, fontWeight: 700 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(0,0,0,0.15)', padding: '6px 14px', borderRadius: 99 }}>
+              🔥 <span style={{ opacity: 0.9 }}>Streak:</span> 5 Hari
             </div>
-
-            <div className={styles.leaderboardCard}>
-              {leaderboard.length > 0 ? (
-                leaderboard.map((player, index) => (
-                  <div key={`${player.name}-${index}`} className={styles.leaderboardRow}>
-                    <div
-                      className={styles.leaderRank}
-                      style={{ background: rankColors[index]?.bg || "#f1f5f9", color: rankColors[index]?.text || "#64748b" }}
-                    >
-                      {index + 1}
-                    </div>
-                    <div className={styles.leaderCopy}>
-                      <h3 className={styles.leaderName}>{player.name}</h3>
-                      <p className={styles.leaderSubtext}>MoLeCul score</p>
-                    </div>
-                    <div className={styles.leaderScoreBlock}>
-                      <span className={styles.leaderScore}>{player.score.toLocaleString()}</span>
-                      <span className={styles.leaderScoreLabel}>XP</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className={styles.emptyState}>Belum ada data leaderboard.</div>
-              )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(0,0,0,0.15)', padding: '6px 14px', borderRadius: 99 }}>
+              📁 <span style={{ opacity: 0.9 }}>Bukti:</span> 12 Minggu ini
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className={styles.section}>
-        <Link href="/about" className={styles.aboutBanner}>
-          <div>
-            <p className={styles.aboutEyebrow}>About MoLeCul</p>
-            <h2 className={styles.aboutTitle}>Pelajari filosofi, fitur, dan tim di balik platform ini.</h2>
-            <p className={styles.aboutDescription}>Cocok dipakai sebagai jalur orientasi, pembiasaan, sampai penguatan budaya belajar digital.</p>
+      {/* 2. Panel Hari Ini (Check-in/Bukti/Refleksi) */}
+      <HomeActivityPanel userEmail={userEmail} />
+
+      {/* 🔔 FITUR UNGGULAN (TERBARU) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 32 }}>
+        {/* 3D Seragam */}
+        <Link href="/seragam" className={styles.featureCard} style={{
+          background: 'linear-gradient(135deg, #0f172a, #1e1b4b)',
+          border: '1px solid rgba(225,29,72,0.3)',
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, background: 'radial-gradient(circle at top right, rgba(225,29,72,0.6), transparent 70%)' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 2, marginBottom: 24 }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 16,
+              background: 'linear-gradient(135deg, #e11d48, #be123c)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 22, boxShadow: '0 8px 20px rgba(225,29,72,0.4)',
+            }}>👔</div>
+            <span style={{ fontSize: 9, fontWeight: 900, background: 'rgba(225,29,72,0.2)', color: '#fda4af', padding: '4px 10px', borderRadius: 20, border: '1px solid rgba(225,29,72,0.3)' }}>NEW</span>
           </div>
-          <span className={styles.aboutArrow}>↗</span>
+          <div style={{ zIndex: 2 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: 'white', marginBottom: 4 }}>3D Seragam</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.4 }}>
+              Review model 3D seragam
+            </div>
+          </div>
         </Link>
-      </section>
 
-      {userEmail === "hadhiee@gmail.com" ? (
-        <section className={styles.adminSection}>
-          <Link href="/admin/logs" className={styles.adminLink}>Buka Control Center</Link>
-        </section>
-      ) : null}
+        {/* BOMBI Mascot */}
+        <Link href="/bombi" className={styles.featureCard} style={{
+          background: 'linear-gradient(135deg, #0c1929, #1e1b4b)',
+          border: '1px solid rgba(59,130,246,0.3)',
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, background: 'radial-gradient(circle at top right, rgba(59,130,246,0.6), transparent 70%)' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 2, marginBottom: 24 }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 16,
+              background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 22, boxShadow: '0 8px 20px rgba(59,130,246,0.4)',
+            }}>🤖</div>
+            <span style={{ fontSize: 9, fontWeight: 900, background: 'rgba(59,130,246,0.2)', color: '#93c5fd', padding: '4px 10px', borderRadius: 20, border: '1px solid rgba(59,130,246,0.3)' }}>3D</span>
+          </div>
+          <div style={{ zIndex: 2 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: 'white', marginBottom: 4 }}>BOMBI 3D</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 500, lineHeight: 1.4 }}>
+              Bocah Moklet Bionik
+            </div>
+          </div>
+        </Link>
 
-      <footer className={styles.footer}>
-        <p className={styles.footerTagline}>ATTITUDE IS EVERYTHING</p>
-        <p className={styles.footerMeta}>SMK TELKOM MALANG © 2026</p>
-      </footer>
+        {/* MoDy - AI Moklet Buddy Card (Spans full width) */}
+        <Link href="/ai-tutor" className={styles.featureCard} style={{
+          background: 'linear-gradient(135deg, #312e81, #4c1d95, #6d28d9)',
+          border: '1px solid rgba(139,92,246,0.4)',
+          gridColumn: '1 / -1'
+        }}>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, background: 'radial-gradient(circle at 80% 20%, rgba(167,139,250,0.6), transparent 60%)' }} />
+          <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 900, color: '#c4b5fd', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  MoDy AI Tutor
+                </span>
+                <span style={{ fontSize: 9, fontWeight: 900, background: '#22c55e', color: 'white', padding: '2px 10px', borderRadius: 20 }}>READY</span>
+              </div>
+              <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 4, letterSpacing: '-0.02em', color: 'white' }}>
+                Chat dengan Gemini AI
+              </div>
+              <div style={{ fontSize: 13, color: '#c4b5fd', fontWeight: 500 }}>
+                Tanya pelajaran, info lomba, atau tips belajar 🎓
+              </div>
+            </div>
+            <div style={{
+              width: 64, height: 64, borderRadius: 24,
+              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 32, flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)',
+              boxShadow: '0 12px 24px rgba(0,0,0,0.2)'
+            }}>
+              <span className="animate-float">✨</span>
+            </div>
+          </div>
+        </Link>
+      </div>
 
-      <nav className={styles.bottomNav}>
-        {navItems.slice(0, 2).map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`${styles.bottomNavItem} ${item.active ? styles.bottomNavItemActive : ""}`}
-          >
-            {item.icon}
-            <span>{item.label}</span>
+      {/* 3. Culture Hub Card */}
+      <Link href="/culture" className={styles.featureCard} style={{
+        background: 'linear-gradient(135deg, #0f172a, #111827, #1f2937)',
+        marginBottom: 32,
+        padding: 24,
+      }}>
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")' }} />
+        <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 900, color: 'var(--theme-primary)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: 10 }}>
+              Culture Hub
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 6, letterSpacing: '-0.03em', color: 'white' }}>
+              Pengenalan Moklet Culture
+            </div>
+            <div style={{ fontSize: 13, color: '#94a3b8', fontWeight: 500 }}>
+              Pusat pembelajaran karakter & nilai ATTITUDE
+            </div>
+          </div>
+          <div style={{
+            width: 56, height: 56, borderRadius: 20,
+            background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 28, flexShrink: 0, border: '1px solid rgba(255,255,255,0.15)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+          }}>
+            <span className="animate-float">📘</span>
+          </div>
+        </div>
+      </Link>
+
+      {/* MOLESH Leadership Card */}
+      <Link href="/molesh" className={styles.featureCard} style={{
+        background: 'linear-gradient(135deg, #1a1145, #312e81, #4c1d95)',
+        marginBottom: 32,
+        padding: 24,
+      }}>
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.15, background: 'radial-gradient(circle at 90% 10%, rgba(245,158,11,0.5), transparent 60%)' }} />
+        <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <span style={{ fontSize: 9, fontWeight: 900, background: '#f59e0b', color: '#1e293b', padding: '3px 10px', borderRadius: 20, letterSpacing: '0.1em' }}>LEADERSHIP</span>
+              <span style={{ fontSize: 9, fontWeight: 900, background: 'rgba(255,255,255,0.15)', color: '#c4b5fd', padding: '3px 10px', borderRadius: 20, letterSpacing: '0.05em' }}>6 SESI + KUIS</span>
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 6, letterSpacing: '-0.03em', color: 'white' }}>
+              MOLESH
+            </div>
+            <div style={{ fontSize: 13, color: '#c4b5fd', fontWeight: 500, lineHeight: 1.5 }}>
+              Moklet Leadership: <span style={{ color: '#60a5fa' }}>Sadari</span> · <span style={{ color: '#34d399' }}>Peduli</span> · <span style={{ color: '#f87171' }}>Berani</span>
+            </div>
+            <div style={{ fontSize: 11, color: '#a78bfa', fontWeight: 500, marginTop: 4 }}>
+              Kurikulum khusus RPL, TKJ & PG 🎓
+            </div>
+          </div>
+          <div style={{
+            width: 56, height: 56, borderRadius: 20,
+            background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 28, flexShrink: 0, border: '1px solid rgba(255,255,255,0.15)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+          }}>
+            <span className="animate-float">👑</span>
+          </div>
+        </div>
+      </Link>
+
+      {/* Career Explorer Card */}
+      <Link href="/karier" className={styles.featureCard} style={{
+        background: 'linear-gradient(135deg, #0c4a6e, #0369a1, #0ea5e9)',
+        marginBottom: 32,
+        padding: 24,
+      }}>
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.12, background: 'radial-gradient(circle at 85% 15%, rgba(245,158,11,0.6), transparent 60%)' }} />
+        <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <span style={{ fontSize: 9, fontWeight: 900, background: '#f59e0b', color: '#1e293b', padding: '3px 10px', borderRadius: 20, letterSpacing: '0.1em' }}>CAREER</span>
+              <span style={{ fontSize: 9, fontWeight: 900, background: 'rgba(255,255,255,0.15)', color: '#bae6fd', padding: '3px 10px', borderRadius: 20 }}>+XP TIAP EXPLORE</span>
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 6, letterSpacing: '-0.03em', color: 'white' }}>
+              Career Explorer
+            </div>
+            <div style={{ fontSize: 13, color: '#bae6fd', fontWeight: 500, lineHeight: 1.5 }}>
+              Jelajahi potensi karier IT masa depan & fakta teknologi menarik
+            </div>
+            <div style={{ fontSize: 11, color: '#7dd3fc', fontWeight: 500, marginTop: 4 }}>
+              RPL · TKJ · PG · Emerging Tech 🚀
+            </div>
+          </div>
+          <div style={{
+            width: 56, height: 56, borderRadius: 20,
+            background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 28, flexShrink: 0, border: '1px solid rgba(255,255,255,0.15)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+          }}>
+            <span className="animate-float">🚀</span>
+          </div>
+        </div>
+      </Link>
+
+      {/* 3.b Tech News Tracker */}
+      <Suspense fallback={<div style={{ height: 200, background: '#f8fafc', borderRadius: 24, marginBottom: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#cbd5e1', fontSize: 12, fontWeight: 700 }}>Memuat Berita...</div>}>
+        <TechNewsPanel />
+      </Suspense>
+
+      {/* --- SECTION DIVIDER: GAMES --- */}
+      <div style={{ marginTop: 40, marginBottom: 24, textAlign: 'center' }}>
+        <h2 style={{ fontSize: 24, fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>Training Grounds</h2>
+        <div style={{ width: 40, height: 4, background: 'var(--theme-primary)', borderRadius: 99, margin: '8px auto 0' }} />
+        <p style={{ fontSize: 13, color: '#64748b', marginTop: 8, fontWeight: 500 }}>Asah karaktermu melalui berbagai mini-games seru</p>
+      </div>
+
+      {/* --- CATEGORY: ACTION ARENA --- */}
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ width: 4, height: 24, background: 'var(--theme-primary)', borderRadius: 2 }} />
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Action Arena</h2>
+        <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '4px 10px', borderRadius: 20 }}>KETANGKASAN</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 12, marginBottom: 48 }}>
+        {/* Moklet Runner */}
+        <Link href="/runner" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#4c1d95' }}>🏃</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Moklet Runner</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Endless escape training</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* 3D Attitude Fighter */}
+        <Link href="/fighter-3d" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#991b1b' }}>🥊</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Attitude Fighter</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Combat arena for discipline</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Space Shooter */}
+        <Link href="/space-shooter" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#1e40af' }}>🚀</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Space Culture</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Protect the galaxy values</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Culture Tetris */}
+        <Link href="/tetris" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#4338ca' }}>🧩</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Moklet Tetris</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Puzzle logic mission</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Moklet Snake */}
+        <Link href="/snake" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#16a34a' }}>🐍</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+              <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Moklet Snake</div>
+              <span style={{ fontSize: 8, fontWeight: 800, background: '#e11d48', color: 'white', padding: '1px 6px', borderRadius: 4 }}>NEW</span>
+            </div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Collect ATTITUDE values</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Culture Connect */}
+        <Link href="/culture-connect" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#059669' }}>🔗</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Culture Connect</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Matching logic challenge</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Focus Guard */}
+        <Link href="/focus-guard" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#d97706' }}>🛡️</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Focus Guard</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Action smasher challenge</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+      </div>
+
+      {/* --- CATEGORY: STRATEGY LAB --- */}
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ width: 4, height: 24, background: '#0ea5e9', borderRadius: 2 }} />
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Strategy Lab</h2>
+        <span style={{ fontSize: 10, fontWeight: 700, color: '#0ea5e9', background: '#e0f2fe', padding: '4px 10px', borderRadius: 20 }}>BERPIKIR KRITIS</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 12, marginBottom: 48 }}>
+        <Link href="/simulation" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#3b82f6' }}>🔮</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Moklet Culture Simulation</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Interactive decision laboratory</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        <Link href="/future" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#0ea5e9' }}>🏗️</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Arsitek Masa Depan</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Mastering school life strategy</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        <Link href="/challenge" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#be123c' }}>⚡</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Tantangan Kilat</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Quick thinking & values quiz</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+      </div>
+
+      {/* --- CATEGORY: PUSPRESNAS ARENA --- */}
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 4, height: 24, background: '#8b5cf6', borderRadius: 2 }} />
+          <div>
+            <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b', lineHeight: 1.2 }}>Puspresnas Arena</h2>
+            <div style={{ fontSize: 10, color: '#64748b', fontWeight: 500 }}>Ajang Talenta Nasional</div>
+          </div>
+        </div>
+        <Link href="/events" style={{ fontSize: 11, fontWeight: 700, color: '#8b5cf6' }}>Lihat Semua →</Link>
+      </div>
+
+      {/* Horizontal Scroll Container */}
+      <div className="hide-scrollbar" style={{
+        display: 'flex', gap: 16, overflowX: 'auto',
+        paddingBottom: 20, margin: '0 -24px', paddingLeft: 24, paddingRight: 24,
+        scrollSnapType: 'x mandatory'
+      }}>
+        {EVENTS.map(event => (
+          <div key={event.id} style={{ minWidth: 260, width: '75%', scrollSnapAlign: 'center' }}>
+            <EventCard event={event} />
+          </div>
+        ))}
+      </div>
+
+      {/* --- CATEGORY: EXPLORATION ZONE --- */}
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ width: 4, height: 24, background: '#16a34a', borderRadius: 2 }} />
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e293b' }}>Exploration Zone</h2>
+        <span style={{ fontSize: 10, fontWeight: 700, color: '#16a34a', background: '#dcfce7', padding: '4px 10px', borderRadius: 20 }}>PETUALANGAN</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 12, marginBottom: 56 }}>
+        <Link href="/sekolah-3d" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#2563eb' }}>🏛️</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+              <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Gedung Sekolah 3D</div>
+              <span style={{ fontSize: 8, fontWeight: 800, background: '#e11d48', color: 'white', padding: '1px 6px', borderRadius: 4 }}>NEW</span>
+            </div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Tour kampus virtual interaktif</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Manajemen Sekolah */}
+        <Link href="/manajemen" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#d97706' }}>🤝</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Manajemen Sekolah</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Kenali struktur organisasi sekolah</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Profil YPT */}
+        <Link href="/profil-ypt" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#ef4444' }}>🏢</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Profil YPT</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Mengenal Yayasan Pendidikan Telkom</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Ekstrakurikuler */}
+        <Link href="/ekskul" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#10b981' }}>⚽</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Ekstrakurikuler</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Wadah minat bakat siswa</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Journey Map */}
+        <Link href="/journey" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#22c55e' }}>🗺️</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Journey Map Sekolah</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Peta petualangan budaya sekolah</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+
+        {/* Discovery 3D */}
+        <Link href="/discovery-3d" className={styles.gameCardNew}>
+          <div className={styles.iconWrapper} style={{ color: '#ffffff', background: '#8b5cf6' }}>💎</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: '#1e293b' }}>Discovery 3D</div>
+            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>Crystal self discovery lab</div>
+          </div>
+          <div className={styles.arrowBtn}>→</div>
+        </Link>
+      </div>
+
+      {/* 5. Pilih Chapter (Skill Tree) */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Skill Tree: Pilih Chapter</h2>
+        <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' }}>4 Sectors</span>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 56 }}>
+        {chapterData.map((ch, i) => (
+          <Link key={i} href={`/chapter/${i + 1}`} style={{
+            background: 'white', borderRadius: 24, overflow: 'hidden',
+            border: '1px solid #e5e7eb', textDecoration: 'none',
+            display: 'flex', flexDirection: 'column',
+            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+          }}>
+            <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, background: ch.bg, position: 'relative' }}>
+              <span className="animate-float" style={{ position: 'relative', zIndex: 1, animationDelay: `${i * 0.2}s` }}>{ch.emoji}</span>
+            </div>
+            <div style={{ padding: 16, flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, fontWeight: 800, marginBottom: 8 }}>
+                <span style={{ color: ch.color }}>CH {i + 1}</span>
+                <span style={{ color: '#94a3b8' }}>{ch.completed}/{ch.nodes} NODE</span>
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#1a1a2e', lineHeight: 1.3, marginBottom: 10, flex: 1 }}>
+                {ch.name.split(":")[0]}
+              </div>
+              <div style={{ height: 4, background: '#f1f5f9', borderRadius: 2, marginBottom: 12, overflow: 'hidden' }}>
+                <div style={{ width: `${(ch.completed / ch.nodes) * 100}%`, height: '100%', background: ch.color }} />
+              </div>
+              <div style={{ fontSize: 10, fontWeight: 800, color: ch.completed > 0 ? ch.color : '#94a3b8', textAlign: 'center' }}>
+                {ch.completed > 0 ? 'RESUME ⚡' : 'START →'}
+              </div>
+            </div>
           </Link>
         ))}
+      </div>
 
-        <div className={styles.bottomNavCenter}>
-          <FocusChatButton />
-          <Link href="/ai-tutor" className={styles.modyButton}>
-            <div className={styles.modyButtonIcon}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 8V4H8" />
-                <rect width="16" height="12" x="4" y="8" rx="2" />
-                <path d="M2 14h2" />
-                <path d="M20 14h2" />
-                <path d="M15 13v2" />
-                <path d="M9 13v2" />
-              </svg>
-              <span className={styles.modyDot}>AI</span>
+      {/* Bottom: Leaderboard */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1a1a2e' }}>Leaderboard</h2>
+        <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--theme-primary)', background: 'var(--theme-light)', padding: '5px 12px', borderRadius: 99, textTransform: 'uppercase' }}>Top {leaderboard.length || '-'}</span>
+      </div>
+      <div style={{ background: 'white', borderRadius: 20, border: '1px solid #e5e7eb', overflow: 'hidden', marginBottom: 40 }}>
+        {leaderboard.length > 0 ? leaderboard.map((player, i) => (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'center', padding: '16px 20px',
+            borderBottom: i < leaderboard.length - 1 ? '1px solid #f3f4f6' : 'none',
+            gap: 14,
+          }}>
+            <div style={{ width: 32, height: 32, minWidth: 32, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, background: rankColors[i]?.bg || '#f1f5f9', color: rankColors[i]?.text || '#64748b' }}>
+              {i + 1}
             </div>
-            <span>MoDy</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a2e' }}>{player.name}</div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#1a1a2e' }}>{player.score.toLocaleString()}</div>
+              <div style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600 }}>XP</div>
+            </div>
+          </div>
+        )) : (
+          <div style={{ padding: '32px 20px', textAlign: 'center', color: '#94a3b8', fontSize: 13, fontWeight: 600 }}>
+            Belum ada data.
+          </div>
+        )}
+      </div>
+
+      {/* About App Banner */}
+      <Link href="/about" style={{ textDecoration: 'none' }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #e11d48, #be123c)',
+          borderRadius: 24, padding: 24, color: 'white',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          boxShadow: '0 10px 25px -5px rgba(225,29,72,0.3)',
+          position: 'relative', overflow: 'hidden',
+          marginBottom: 40
+        }}>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Tentang MoLeCul</div>
+            <div style={{ fontSize: 13, opacity: 0.9, fontWeight: 500, maxWidth: 200 }}>
+              Pelajari filosofi, fitur, dan tim di balik aplikasi ini
+            </div>
+          </div>
+          <div style={{ fontSize: 48, zIndex: 1, filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))' }}>ℹ️</div>
+        </div>
+      </Link>
+
+      {/* Admin Panel Link */}
+      {userEmail === "hadhiee@gmail.com" && (
+        <div style={{ marginBottom: 40, borderTop: '1px solid #f1f5f9', paddingTop: 24, textAlign: 'center' }}>
+          <Link href="/admin/logs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1a1a2e', color: 'white', padding: '12px 24px', borderRadius: 99, textDecoration: 'none', fontSize: 13, fontWeight: 800 }}>
+            <span>🔒</span> Control Center (Admin Status)
+          </Link>
+        </div>
+      )}
+
+      {/* Footer Tagline */}
+      <div style={{
+        marginTop: 60,
+        marginBottom: 140,
+        textAlign: 'center',
+        opacity: 0.4,
+        padding: '0 20px'
+      }}>
+        <div style={{
+          fontSize: 14,
+          fontWeight: 900,
+          letterSpacing: '0.4em',
+          color: '#1e293b',
+          textTransform: 'uppercase',
+          marginBottom: 8
+        }}>
+          ATTITUDE IS EVERYTHING
+        </div>
+        <div style={{ fontSize: 10, fontWeight: 700, color: '#64748b' }}>
+          SMK TELKOM MALANG &copy; 2026
+        </div>
+      </div>
+
+      {/* ===== FIXED BOTTOM NAVIGATION BAR ===== */}
+      <nav style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999,
+        background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+        borderTop: '1px solid rgba(0,0,0,0.06)',
+        padding: '6px 8px env(safe-area-inset-bottom, 8px)',
+        display: 'flex', justifyContent: 'space-around', alignItems: 'center',
+      }}>
+        {/* Home */}
+        <Link href="/" style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+          textDecoration: 'none', padding: '4px 10px', borderRadius: 12,
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--theme-primary)" stroke="var(--theme-primary)" strokeWidth="0">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z" fill="none" stroke="var(--theme-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--theme-primary)', letterSpacing: '0.02em' }}>Home</span>
+        </Link>
+
+        {/* Journey */}
+        <Link href="/journey" style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+          textDecoration: 'none', padding: '4px 10px', borderRadius: 12,
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+            <line x1="9" y1="3" x2="9" y2="18" /><line x1="15" y1="6" x2="15" y2="21" />
+          </svg>
+          <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Journey</span>
+        </Link>
+
+        {/* Center: MoDy + Fokus Ngobrol */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, marginTop: -18, position: 'relative' }}>
+          {/* Fokus Ngobrol */}
+          <FocusChatButton />
+          {/* MoDy */}
+          <Link href="/ai-tutor" style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            textDecoration: 'none',
+          }}>
+            <div style={{
+              width: 52, height: 52, borderRadius: 18,
+              background: 'linear-gradient(135deg, #6366f1, #7c3aed)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 6px 20px -4px rgba(99,102,241,0.5)',
+              border: '3px solid white',
+              position: 'relative',
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" />
+                <path d="M2 14h2" /><path d="M20 14h2" />
+                <path d="M15 13v2" /><path d="M9 13v2" />
+              </svg>
+              <span style={{
+                position: 'absolute', top: -4, right: -4,
+                width: 16, height: 16, borderRadius: 8,
+                background: '#22c55e', border: '2px solid white',
+                fontSize: 7, fontWeight: 900, color: 'white',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>AI</span>
+            </div>
+            <span style={{ fontSize: 9, fontWeight: 800, color: '#6366f1', marginTop: 2, letterSpacing: '0.02em' }}>MoDy</span>
           </Link>
         </div>
 
-        {navItems.slice(2).map((item) => (
-          <Link key={item.href} href={item.href} className={styles.bottomNavItem}>
-            {item.icon}
-            <span>{item.label}</span>
-          </Link>
-        ))}
+        {/* Culture */}
+        <Link href="/culture" style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+          textDecoration: 'none', padding: '4px 10px', borderRadius: 12,
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
+          <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Culture</span>
+        </Link>
+
+        {/* Events */}
+        <Link href="/events" style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+          textDecoration: 'none', padding: '4px 10px', borderRadius: 12,
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7" />
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7" />
+            <path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22" />
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22" />
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+          </svg>
+          <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.02em' }}>Lomba</span>
+        </Link>
       </nav>
     </div>
   );
