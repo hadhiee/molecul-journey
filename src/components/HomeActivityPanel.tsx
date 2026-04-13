@@ -282,20 +282,20 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
         setUploadStatus("Mengupload ke Cloud...");
 
         try {
-            const formData = new FormData();
-            formData.append("file", file);
+            const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+            const filePath = `${normalizedEmail}/${fileName}`;
 
-            const uploadResponse = await fetch("/api/evidence", {
-                method: "POST",
-                body: formData,
-            });
-            const uploadJson = await uploadResponse.json();
+            const { error: uploadError } = await supabase.storage
+                .from('evidence')
+                .upload(filePath, file);
 
-            if (!uploadResponse.ok) {
-                throw new Error(uploadJson.error || "Gagal upload file ke Google Drive.");
+            if (uploadError) {
+                console.error("Storage Upload Error:", uploadError);
+                throw new Error("Gagal upload file. Pastikan Bucket 'evidence' sudah dibuat di Supabase.");
             }
 
-            const choiceLabel = `${file.name}|${uploadJson.storageToken}|${file.type}`;
+            const { data: { publicUrl } } = supabase.storage.from('evidence').getPublicUrl(filePath);
+            const choiceLabel = `${file.name}|${publicUrl}|${file.type}`;
 
             const { error: dbError } = await supabase.from("user_progress").insert({
                 user_email: normalizedEmail,
