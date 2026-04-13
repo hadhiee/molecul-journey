@@ -98,6 +98,18 @@ class SheetsQueryBuilder implements PromiseLike<any> {
     return this;
   }
 
+  like(field: string, value: string) {
+    if (this.table !== "user_progress") {
+      throw new Error(`Like is not supported for ${this.table}.`);
+    }
+
+    this.operation.filters = [
+      ...(this.operation.filters || []),
+      { field, op: "like", value } satisfies ProgressFilter,
+    ];
+    return this;
+  }
+
   order(field: string, options?: { ascending?: boolean }) {
     this.operation.order = {
       field,

@@ -25,6 +25,10 @@ function hasUserEmailMismatch(filters: ProgressFilter[] = [], currentUserEmail: 
       return normalizeEmail(filter.value) !== currentUserEmail;
     }
 
+    if (filter.op === "like") {
+      return false;
+    }
+
     return filter.value.some((value) => normalizeEmail(value) !== currentUserEmail);
   });
 }

@@ -16,14 +16,47 @@ import type {
   ProgressRowWithIndex,
 } from "./types";
 
+function normalizeForCompare(field: string, value: unknown) {
+  if (value == null) {
+    return null;
+  }
+
+  if (field === "score") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  if (field === "user_email" || field === "mission_id" || field === "choice_label" || field === "id") {
+    return String(value).trim().toLowerCase();
+  }
+
+  if (typeof value === "number" || typeof value === "boolean") {
+    return value;
+  }
+
+  return String(value).trim();
+}
+
 function matchesFilter(row: ProgressRow, filter: ProgressFilter) {
   const value = (row as Record<string, unknown>)[filter.field];
 
   if (filter.op === "eq") {
-    return value === filter.value;
+    return normalizeForCompare(filter.field, value) === normalizeForCompare(filter.field, filter.value);
   }
 
-  return filter.value.includes(value);
+  if (filter.op === "in") {
+    return filter.value.some((item) => normalizeForCompare(filter.field, item) === normalizeForCompare(filter.field, value));
+  }
+
+  const rowValue = normalizeForCompare(filter.field, value);
+  const likePattern = String(filter.value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    .replace(/%/g, ".*")
+    .replace(/_/g, ".");
+
+  return new RegExp(`^${likePattern}$`, "i").test(String(rowValue || ""));
 }
 
 function applyFilters(rows: ProgressRowWithIndex[], filters: ProgressFilter[] = []) {

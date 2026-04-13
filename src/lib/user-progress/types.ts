@@ -17,7 +17,8 @@ export type ProgressRowWithIndex = {
 
 export type ProgressFilter =
   | { field: string; op: "eq"; value: unknown }
-  | { field: string; op: "in"; value: unknown[] };
+  | { field: string; op: "in"; value: unknown[] }
+  | { field: string; op: "like"; value: string };
 
 export type ProgressOrder = {
   field: string;
