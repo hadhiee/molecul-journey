@@ -156,7 +156,7 @@ export default function ManajemenPage() {
             .eq('user_email', userEmail)
             .eq('mission_id', 'SYSTEM_EXPLORE_PERSONIL')
             .single()
-            .then(({ data }) => {
+            .then(({ data }: { data: any }) => {
                 if (data) setPersonnelXpEarned(true);
             });
 
@@ -167,7 +167,7 @@ export default function ManajemenPage() {
             .eq('user_email', userEmail)
             .eq('mission_id', 'SYSTEM_MINIGAME_STRUKTUR')
             .single()
-            .then(({ data }) => {
+            .then(({ data }: { data: any }) => {
                 if (data) {
                     setGameXpEarned(true);
                     setFoundPeople(['direktur', 'kepsek', 'kkomite', 'admin']);

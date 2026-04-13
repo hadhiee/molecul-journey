@@ -20,10 +20,10 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
             .from("user_progress")
             .select("mission_id")
             .eq("user_email", userEmail)
-            .in("mission_id", scenarios.map(s => s.id));
+            .in("mission_id", scenarios.map((s: any) => s.id));
 
         if (progress) {
-            progress.forEach(p => completedIds.add(p.mission_id));
+            progress.forEach((p: any) => completedIds.add(p.mission_id));
         }
     }
 
@@ -47,7 +47,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ id: st
             </h1>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {scenarios?.map((s, i) => (
+                {scenarios?.map((s: any, i: number) => (
                     <Link key={s.id} href={`/mission/${s.id}`} style={{
                         background: 'white', border: '1px solid #e5e7eb', borderRadius: 16,
                         padding: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between',

@@ -1,9 +1,11 @@
-import { readFileSync } from "node:fs";
 import dotenv from "dotenv";
+import { createClient } from "@supabase/supabase-js";
 import { google } from "googleapis";
 
 dotenv.config({ path: new URL("../.env.local", import.meta.url) });
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
 const SHEET_NAME = process.env.GOOGLE_SHEETS_SCENARIOS_TAB || "scenarios";
 const SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL;
@@ -23,6 +25,8 @@ const HEADERS = [
 
 function assertConfig() {
   const missing = [];
+  if (!SUPABASE_URL) missing.push("NEXT_PUBLIC_SUPABASE_URL");
+  if (!SUPABASE_KEY) missing.push("SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY");
   if (!SPREADSHEET_ID) missing.push("GOOGLE_SHEETS_SPREADSHEET_ID");
   if (!SERVICE_ACCOUNT_EMAIL) missing.push("GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL");
   if (!PRIVATE_KEY) missing.push("GOOGLE_SHEETS_PRIVATE_KEY");
@@ -30,29 +34,6 @@ function assertConfig() {
   if (missing.length > 0) {
     throw new Error(`Missing required env vars: ${missing.join(", ")}`);
   }
-}
-
-function stringToUUID(str) {
-  let hash = 0x811c9dc5;
-  for (let i = 0; i < str.length; i++) {
-    hash ^= str.charCodeAt(i);
-    hash = Math.imul(hash, 0x01000193);
-  }
-
-  let result = "";
-  const hexChars = "0123456789abcdef";
-  let seed = hash >>> 0;
-
-  for (let i = 0; i < 32; i++) {
-    const charCode = str.charCodeAt(i % str.length) || 0;
-    seed = Math.imul(seed ^ charCode, 1664525) + 1013904223;
-    const val = (seed >>> 16) & 0x0f;
-    result += hexChars[val];
-  }
-
-  const variant = ((parseInt(result[16], 16) & 0x3) | 0x8).toString(16);
-
-  return `${result.substring(0, 8)}-${result.substring(8, 12)}-4${result.substring(13, 16)}-${variant}${result.substring(17, 20)}-${result.substring(20, 32)}`.toLowerCase();
 }
 
 function createSheetsClient() {
@@ -103,24 +84,59 @@ async function ensureSheet(sheets) {
   });
 }
 
+async function loadAllScenarios() {
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: false },
+  });
+
+  const PAGE_SIZE = 1000;
+  let from = 0;
+  let hasMore = true;
+  const rows = [];
+
+  while (hasMore) {
+    const { data, error } = await supabase
+      .from("scenarios")
+      .select("id, chapter, title, context, tags, choices, is_published, created_at")
+      .order("id", { ascending: true })
+      .range(from, from + PAGE_SIZE - 1);
+
+    if (error) {
+      throw new Error(`Failed to fetch scenarios from Supabase: ${error.message}`);
+    }
+
+    if (!data || data.length === 0) {
+      hasMore = false;
+      continue;
+    }
+
+    rows.push(...data);
+    from += PAGE_SIZE;
+    if (data.length < PAGE_SIZE) {
+      hasMore = false;
+    }
+  }
+
+  return rows;
+}
+
 async function main() {
   assertConfig();
 
   const sheets = createSheetsClient();
   await ensureSheet(sheets);
 
-  const data = JSON.parse(readFileSync(new URL("../seeds/seed_scenarios_40.json", import.meta.url), "utf8"));
-  const now = new Date().toISOString();
-  const values = data.map((scenario) => [
-    stringToUUID(`scenario:${scenario.chapter}:${scenario.title}`),
-    String(scenario.chapter),
-    scenario.title,
-    scenario.context,
-    JSON.stringify(scenario.tags || null),
-    JSON.stringify(scenario.choices || []),
-    "true",
-    now,
-    now,
+  const scenarios = await loadAllScenarios();
+  const values = scenarios.map((row) => [
+    row.id,
+    String(row.chapter ?? 0),
+    row.title ?? "",
+    row.context ?? "",
+    JSON.stringify(row.tags ?? null),
+    JSON.stringify(row.choices ?? []),
+    String(row.is_published ?? true),
+    row.created_at ?? new Date().toISOString(),
+    row.created_at ?? new Date().toISOString(),
   ]);
 
   await sheets.spreadsheets.values.clear({
@@ -128,16 +144,18 @@ async function main() {
     range: `${SHEET_NAME}!A2:I`,
   });
 
-  await sheets.spreadsheets.values.update({
-    spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_NAME}!A2:I${values.length + 1}`,
-    valueInputOption: "RAW",
-    requestBody: {
-      values,
-    },
-  });
+  if (values.length > 0) {
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${SHEET_NAME}!A2:I${values.length + 1}`,
+      valueInputOption: "RAW",
+      requestBody: {
+        values,
+      },
+    });
+  }
 
-  console.log("Seeded", values.length, "scenarios into Google Sheets.");
+  console.log(`Migrated ${values.length} scenarios to Google Sheets (${SHEET_NAME}).`);
 }
 
 main().catch((error) => {

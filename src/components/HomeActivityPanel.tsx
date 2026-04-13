@@ -23,6 +23,28 @@ interface HistoryItem {
     metadata?: { url?: string; fileType?: string; fileName?: string };
 }
 
+const isGoogleDriveToken = (value?: string) => Boolean(value && value.startsWith("gdrive:"));
+
+const getGoogleDriveFileId = (value?: string) => {
+    if (!value) return null;
+    if (value.startsWith("gdrive:")) return value.slice("gdrive:".length);
+    return null;
+};
+
+const getGoogleDriveLinks = (value: string, fileType: string) => {
+    const fileId = getGoogleDriveFileId(value);
+    if (!fileId) return null;
+
+    return {
+        fileId,
+        previewUrl: fileType.startsWith("image/")
+            ? `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`
+            : `https://drive.google.com/file/d/${fileId}/preview`,
+        openUrl: `https://drive.google.com/file/d/${fileId}/view`,
+        downloadUrl: `https://drive.google.com/uc?export=download&id=${fileId}`,
+    };
+};
+
 const Modal = ({ title, children, onClose }: { title: string, children: React.ReactNode, onClose: () => void }) => (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
         <div
@@ -52,6 +74,10 @@ const PreviewModal = ({ url, type, name, onClose }: { url: string; type: string;
     const isImage = type.startsWith("image/");
     const isVideo = type.startsWith("video/");
     const isPDF = type === "application/pdf";
+    const driveLinks = isGoogleDriveToken(url) ? getGoogleDriveLinks(url, type) : null;
+    const previewUrl = driveLinks?.previewUrl || url;
+    const externalUrl = driveLinks?.openUrl || url;
+    const downloadUrl = driveLinks?.downloadUrl || url;
 
     return (
         <div style={{ position: 'fixed', inset: 0, zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
@@ -62,20 +88,28 @@ const PreviewModal = ({ url, type, name, onClose }: { url: string; type: string;
                     <button onClick={onClose} style={{ background: 'white', color: 'black', border: 'none', borderRadius: 4, padding: '4px 12px', fontWeight: 800, cursor: 'pointer' }}>Tutup</button>
                 </div>
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a1a', minHeight: 300 }}>
-                    {isImage && <img src={url} alt={name} style={{ maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain' }} />}
-                    {isVideo && <video src={url} controls style={{ maxWidth: '100%', maxHeight: '80vh' }} />}
-                    {isPDF && <iframe src={url} style={{ width: '100%', height: '80vh', border: 'none' }} title={name} />}
+                    {isImage && <img src={previewUrl} alt={name} style={{ maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain' }} />}
+                    {isVideo && !driveLinks && <video src={previewUrl} controls style={{ maxWidth: '100%', maxHeight: '80vh' }} />}
+                    {(isPDF || (isVideo && driveLinks)) && <iframe src={previewUrl} style={{ width: '100%', height: '80vh', border: 'none' }} title={name} />}
                     {!isImage && !isVideo && !isPDF && (
                         <div style={{ textAlign: 'center', color: 'white', padding: 20 }}>
                             <p style={{ marginBottom: 12 }}>File ini tidak dapat dipratinjau langsung.</p>
-                            <a href={url} target="_blank" rel="noreferrer" style={{ background: '#3b82f6', color: 'white', padding: '10px 20px', borderRadius: 8, textDecoration: 'none', fontWeight: 700 }}>
+                            <a href={externalUrl} target="_blank" rel="noreferrer" style={{ background: '#3b82f6', color: 'white', padding: '10px 20px', borderRadius: 8, textDecoration: 'none', fontWeight: 700 }}>
                                 Download / Buka External
                             </a>
-                            {/* Fallback for docs using Google Viewer */}
-                            {(type.includes("word") || type.includes("document")) && (
+                            {driveLinks && (
                                 <div style={{ marginTop: 20 }}>
                                     <iframe
-                                        src={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`}
+                                        src={previewUrl}
+                                        style={{ width: '100%', height: '60vh', border: 'none', background: 'white' }}
+                                        title={`${name}-preview`}
+                                    />
+                                </div>
+                            )}
+                            {!driveLinks && (type.includes("word") || type.includes("document")) && (
+                                <div style={{ marginTop: 20 }}>
+                                    <iframe
+                                        src={`https://docs.google.com/viewer?url=${encodeURIComponent(downloadUrl)}&embedded=true`}
                                         style={{ width: '100%', height: '60vh', border: 'none', background: 'white' }}
                                     />
                                 </div>
@@ -133,10 +167,11 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
             }
 
             if (data) {
-                setReflectionsHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.REFLECTION.toLowerCase()).map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'reflection' })));
+                const historyRows = data as any[];
+                setReflectionsHistory(historyRows.filter((i: any) => i.mission_id?.toLowerCase() === SYSTEM_IDS.REFLECTION.toLowerCase()).map((i: any) => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'reflection' })));
 
                 // Parse Evidence
-                setEvidenceHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.EVIDENCE.toLowerCase()).map(i => {
+                setEvidenceHistory(historyRows.filter((i: any) => i.mission_id?.toLowerCase() === SYSTEM_IDS.EVIDENCE.toLowerCase()).map((i: any) => {
                     const parsed = parseEvidence(i.choice_label);
                     return {
                         id: i.id,
@@ -147,7 +182,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
                     };
                 }));
 
-                setCheckinHistory(data.filter(i => i.mission_id?.toLowerCase() === SYSTEM_IDS.CHECKIN.toLowerCase()).map(i => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'checkin' })));
+                setCheckinHistory(historyRows.filter((i: any) => i.mission_id?.toLowerCase() === SYSTEM_IDS.CHECKIN.toLowerCase()).map((i: any) => ({ id: i.id, content: i.choice_label, timestamp: i.created_at, type: 'checkin' })));
             }
         } catch (e) {
             console.error("History fetch catch error:", e);
@@ -247,27 +282,20 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
         setUploadStatus("Mengupload ke Cloud...");
 
         try {
-            // 1. Upload to Supabase Storage
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
-            const filePath = `${normalizedEmail}/${fileName}`;
+            const formData = new FormData();
+            formData.append("file", file);
 
-            // Try uploading to 'evidence' bucket
-            const { data: uploadData, error: uploadError } = await supabase.storage
-                .from('evidence')
-                .upload(filePath, file);
+            const uploadResponse = await fetch("/api/evidence", {
+                method: "POST",
+                body: formData,
+            });
+            const uploadJson = await uploadResponse.json();
 
-            if (uploadError) {
-                console.error("Storage Upload Error:", uploadError);
-                throw new Error("Gagal upload file. Pastikan Bucket 'evidence' sudah dibuat di Supabase.");
+            if (!uploadResponse.ok) {
+                throw new Error(uploadJson.error || "Gagal upload file ke Google Drive.");
             }
 
-            // 2. Get Public URL
-            const { data: { publicUrl } } = supabase.storage.from('evidence').getPublicUrl(filePath);
-
-            // 3. Save Record with Metadata in choice_label
-            // Format: FILENAME|URL|MIMETYPE
-            const choiceLabel = `${file.name}|${publicUrl}|${file.type}`;
+            const choiceLabel = `${file.name}|${uploadJson.storageToken}|${file.type}`;
 
             const { error: dbError } = await supabase.from("user_progress").insert({
                 user_email: normalizedEmail,
@@ -281,6 +309,7 @@ export default function HomeActivityPanel({ userEmail }: { userEmail: string }) 
             await fetchUserHistory();
             setUploadStatus(`Berhasil: ${file.name} ✅`);
             setTimeout(() => setUploadStatus(null), 2000);
+            e.target.value = "";
         } catch (e: any) {
             console.error("Evidence catch:", e);
             setUploadStatus(`Gagal: ${e.message}`);

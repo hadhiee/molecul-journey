@@ -7,7 +7,10 @@
     "build": "next build --webpack",
     "start": "next start",
     "seed:scenarios": "node scripts/seed-scenarios.mjs",
-    "seed:attitude": "echo \"Run seeds/seed_attitude_values.sql in Supabase SQL Editor\""
+    "seed:attitude": "echo \"Run seeds/seed_attitude_values.sql in Supabase SQL Editor\"",
+    "migrate:progress-to-sheets": "node scripts/migrate-progress-to-sheets.mjs",
+    "migrate:scenarios-to-sheets": "node scripts/migrate-scenarios-to-sheets.mjs",
+    "migrate:evidence-to-drive": "node scripts/migrate-evidence-to-drive.mjs"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
@@ -17,6 +20,7 @@
     "@types/three": "^0.182.0",
     "canvas-confetti": "^1.9.4",
     "dotenv": "^17.3.1",
+    "googleapis": "^171.4.0",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "react": "19.2.3",

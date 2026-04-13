@@ -106,7 +106,7 @@ export default async function Home() {
         p.user_email && p.user_email.toLowerCase().trim() === userEmail
       );
 
-      const userCompletedIds = new Set(userProgress.map(p =>
+      const userCompletedIds = new Set(userProgress.map((p: any) =>
         ((p.mission_id || p.choice_label || "") as string).toUpperCase()
       ));
 
@@ -133,7 +133,7 @@ export default async function Home() {
     const { data: allScenarios } = await supabase.from("scenarios").select("id, chapter");
 
     if (allScenarios) {
-      allScenarios.forEach(s => {
+      allScenarios.forEach((s: any) => {
         const chIdx = (s.chapter || 1) - 1;
         if (chapterData[chIdx]) {
           chapterData[chIdx].nodes++;
@@ -146,11 +146,11 @@ export default async function Home() {
         .from("user_progress")
         .select("mission_id")
         .eq("user_email", userEmail)
-        .in("mission_id", allScenarios.map(s => s.id));
+        .in("mission_id", allScenarios.map((s: any) => s.id));
 
       if (userProg) {
-        const completedSet = new Set(userProg.map(p => p.mission_id));
-        allScenarios.forEach(s => {
+        const completedSet = new Set(userProg.map((p: any) => p.mission_id));
+        allScenarios.forEach((s: any) => {
           if (completedSet.has(s.id)) {
             const chIdx = (s.chapter || 1) - 1;
             if (chapterData[chIdx]) {
